@@ -1,0 +1,333 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>第8题 - 不同知识点三道示例题</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- D3.js v6 -->
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background-color: #f6f9fc; }
+    .node circle {
+      cursor: pointer;
+      stroke: #999;
+      stroke-width: 1px;
+      transition: transform 0.2s;
+    }
+    .node:hover circle {
+      transform: scale(1.1);
+      stroke: #333;
+    }
+    .node text {
+      pointer-events: none;
+      font-size: 10px;
+      fill: #333;
+    }
+    line.link {
+      stroke: #ccc;
+      stroke-width: 1.5px;
+    }
+    .tooltip {
+      position: absolute;
+      min-width: 120px;
+      padding: 8px;
+      font-size: 12px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      pointer-events: none;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+      opacity: 0;
+      transition: opacity 0.2s;
+      z-index: 999;
+    }
+    .line {
+      fill: none;
+      stroke-width: 2px;
+    }
+    .line-chart-axis path,
+    .line-chart-axis line {
+      fill: none;
+      stroke: #ccc;
+    }
+    .dot {
+      fill: #ff5722;
+      stroke: #fff;
+      stroke-width: 1px;
+      cursor: pointer;
+    }
+    .dot:hover {
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body class="h-screen w-screen overflow-hidden bg-gray-100">
+
+<!-- 顶部：返回题目列表按钮 -->
+<div class="p-4 bg-white shadow">
+  <button
+    class="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 transition-colors"
+    onclick="location.href='index.html'">
+    返回题目列表
+  </button>
+</div>
+
+<!-- 主体：左侧知识图谱 + 右侧信息栏 -->
+<div class="flex h-[calc(100vh-64px)]">
+
+  <!-- 左侧：力导向知识图谱 -->
+  <div id="left-panel" class="w-1/2 h-full bg-white relative">
+    <svg id="graph-svg" class="w-full h-full"></svg>
+    <div id="graph-tooltip" class="tooltip"></div>
+  </div>
+
+  <!-- 右侧：题目信息 + “相关题目说明” + 历史正确率折线图 -->
+  <div id="right-panel" class="w-1/2 h-full flex flex-col p-4 space-y-4">
+
+    <!-- 题目信息 -->
+    <div class="bg-white p-4 rounded shadow">
+      <h1 class="text-xl font-bold mb-2">题号：第8题</h1>
+      <p class="mb-2">
+        甲、乙两车分别从 A、B 两地同时出发，沿同一条公路相向而行，  
+        甲、乙所走路程的比为 2 : 3，相遇时的中间位置如图示。  
+        若给出路程 y (km) 与甲车出发时间 t (h) 的函数关系示意图，  
+        则甲车走完全程所用时间是多少？  
+        选项：  
+        A. 5 h B. 2.5 h C. 5/3 h D. 10/3 h  
+      </p>
+      <!-- 示例：掌握率展示 -->
+      <p>当前掌握率：<span class="text-green-600 font-medium">65%</span></p>
+      <p>历史正确率：<span class="text-yellow-600 font-medium">61%</span></p>
+    </div>
+
+    <!-- 直接关联知识点 -->
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="text-lg font-bold mb-2">直接关联知识点</h2>
+      <ul class="list-disc list-inside text-gray-700">
+        <li>相遇问题</li>
+        <li>速度与时间函数</li>
+        <li>一次函数与图像</li>
+      </ul>
+    </div>
+
+    <!-- 相关题目定义与层次说明 -->
+    <div class="bg-white p-4 rounded shadow overflow-auto">
+      <h2 class="text-lg font-bold mb-2">相关题目的定位与层次</h2>
+      <p class="mb-2">
+        <strong>定义：</strong>此题为典型的“直线相遇”问题，考查学生对路程、速度、时间关系的理解，并可结合坐标函数图像分析。
+      </p>
+      <p class="mb-2">
+        <strong>针对性：</strong>从“速度与一次函数”的角度，利用几何图像或者函数表达式推导所用时间或路程。
+      </p>
+      <p class="mb-2">
+        <strong>层次性：</strong>基础层把握单一车速与路程，中等层涉及相向或背向运动，较难层可结合斜率、截距、几何判定等综合分析。
+      </p>
+    </div>
+
+    <!-- 历史正确率趋势折线图 -->
+    <div class="flex-1 bg-white p-4 rounded shadow relative">
+      <h2 class="text-lg font-bold mb-2">历史正确率趋势</h2>
+      <svg id="line-chart" class="w-full h-full"></svg>
+      <div id="line-tooltip" class="tooltip"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// 1) 定义所有知识点对应的三道示例题
+const knowledgeQuestions = {
+  "相遇问题": {
+    basic:   "两车相向而行：设速度 v1、v2，初始距离 d，求相遇时间",
+    medium:  "若甲车速度比乙车速度大 20%，如何调整相遇点距离？",
+    advanced:"多车相遇或往返问题，需综合速度与时间计算"
+  },
+  "速度与时间函数": {
+    basic:   "路程 s = vt，或 y = mx + c 的一次函数关系，识别斜率含义",
+    medium:  "给出路程随时间变化的函数图，如何确定速度、相遇点坐标？",
+    advanced:"结合多段速度或特殊函数（加速/减速）分析曲线与路程时间"
+  },
+  "一次函数与图像": {
+    basic:   "一次函数 y=mx+b 的图形是斜直线，斜率 m、截距 b 物理含义",
+    medium:  "比对甲车与乙车两条直线，判断相交点坐标在几秒/几小时处",
+    advanced:"综合题：多条一次函数交于一点，可能代表多车同时相遇时刻"
+  }
+};
+
+// 2) 知识图谱节点数据
+const graphData = {
+  nodes: [
+    { id: "Q8",  type: "question",   name: "第8题" },
+    { id: "K1",  type: "knowledge",  name: "相遇问题" },
+    { id: "K2",  type: "knowledge",  name: "速度与时间函数" },
+    { id: "K1a", type: "sub-knowledge", name: "一次函数与图像" }
+  ],
+  links: [
+    // 第8题接到2大知识点
+    { source: "Q8", target: "K1" },
+    { source: "Q8", target: "K2" },
+    // 再从K1连接到子知识点
+    { source: "K1", target: "K1a" }
+  ]
+};
+
+// 3) 绘制左侧力导向图
+const width = document.getElementById("left-panel").clientWidth;
+const height = document.getElementById("left-panel").clientHeight;
+
+const svgGraph = d3.select("#graph-svg")
+  .attr("width", width)
+  .attr("height", height);
+
+const simulation = d3.forceSimulation(graphData.nodes)
+  .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(110))
+  .force("charge", d3.forceManyBody().strength(-300))
+  .force("center", d3.forceCenter(width / 2, height / 2))
+  .on("tick", ticked);
+
+const link = svgGraph.selectAll("line.link")
+  .data(graphData.links)
+  .enter()
+  .append("line")
+  .attr("class", "link");
+
+const node = svgGraph.selectAll("g.node")
+  .data(graphData.nodes)
+  .enter()
+  .append("g")
+  .attr("class", "node");
+
+const tooltipGraph = d3.select("#graph-tooltip");
+
+node.append("circle")
+  .attr("r", d => d.type === "question" ? 18 : (d.type === "knowledge" ? 14 : 10))
+  .attr("fill", d => {
+    if (d.type === "question")   return "#fca5a5"; // 浅红
+    if (d.type === "knowledge") return "#93c5fd"; // 浅蓝
+    return "#a7f3d0";                               // 浅绿 (sub-knowledge)
+  })
+  .on("mouseover", (event, d) => {
+    let htmlStr = "";
+    if (d.type === "question") {
+      htmlStr = `题号：<strong>${d.name}</strong>`;
+    } else {
+      htmlStr = `知识点：<strong>${d.name}</strong>`;
+      const qSet = knowledgeQuestions[d.name];
+      if (qSet) {
+        htmlStr += `
+          <br/><strong>基础题：</strong>${qSet.basic}
+          <br/><strong>中等题：</strong>${qSet.medium}
+          <br/><strong>较难题：</strong>${qSet.advanced}
+        `;
+      } else {
+        htmlStr += "<br/>暂无示例题";
+      }
+    }
+    tooltipGraph
+      .style("opacity", 1)
+      .html(htmlStr)
+      .style("left", (event.pageX + 10) + "px")
+      .style("top", (event.pageY - 10) + "px");
+  })
+  .on("mouseout", () => tooltipGraph.style("opacity", 0));
+
+node.append("text")
+  .text(d => d.name)
+  .attr("x", 20)
+  .attr("y", 4)
+  .attr("font-size", "12px")
+  .attr("fill", "#333")
+  .attr("font-weight", d => (d.type === "question" ? "bold" : "normal"));
+
+function ticked() {
+  link
+    .attr("x1", d => d.source.x)
+    .attr("y1", d => d.source.y)
+    .attr("x2", d => d.target.x)
+    .attr("y2", d => d.target.y);
+
+  node
+    .attr("transform", d => `translate(${d.x}, ${d.y})`);
+}
+
+// 4) 历史正确率折线图 (示例数据)
+const trendData = [
+  { time: "测验1", accuracy: 0.54 },
+  { time: "测验2", accuracy: 0.57 },
+  { time: "测验3", accuracy: 0.60 },
+  { time: "测验4", accuracy: 0.63 },
+  { time: "测验5", accuracy: 0.61 }
+];
+
+const lineChartWidth = document.getElementById("line-chart").clientWidth;
+const lineChartHeight = document.getElementById("line-chart").clientHeight;
+
+const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+const innerWidth = lineChartWidth - margin.left - margin.right;
+const innerHeight = lineChartHeight - margin.top - margin.bottom;
+
+const xScale = d3.scalePoint()
+  .domain(trendData.map(d => d.time))
+  .range([0, innerWidth])
+  .padding(0.5);
+
+const yScale = d3.scaleLinear()
+  .domain([0, 1])
+  .range([innerHeight, 0]);
+
+const svgLine = d3.select("#line-chart")
+  .attr("width", lineChartWidth)
+  .attr("height", lineChartHeight)
+  .append("g")
+  .attr("transform", `translate(${margin.left},${margin.top})`);
+
+const xAxis = d3.axisBottom(xScale);
+const yAxis = d3.axisLeft(yScale).tickFormat(d3.format(".0%"));
+
+svgLine.append("g")
+  .attr("class", "line-chart-axis")
+  .attr("transform", `translate(0, ${innerHeight})`)
+  .call(xAxis);
+
+svgLine.append("g")
+  .attr("class", "line-chart-axis")
+  .call(yAxis);
+
+const lineGenerator = d3.line()
+  .x(d => xScale(d.time))
+  .y(d => yScale(d.accuracy));
+
+svgLine.append("path")
+  .datum(trendData)
+  .attr("class", "line")
+  .attr("d", lineGenerator)
+  .attr("stroke", "#f97316");
+
+const tooltipLine = d3.select("#line-tooltip");
+
+svgLine.selectAll(".dot")
+  .data(trendData)
+  .enter()
+  .append("circle")
+  .attr("class", "dot")
+  .attr("r", 4)
+  .attr("cx", d => xScale(d.time))
+  .attr("cy", d => yScale(d.accuracy))
+  .on("mouseover", (event, d) => {
+    tooltipLine
+      .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(1)}%</strong>`)
+      .style("opacity", 1)
+      .style("left", (event.pageX + 10) + "px")
+      .style("top", (event.pageY - 10) + "px");
+  })
+  .on("mouseout", () => {
+    tooltipLine.style("opacity", 0);
+  });
+</script>
+
+<!-- 折线图鼠标tip(悬浮提示) -->
+<div id="line-tooltip" class="tooltip"></div>
+
+</body>
+</html>
