@@ -2,25 +2,349 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8" />
-  <title>题目3详情</title>
+  <meta charset="UTF-8">
+  <title>第3题 - 不同知识点三道示例题</title>
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- D3.js v6 -->
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background-color: #f6f9fc; }
+    .node circle {
+      cursor: pointer;
+      stroke: #999;
+      stroke-width: 1px;
+      transition: transform 0.2s;
+    }
+    .node:hover circle {
+      transform: scale(1.1);
+      stroke: #333;
+    }
+    .node text {
+      pointer-events: none;
+      font-size: 10px;
+      fill: #333;
+    }
+    line.link {
+      stroke: #ccc;
+      stroke-width: 1.5px;
+    }
+    .tooltip {
+      position: absolute;
+      min-width: 120px;
+      padding: 8px;
+      font-size: 12px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      pointer-events: none;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+      opacity: 0;
+      transition: opacity 0.2s;
+      z-index: 999;
+    }
+    .line {
+      fill: none;
+      stroke-width: 2px;
+    }
+    .line-chart-axis path,
+    .line-chart-axis line {
+      fill: none;
+      stroke: #ccc;
+    }
+    .dot {
+      fill: #ff5722;
+      stroke: #fff;
+      stroke-width: 1px;
+      cursor: pointer;
+    }
+    .dot:hover {
+      opacity: 0.8;
+    }
+  </style>
 </head>
-<body class="bg-white min-h-screen">
-  <!-- 返回按钮区域 -->
-  <div class="p-4">
-    <button
-      class="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 transition-colors"
-      onclick="location.href='index.html'">
-      返回题目列表
-    </button>
+<body class="h-screen w-screen overflow-hidden bg-gray-100">
+
+<!-- 顶部：返回题目列表按钮 -->
+<div class="p-4 bg-white shadow">
+  <button
+    class="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 transition-colors"
+    onclick="location.href='index.html'">
+    返回题目列表
+  </button>
+</div>
+
+<!-- 主体：左侧知识图谱 + 右侧信息栏 -->
+<div class="flex h-[calc(100vh-64px)]">
+
+  <!-- 左侧：力导向知识图谱 -->
+  <div id="left-panel" class="w-1/2 h-full bg-white relative">
+    <svg id="graph-svg" class="w-full h-full"></svg>
+    <div id="graph-tooltip" class="tooltip"></div>
   </div>
 
-  <div class="p-4">
-    <h1 class="text-xl font-bold mb-4">这里是题目3详情</h1>
-    <p class="text-gray-600">
-      这里放题目3的详细内容或解题过程。
-    </p>
+  <!-- 右侧：题目信息 + “相关题目说明” + 历史正确率折线图 -->
+  <div id="right-panel" class="w-1/2 h-full flex flex-col p-4 space-y-4">
+
+    <!-- 题目信息 -->
+    <div class="bg-white p-4 rounded shadow">
+      <h1 class="text-xl font-bold mb-2">题号：第3题</h1>
+      <p class="mb-2">
+        现实世界中，对称现象无处不在。  
+        下面问题涉及**轴对称**、**中心对称**（点对称）等常见几何概念。  
+        例如，一些方块字包含着轴对称的性质：  
+      </p>
+      <!-- 示例显示一些掌握率信息 -->
+      <p>当前掌握率：<span class="text-green-600 font-medium">70%</span></p>
+      <p>历史正确率：<span class="text-yellow-600 font-medium">65%</span></p>
+    </div>
+
+    <!-- 直接关联知识点 -->
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="text-lg font-bold mb-2">直接关联知识点</h2>
+      <ul class="list-disc list-inside text-gray-700">
+        <li>轴对称图形的定义与判断</li>
+        <li>中心对称（点对称）的概念</li>
+        <li>生活实例中的对称现象</li>
+      </ul>
+    </div>
+
+    <!-- 相关题目定义与层次说明 -->
+    <div class="bg-white p-4 rounded shadow overflow-auto">
+      <h2 class="text-lg font-bold mb-2">相关题目的定位与层次</h2>
+      <p class="mb-2">
+        <strong>定义：</strong>此类题目旨在考查学生对“轴对称”、“中心对称”等概念的理解，可从文字、图形到生活实例进行辨别与分析。
+      </p>
+      <p class="mb-2">
+        <strong>针对性：</strong>题目中列出的汉字或图形，要求学生判断是否属于某种对称类型，进一步深化对“对称”这一几何概念的认知。
+      </p>
+      <p class="mb-2">
+        <strong>层次性：</strong>同样包含基础、中等、较难三个层次，通过逐步递进的题型来检测学生对对称及其应用的掌握度。
+      </p>
+    </div>
+
+    <!-- 历史正确率趋势折线图 -->
+    <div class="flex-1 bg-white p-4 rounded shadow relative">
+      <h2 class="text-lg font-bold mb-2">历史正确率趋势</h2>
+      <svg id="line-chart" class="w-full h-full"></svg>
+      <div id="line-tooltip" class="tooltip"></div>
+    </div>
   </div>
+</div>
+
+<script>
+// 1) 定义所有知识点对应的三道示例题
+//   key值对应知识点名称(name)，value里分别存"基础题"、"中等题"、"较难题"
+const knowledgeQuestions = {
+  "轴对称": {
+    basic:   "判断字母 'A'、'B'、'D' 是否为轴对称图形 (大写英文)",
+    medium:  "已知某图形在镜面对折后可重合，试分析该图形的对称轴位置与数量",
+    advanced:"在坐标平面上，若一个多边形关于 y=1 轴对称，求其顶点坐标转化"
+  },
+  "中心对称": {
+    basic:   "何谓中心对称？举例：国际道路禁止标志等是否具备中心对称？",
+    medium:  "若一个图形以点 O 为中心对称，则该图形对应点如何映射？写出坐标关系",
+    advanced:"分析正 n 边形在坐标系中的中心对称特性，若 n 为偶数则如何判断？"
+  },
+  "生活中对称现象": {
+    basic:   "罗列生活中常见对称，如蝴蝶的翅膀、美术对称构图等",
+    medium:  "如何判断汉字 '中'、'华'、'复'、'兴' 等是否具备某种对称性",
+    advanced:"在日常工程或建筑中，利用对称性进行结构设计的原理与应用示例"
+  },
+  "几何变换复习": {
+    basic:   "什么是平移、旋转、对称等几何变换？概念简析",
+    medium:  "综合考查：如何判定组合变换后图形位置与原图关系",
+    advanced:"基于对称与旋转变换的综合题，如对称后再旋转 180°，探讨结果是否恒等"
+  },
+  "轴对称与中心对称的联系与差异": {
+    basic:   "两种对称的概念区别：一个关于一条轴，一个关于中心点",
+    medium:  "举例说明：若某图形既是轴对称又是中心对称，需要满足何种条件？",
+    advanced:"若 L 条轴对称与 1 个中心对称同时成立，则该图形的具体形状可能是什么？试举例"
+  }
+};
+
+// 2) 知识图谱节点数据
+const graphData = {
+  nodes: [
+    { id: "Q3",  type: "question",   name: "第3题" },
+    { id: "K1",  type: "knowledge",  name: "轴对称" },
+    { id: "K2",  type: "knowledge",  name: "中心对称" },
+    // 子知识点
+    { id: "K1a", type: "sub-knowledge", name: "生活中对称现象" },
+    { id: "K1b", type: "sub-knowledge", name: "几何变换复习" },
+    { id: "K2a", type: "sub-knowledge", name: "轴对称与中心对称的联系与差异" }
+  ],
+  links: [
+    // 第3题直接关联两大知识点
+    { source: "Q3", target: "K1" },
+    { source: "Q3", target: "K2" },
+    // K1 下属子节点
+    { source: "K1", target: "K1a" },
+    { source: "K1", target: "K1b" },
+    // K2 下属子节点
+    { source: "K2", target: "K2a" }
+  ]
+};
+
+// 3) 绘制左侧力导向图 (保持与前两题一致)
+const width = document.getElementById("left-panel").clientWidth;
+const height = document.getElementById("left-panel").clientHeight;
+
+const svgGraph = d3.select("#graph-svg")
+  .attr("width", width)
+  .attr("height", height);
+
+const simulation = d3.forceSimulation(graphData.nodes)
+  .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(110))
+  .force("charge", d3.forceManyBody().strength(-300))
+  .force("center", d3.forceCenter(width / 2, height / 2))
+  .on("tick", ticked);
+
+const link = svgGraph.selectAll("line.link")
+  .data(graphData.links)
+  .enter()
+  .append("line")
+  .attr("class", "link");
+
+const node = svgGraph.selectAll("g.node")
+  .data(graphData.nodes)
+  .enter()
+  .append("g")
+  .attr("class", "node");
+
+const tooltipGraph = d3.select("#graph-tooltip");
+
+node.append("circle")
+  .attr("r", d => d.type === "question" ? 18 : (d.type === "knowledge" ? 14 : 10))
+  .attr("fill", d => {
+    if (d.type === "question")   return "#fca5a5"; // 浅红
+    if (d.type === "knowledge") return "#93c5fd"; // 浅蓝
+    return "#a7f3d0";                               // 浅绿色 (sub-knowledge)
+  })
+  .on("mouseover", (event, d) => {
+    let htmlStr = "";
+    if (d.type === "question") {
+      // 题号节点
+      htmlStr = `题号：<strong>${d.name}</strong>`;
+    } else {
+      // 知识点或子知识点
+      htmlStr = `知识点：<strong>${d.name}</strong>`;
+      const qSet = knowledgeQuestions[d.name];
+      if (qSet) {
+        htmlStr += `
+          <br/><strong>基础题：</strong>${qSet.basic}
+          <br/><strong>中等题：</strong>${qSet.medium}
+          <br/><strong>较难题：</strong>${qSet.advanced}
+        `;
+      } else {
+        htmlStr += "<br/>暂无示例题";
+      }
+    }
+
+    tooltipGraph
+      .style("opacity", 1)
+      .html(htmlStr)
+      .style("left", (event.pageX + 10) + "px")
+      .style("top", (event.pageY - 10) + "px");
+  })
+  .on("mouseout", () => tooltipGraph.style("opacity", 0));
+
+node.append("text")
+  .text(d => d.name)
+  .attr("x", 20)
+  .attr("y", 4)
+  .attr("font-size", "12px")
+  .attr("fill", "#333")
+  .attr("font-weight", d => (d.type === "question" ? "bold" : "normal"));
+
+function ticked() {
+  link
+    .attr("x1", d => d.source.x)
+    .attr("y1", d => d.source.y)
+    .attr("x2", d => d.target.x)
+    .attr("y2", d => d.target.y);
+
+  node
+    .attr("transform", d => `translate(${d.x}, ${d.y})`);
+}
+
+// 4) 右侧：历史正确率折线图 (示例数据)
+const trendData = [
+  { time: "测验1", accuracy: 0.50 },
+  { time: "测验2", accuracy: 0.55 },
+  { time: "测验3", accuracy: 0.57 },
+  { time: "测验4", accuracy: 0.63 },
+  { time: "测验5", accuracy: 0.65 }
+];
+
+const lineChartWidth = document.getElementById("line-chart").clientWidth;
+const lineChartHeight = document.getElementById("line-chart").clientHeight;
+
+const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+const innerWidth = lineChartWidth - margin.left - margin.right;
+const innerHeight = lineChartHeight - margin.top - margin.bottom;
+
+const xScale = d3.scalePoint()
+  .domain(trendData.map(d => d.time))
+  .range([0, innerWidth])
+  .padding(0.5);
+
+const yScale = d3.scaleLinear()
+  .domain([0, 1])
+  .range([innerHeight, 0]);
+
+const svgLine = d3.select("#line-chart")
+  .attr("width", lineChartWidth)
+  .attr("height", lineChartHeight)
+  .append("g")
+  .attr("transform", `translate(${margin.left},${margin.top})`);
+
+const xAxis = d3.axisBottom(xScale);
+const yAxis = d3.axisLeft(yScale).tickFormat(d3.format(".0%"));
+
+svgLine.append("g")
+  .attr("class", "line-chart-axis")
+  .attr("transform", `translate(0, ${innerHeight})`)
+  .call(xAxis);
+
+svgLine.append("g")
+  .attr("class", "line-chart-axis")
+  .call(yAxis);
+
+const lineGenerator = d3.line()
+  .x(d => xScale(d.time))
+  .y(d => yScale(d.accuracy));
+
+svgLine.append("path")
+  .datum(trendData)
+  .attr("class", "line")
+  .attr("d", lineGenerator)
+  .attr("stroke", "#f97316");
+
+const tooltipLine = d3.select("#line-tooltip");
+
+svgLine.selectAll(".dot")
+  .data(trendData)
+  .enter()
+  .append("circle")
+  .attr("class", "dot")
+  .attr("r", 4)
+  .attr("cx", d => xScale(d.time))
+  .attr("cy", d => yScale(d.accuracy))
+  .on("mouseover", (event, d) => {
+    tooltipLine
+      .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(1)}%</strong>`)
+      .style("opacity", 1)
+      .style("left", (event.pageX + 10) + "px")
+      .style("top", (event.pageY - 10) + "px");
+  })
+  .on("mouseout", () => {
+    tooltipLine.style("opacity", 0);
+  });
+</script>
+
+<!-- 折线图鼠标tip(悬浮提示) -->
+<div id="line-tooltip" class="tooltip"></div>
+
 </body>
 </html>
