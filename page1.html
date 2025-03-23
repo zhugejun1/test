@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8" />
-  <title>第1题 - 知识图谱示例（带相关题目说明）</title>
+  <meta charset="UTF-8">
+  <title>第1题 - 不同知识点三道示例题</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- D3.js v6 -->
@@ -88,38 +88,38 @@
 
     <!-- 题目信息 -->
     <div class="bg-white p-4 rounded shadow">
-      <h1 id="question-title" class="text-xl font-bold mb-2">题号：第1题</h1>
-      <p>主知识点：<span id="main-knowledge" class="font-semibold text-blue-600">数轴与相反数</span></p>
+      <h1 class="text-xl font-bold mb-2">题号：第1题</h1>
+      <p>主知识点：<span class="font-semibold text-blue-600">数轴与相反数</span></p>
       <!-- 示例显示一些掌握率信息 -->
-      <p>当前掌握率：<span id="current-accuracy" class="text-green-600 font-medium">80%</span></p>
-      <p>历史正确率：<span id="history-accuracy" class="text-yellow-600 font-medium">72%</span></p>
+      <p>当前掌握率：<span class="text-green-600 font-medium">80%</span></p>
+      <p>历史正确率：<span class="text-yellow-600 font-medium">72%</span></p>
     </div>
 
     <!-- 直接关联知识点 -->
     <div class="bg-white p-4 rounded shadow">
       <h2 class="text-lg font-bold mb-2">直接关联知识点</h2>
-      <ul id="direct-knowledge-list" class="list-disc list-inside text-gray-700">
+      <ul class="list-disc list-inside text-gray-700">
         <li>相反数的定义</li>
         <li>负数与正数的关系</li>
         <li>实数运算（包含加减法）</li>
       </ul>
     </div>
 
-    <!-- 相关题目定义与层次说明（从教师角度） -->
+    <!-- 相关题目定义与层次说明 -->
     <div class="bg-white p-4 rounded shadow overflow-auto">
       <h2 class="text-lg font-bold mb-2">相关题目的定位与层次</h2>
       <p class="mb-2">
         <strong>定义：</strong>从帮助教师了解学生知识点薄弱情况的角度来看，数学知识点相关题目可以定义为：以特定数学知识点为核心，通过多样化的题型和情境设计，全面考查学生对该知识点的理解、掌握、应用以及与其他知识点综合运用能力的题目。
       </p>
       <p class="mb-2">
-        <strong>针对性：</strong>题目明确针对某一个或几个具体的数学知识点进行设计。例如，针对 “三角形内角和定理” 这一知识点，会有直接让学生计算三角形未知角度数的题目，或者判断给定三个角能否构成三角形，以检测学生对该定理的掌握程度。
+        <strong>针对性：</strong>题目明确针对某一个或几个具体的数学知识点进行设计。例如，针对“三角形内角和定理”这一知识点，会有直接让学生计算三角形未知角度数的题目，或判断给定三个角能否构成三角形，以检测学生对该定理的掌握程度。
       </p>
       <p class="mb-2">
         <strong>层次性：</strong>为了全面了解学生在知识点上的薄弱环节，题目会有基础、中等、较难三个层次，递进式地考查学生。
       </p>
       <ul class="list-inside list-disc pl-4 mb-2">
         <li>
-          <strong>基础题目：</strong>考查对知识点的基本概念、定理、公式的记忆和简单应用，如“有理数的加减法”中直接给出两个有理数进行加、减。
+          <strong>基础题目：</strong>考查对知识点的基本概念、定理、公式的记忆和简单应用，如“有理数的加减法”中直接给出两个有理数进行加减。
         </li>
         <li>
           <strong>中等题目：</strong>基于理解基础展开分析、推理和计算，如“一元一次方程”中的生活情境转化为方程求解。
@@ -140,16 +140,46 @@
 </div>
 
 <script>
-// ==================== 1) 知识图谱数据，与之前保持一致 ===========================
+// 1) 定义所有知识点对应的三道示例题
+//   key值对应知识点名称(name)，value里分别存"基础题"、"中等题"、"较难题"
+const knowledgeQuestions = {
+  "正负数加减": {
+    basic:   "(-5) + 3 = ?",
+    medium:  "10 - (-3) + (-7) - 5 = ?",
+    advanced:"若 x + (-3) = -8，求 x 的值"
+  },
+  "相反数": {
+    basic:   "若 1 的相反数是 -1，那么 5 的相反数是？",
+    medium:  "已知 a 的相反数是 -4，求 a 的值",
+    advanced:"若 x 是某数的相反数，且 x + 5 = 1，求该数"
+  },
+  "数轴": {
+    basic:   "在数轴上分别标出 2 与 -2 的位置",
+    medium:  "已知数轴上 A 点对应 4，B 点在 A 点左侧 6 个单位，求 B 点对应的数",
+    advanced:"在数轴上，若 C 点表示 -x 且到原点距离为 3，试求 x 的所有可能值"
+  },
+  "绝对值关系": {
+    basic:   "计算 |5| 与 |-4| 分别等于多少？",
+    medium:  "方程 |a - 2| = 1 的所有解为？",
+    advanced:"在数轴上，已知 |x| + |x+2| = 6，求 x 的所有可能取值"
+  },
+  "数轴上的点表示": {
+    basic:   "请在数轴上标出 0～5 的整数点",
+    medium:  "若数轴上某点与原点距离为 3，该点坐标可能是？",
+    advanced:"在数轴上，求 (-1) 与 2 两点距离"
+  }
+};
+
+// 2) 知识图谱节点数据
 const graphData = {
   nodes: [
-    { id: "Q1",  type: "question", name: "第1题" },
-    { id: "K1",  type: "knowledge",  name: "相反数",   related: "第2题、拓展题" },
-    { id: "K2",  type: "knowledge",  name: "数轴",     related: "思考题P12" },
+    { id: "Q1",  type: "question",   name: "第1题" },
+    { id: "K1",  type: "knowledge",  name: "相反数" },
+    { id: "K2",  type: "knowledge",  name: "数轴" },
     // 子知识点
-    { id: "K1a", type: "sub-knowledge", name: "正负数加减", related: "分层练习" },
-    { id: "K1b", type: "sub-knowledge", name: "绝对值关系", related: "进行巩固" },
-    { id: "K2a", type: "sub-knowledge", name: "数轴上的点表示", related: "巩固题3" },
+    { id: "K1a", type: "sub-knowledge", name: "正负数加减" },
+    { id: "K1b", type: "sub-knowledge", name: "绝对值关系" },
+    { id: "K2a", type: "sub-knowledge", name: "数轴上的点表示" },
   ],
   links: [
     { source: "Q1", target: "K1" },
@@ -160,7 +190,7 @@ const graphData = {
   ]
 };
 
-// ==================== 2) 绘制左侧力导向图 ===========================
+// 3) 绘制左侧力导向图
 const width = document.getElementById("left-panel").clientWidth;
 const height = document.getElementById("left-panel").clientHeight;
 
@@ -169,7 +199,7 @@ const svgGraph = d3.select("#graph-svg")
   .attr("height", height);
 
 const simulation = d3.forceSimulation(graphData.nodes)
-  .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(100))
+  .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(110))
   .force("charge", d3.forceManyBody().strength(-300))
   .force("center", d3.forceCenter(width / 2, height / 2))
   .on("tick", ticked);
@@ -191,31 +221,31 @@ const tooltipGraph = d3.select("#graph-tooltip");
 node.append("circle")
   .attr("r", d => d.type === "question" ? 18 : (d.type === "knowledge" ? 14 : 10))
   .attr("fill", d => {
-    if (d.type === "question") return "#fca5a5";   // 浅红
+    if (d.type === "question")   return "#fca5a5"; // 浅红
     if (d.type === "knowledge") return "#93c5fd"; // 浅蓝
-    return "#a7f3d0";                             // 浅绿色
+    return "#a7f3d0";                               // 浅绿色 (sub-knowledge)
   })
   .on("mouseover", (event, d) => {
-    // 构建 tooltip 文本
     let htmlStr = "";
-    if(d.type === "question"){
-      // 如果是题号节点，只显示题号
+
+    if (d.type === "question") {
+      // 仅显示题号，不附带任何题
       htmlStr = `题号：<strong>${d.name}</strong>`;
     } else {
-      // 知识点或子知识点
+      // 如果不是question，则根据知识点名称找对应的三题
       htmlStr = `知识点：<strong>${d.name}</strong>`;
 
-      // 仅当名字是“正负数加减”时，展示三道题型示例
-      if(d.name === "正负数加减"){
+      const qSet = knowledgeQuestions[d.name];
+      if (qSet) {
+        // 如果该知识点名称在 knowledgeQuestions 中能找到
         htmlStr += `
-          <br/><strong>基础题：</strong>(-5) + 3 = ?
-          <br/><strong>中等题：</strong>10 - (-3) + (-7) - 5 = ?
-          <br/><strong>较难题：</strong>若 x + (-3) = -8，求 x 的值
+          <br/><strong>基础题：</strong>${qSet.basic}
+          <br/><strong>中等题：</strong>${qSet.medium}
+          <br/><strong>较难题：</strong>${qSet.advanced}
         `;
-      }
-      // 对于其他知识点，按原方式显示
-      else if(d.related){
-        htmlStr += `<br/>相关题目：<em>${d.related}</em>`;
+      } else {
+        // 若还未为该知识点定义题，可做其他处理
+        htmlStr += `<br/>暂无示例题`;
       }
     }
 
@@ -225,7 +255,9 @@ node.append("circle")
       .style("left", (event.pageX + 10) + "px")
       .style("top", (event.pageY - 10) + "px");
   })
-  .on("mouseout", () => tooltipGraph.style("opacity", 0));
+  .on("mouseout", () => {
+    tooltipGraph.style("opacity", 0);
+  });
 
 node.append("text")
   .text(d => d.name)
@@ -233,7 +265,7 @@ node.append("text")
   .attr("y", 4)
   .attr("font-size", "12px")
   .attr("fill", "#333")
-  .attr("font-weight", d => d.type === "question" ? "bold" : "normal");
+  .attr("font-weight", d => (d.type === "question" ? "bold" : "normal"));
 
 function ticked() {
   link
@@ -246,7 +278,7 @@ function ticked() {
     .attr("transform", d => `translate(${d.x}, ${d.y})`);
 }
 
-// ==================== 3) 右侧：历史正确率折线图 ==================
+// 4) 右侧：历史正确率折线图
 const trendData = [
   { time: "测验1", accuracy: 0.65 },
   { time: "测验2", accuracy: 0.7 },
@@ -254,6 +286,7 @@ const trendData = [
   { time: "测验4", accuracy: 0.68 },
   { time: "测验5", accuracy: 0.8 }
 ];
+
 const lineChartWidth = document.getElementById("line-chart").clientWidth;
 const lineChartHeight = document.getElementById("line-chart").clientHeight;
 
@@ -299,6 +332,7 @@ svgLine.append("path")
   .attr("stroke", "#f97316");
 
 const tooltipLine = d3.select("#line-tooltip");
+
 svgLine.selectAll(".dot")
   .data(trendData)
   .enter()
@@ -308,14 +342,15 @@ svgLine.selectAll(".dot")
   .attr("cx", d => xScale(d.time))
   .attr("cy", d => yScale(d.accuracy))
   .on("mouseover", (event, d) => {
-    tooltipLine.html(
-      `${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(1)}%</strong>`
-    )
-    .style("opacity", 1)
-    .style("left", (event.pageX + 10) + "px")
-    .style("top", (event.pageY - 10) + "px");
+    tooltipLine
+      .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(1)}%</strong>`)
+      .style("opacity", 1)
+      .style("left", (event.pageX + 10) + "px")
+      .style("top", (event.pageY - 10) + "px");
   })
-  .on("mouseout", () => tooltipLine.style("opacity", 0));
+  .on("mouseout", () => {
+    tooltipLine.style("opacity", 0);
+  });
 </script>
 
 <!-- 折线图鼠标tip(悬浮提示) -->
