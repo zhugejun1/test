@@ -2,7 +2,7 @@
 <html lang="zh">  
 <head>  
     <meta charset="UTF-8" />  
-    <title>第9题 - 题目描述</title>  
+    <title>第9题 - 数据分析题目</title>  
     <!-- Tailwind CSS -->  
     <script src="https://cdn.tailwindcss.com"></script>  
     <!-- D3.js v6 -->  
@@ -45,23 +45,32 @@
         <div class="bg-white p-4 rounded shadow">  
             <h1 class="text-xl font-bold mb-2">题号：第9题</h1>  
             <p class="mb-2">  
-                请在此处填写题目描述。  
+                观察表格中的数据：  
+            </p>  
+            <p class="mb-2">  
+                \(x\) ：16, 16.1, 16.2, 16.3, 16.4, 16.5, 16.6, 16.7, 16.8, 16.9, 17  
+            </p>  
+            <p class="mb-2">  
+                \(x^2\) ：256, 259.21, 262.44, 265.69, 268.96, 272.25, 275.56, 278.89, 282.24, 285.61, 289  
+            </p>  
+            <p class="mb-2">  
+                根据表格中的数据可知 \(\sqrt{280}\) 在哪个两个数之间（ ）  
             </p>  
             <div class="mb-4">  
                 <input type="checkbox" id="option1" />  
-                <label for="option1">A. 选项1</label>  
+                <label for="option1">A. 在16.4和16.5之间</label>  
             </div>  
             <div class="mb-4">  
                 <input type="checkbox" id="option2" />  
-                <label for="option2">B. 选项2</label>  
+                <label for="option2">B. 在16.6和16.7之间</label>  
             </div>  
             <div class="mb-4">  
                 <input type="checkbox" id="option3" />  
-                <label for="option3">C. 选项3</label>  
+                <label for="option3">C. 在16.7和16.8之间</label>  
             </div>  
             <div class="mb-4">  
                 <input type="checkbox" id="option4" />  
-                <label for="option4">D. 选项4</label>  
+                <label for="option4">D. 在16.8和16.9之间</label>  
             </div>  
             <p>当前掌握率：<span class="text-green-600 font-medium">94.7%</span></p>  
             <p>历史正确率：<span class="text-yellow-600 font-medium">65%</span></p>  
@@ -71,8 +80,8 @@
         <div class="bg-white p-4 rounded shadow">  
             <h2 class="text-lg font-bold mb-2">直接关联知识点</h2>  
             <ul class="list-disc list-inside text-gray-700">  
-                <li>知识点1</li>  
-                <li>知识点2</li>  
+                <li>平方数的性质</li>  
+                <li>平方根的应用</li>  
             </ul>  
         </div>  
 
@@ -80,13 +89,13 @@
         <div class="bg-white p-4 rounded shadow overflow-auto">  
             <h2 class="text-lg font-bold mb-2">相关题目的定位与层次</h2>  
             <p class="mb-2">  
-                <strong>定义：</strong>该题考察相关的数学概念和方法。  
+                <strong>定义：</strong>该题考察平方数的理解及平方根的应用。  
             </p>  
             <p class="mb-2">  
-                <strong>针对性：</strong>强化学生对该知识点的理解和运用。  
+                <strong>针对性：</strong>帮助学生理解数据表格和函数之间的关系。  
             </p>  
             <p class="mb-2">  
-                <strong>层次性：</strong>可扩展到更复杂的问题和场景。  
+                <strong>层次性：</strong>可扩展到涉及更多复杂函数的问题。  
             </p>  
         </div>  
 
@@ -102,15 +111,15 @@
 <script>  
 // ================ (1) 知识点对应示例题 ================  
 const knowledgeQuestions = {  
-    "知识点1": {  
-        basic: "基本概念",  
-        medium: "中等概念",  
-        advanced: "高级应用"  
+    "平方数的性质": {  
+        basic: "理解平方数的基本概念",  
+        medium: "掌握平方数与平方根的关系",  
+        advanced: "应用平方数解决相关问题"  
     },  
-    "知识点2": {  
-        basic: "基本概念",  
-        medium: "中等概念",  
-        advanced: "高级应用"  
+    "平方根的应用": {  
+        basic: "了解平方根的定义及计算",  
+        medium: "掌握平方根在不等式中的应用",  
+        advanced: "解决复杂的平方根问题"  
     }  
 };  
 
@@ -118,8 +127,8 @@ const knowledgeQuestions = {
 const graphData = {  
     nodes: [  
         { id: "Q9", type: "question", name: "第9题" },  
-        { id: "K1", type: "knowledge", name: "知识点1" },  
-        { id: "K2", type: "knowledge", name: "知识点2" }  
+        { id: "K1", type: "knowledge", name: "平方数的性质" },  
+        { id: "K2", type: "knowledge", name: "平方根的应用" }  
     ],  
     links: [  
         { source: "Q9", target: "K1" },  
@@ -207,9 +216,9 @@ function ticked() {
 // ================ (4) 历史正确率折线图 ================  
 const trendData = [  
     { time: "测验1", accuracy: 0.90 },  
-    { time: "测验2", accuracy: 0.94 },  
-    { time: "测验3", accuracy: 0.95 },  
-    { time: "测验4", accuracy: 0.93 },  
+    { time: "测验2", accuracy: 0.92 },  
+    { time: "测验3", accuracy: 0.94 },  
+    { time: "测验4", accuracy: 0.95 },  
     { time: "测验5", accuracy: 0.94 }  
 ];  
 
