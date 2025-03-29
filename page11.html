@@ -1,326 +1,291 @@
+<!DOCTYPE html>  
+<html lang="zh">  
+<head>  
+    <meta charset="UTF-8" />  
+    <title>第11题 - 数学题目</title>  
+    <!-- Tailwind CSS -->  
+    <script src="https://cdn.tailwindcss.com"></script>  
+    <!-- D3.js v6 -->  
+    <script src="https://d3js.org/d3.v6.min.js"></script>  
+    <style>  
+        body { margin: 0; font-family: Arial, sans-serif; background-color: #f6f9fc; }  
+        .node circle { cursor: pointer; }  
+        .node circle:hover { fill: #333; }  
+        .node text { pointer-events: none; font-size: 10px; fill: #333; }  
+        line.link { stroke: #ccc; stroke-width: 1.5px; }  
+        .tooltip { position: absolute; min-width: 120px; padding: 8px; font-size: 12px; background: rgba(255, 255, 255, 0.9); border: 1px solid #ccc; border-radius: 4px; pointer-events: none; box-shadow: 0 2px 5px rgba(0,0,0,0.15); opacity: 0; transition: opacity 0.2s; z-index: 999; }  
+        .line { fill: none; stroke-width: 2px; }  
+        .line-chart-axis path, .line-chart-axis line { fill: none; stroke: #ccc; }  
+        .dot { fill: #ff5722; stroke: #fff; stroke-width: 1px; cursor: pointer; }  
+        .dot:hover { opacity: 0.8; }  
+    </style>  
+</head>  
+<body class="h-screen w-screen overflow-hidden bg-gray-100">  
 
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-  <meta charset="UTF-8">
-  <title>第11题 - 不同知识点三道示例题</title>
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- D3.js v6 -->
-  <script src="https://d3js.org/d3.v6.min.js"></script>
-  <style>
-    body { margin: 0; font-family: Arial, sans-serif; background-color: #f6f9fc; }
-    .node circle {
-      cursor: pointer;
-      stroke: #999;
-      stroke-width: 1px;
-      transition: transform 0.2s;
-    }
-    .node:hover circle {
-      transform: scale(1.1);
-      stroke: #333;
-    }
-    .node text {
-      pointer-events: none;
-      font-size: 10px;
-      fill: #333;
-    }
-    line.link {
-      stroke: #ccc;
-      stroke-width: 1.5px;
-    }
-    .tooltip {
-      position: absolute;
-      min-width: 120px;
-      padding: 8px;
-      font-size: 12px;
-      background: rgba(255, 255, 255, 0.9);
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      pointer-events: none;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-      opacity: 0;
-      transition: opacity 0.2s;
-      z-index: 999;
-    }
-    .line {
-      fill: none;
-      stroke-width: 2px;
-    }
-    .line-chart-axis path,
-    .line-chart-axis line {
-      fill: none;
-      stroke: #ccc;
-    }
-    .dot {
-      fill: #ff5722;
-      stroke: #fff;
-      stroke-width: 1px;
-      cursor: pointer;
-    }
-    .dot:hover {
-      opacity: 0.8;
-    }
-  </style>
-</head>
-<body class="h-screen w-screen overflow-hidden bg-gray-100">
+<!-- 顶部：返回按钮 -->  
+<div class="p-4 bg-white shadow">  
+    <button class="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 transition-colors" onclick="location.href='index.html'">  
+        返回题目列表  
+    </button>  
+</div>  
 
-<!-- 顶部：返回题目列表按钮 -->
-<div class="p-4 bg-white shadow">
-  <button
-    class="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 transition-colors"
-    onclick="location.href='index.html'">
-    返回题目列表
-  </button>
-</div>
+<!-- 主体：左侧力导向图 + 右侧题目信息 -->  
+<div class="flex h-[calc(100vh-64px)]">  
 
-<!-- 主体：左侧知识图谱 + 右侧内容面板 -->
-<div class="flex h-[calc(100vh-64px)]">
+    <!-- 左侧：力导向图 -->  
+    <div id="left-panel" class="w-1/2 h-full bg-white relative">  
+        <svg id="graph-svg" class="w-full h-full"></svg>  
+        <div id="graph-tooltip" class="tooltip"></div>  
+    </div>  
 
-  <!-- 左侧：力导向图 -->
-  <div id="left-panel" class="w-1/2 h-full bg-white relative">
-    <svg id="graph-svg" class="w-full h-full"></svg>
-    <div id="graph-tooltip" class="tooltip"></div>
-  </div>
+    <!-- 右侧：题目信息 -->  
+    <div id="right-panel" class="w-1/2 h-full flex flex-col p-4 space-y-4">  
 
-  <!-- 右侧：题目信息 + 知识点 + 历史正确率图 -->
-  <div id="right-panel" class="w-1/2 h-full flex flex-col p-4 space-y-4">
+        <!-- 题干描述区域 -->  
+        <div class="bg-white p-4 rounded shadow">  
+            <h1 class="text-xl font-bold mb-2">题号：第11题</h1>  
+            <p class="mb-4">√2 的相反数是 _____；</p>  
+            <p class="mb-4">3 - _____ 的绝对值是 _____；</p>  
+            <p class="mb-4">³√(1/27) = _____.</p>  
 
-    <!-- 题目信息 -->
-    <div class="bg-white p-4 rounded shadow">
-      <h1 class="text-xl font-bold mb-2">题号：第11题</h1>
-      <p class="mb-2">
-        2024年五一假期，全国国内旅游出游合计 2.95 亿人次，  
-        数字 2.95 亿用科学记数法表示是________。
-      </p>
-      <p>当前掌握率：<span class="text-green-600 font-medium">74%</span></p>
-      <p>历史正确率：<span class="text-yellow-600 font-medium">70%</span></p>
-    </div>
+            <div class="mb-4">  
+                <label for="answer1" class="block">相反数：</label>  
+                <input type="text" id="answer1" class="border p-2 rounded" />  
+            </div>  
+            <div class="mb-4">  
+                <label for="answer2" class="block">3 - ___________________：</label>  
+                <input type="text" id="answer2" class="border p-2 rounded" />  
+            </div>  
+            <div class="mb-4">  
+                <label for="answer3" class="block">³√(1/27)：</label>  
+                <input type="text" id="answer3" class="border p-2 rounded" />  
+            </div>  
+            
+            <p>当前掌握率：<span class="text-green-600 font-medium">78.9%</span></p>  
+            <p>历史正确率：<span class="text-yellow-600 font-medium">65%</span></p>  
+        </div>  
 
-    <!-- 直接关联知识点 -->
-    <div class="bg-white p-4 rounded shadow">
-      <h2 class="text-lg font-bold mb-2">直接关联知识点</h2>
-      <ul class="list-disc list-inside text-gray-700">
-        <li>科学记数法</li>
-        <li>大数与计量</li>
-        <li>数据处理与表示</li>
-      </ul>
-    </div>
+        <!-- 知识点 -->  
+        <div class="bg-white p-4 rounded shadow">  
+            <h2 class="text-lg font-bold mb-2">直接关联知识点</h2>  
+            <ul class="list-disc list-inside text-gray-700">  
+                <li>数的性质</li>  
+                <li>绝对值</li>  
+                <li>立方根</li>  
+            </ul>  
+        </div>  
 
-    <!-- 相关题目定义与层次说明 -->
-    <div class="bg-white p-4 rounded shadow overflow-auto">
-      <h2 class="text-lg font-bold mb-2">相关题目的定位与层次</h2>
-      <p class="mb-2">
-        <strong>定义：</strong>题目考查如何将约 2.95 × 10^8 等大数据用科学记数法准确表示，并理解亿与 SI 单位间的换算。
-      </p>
-      <p class="mb-2">
-        <strong>针对性：</strong>学生需理解 1 亿 = 1 × 10^8，以及数字小数位与幂运算的配合关系。
-      </p>
-      <p class="mb-2">
-        <strong>层次性：</strong>基础层掌握科学记数法，中等层能转换与比较不同数量级数据，较难层可延伸到前缀单位、单位换算等复杂情形。
-      </p>
-    </div>
+        <!-- 相关内容说明 -->  
+        <div class="bg-white p-4 rounded shadow overflow-auto">  
+            <h2 class="text-lg font-bold mb-2">相关题目的定位与层次</h2>  
+            <p class="mb-2">  
+                <strong>定义：</strong>该题考察数的相反数、绝对值和立方根的计算。  
+            </p>  
+            <p class="mb-2">  
+                <strong>针对性：</strong>帮助学生理解数的基本性质及其运算。  
+            </p>  
+            <p class="mb-2">  
+                <strong>层次性：</strong>可以扩展到更复杂的数值运算问题。  
+            </p>  
+        </div>  
 
-    <!-- 历史正确率折线图 -->
-    <div class="flex-1 bg-white p-4 rounded shadow relative">
-      <h2 class="text-lg font-bold mb-2">历史正确率趋势</h2>
-      <svg id="line-chart" class="w-full h-full"></svg>
-      <div id="line-tooltip" class="tooltip"></div>
-    </div>
-  </div>
-</div>
+        <!-- 历史正确率折线图 -->  
+        <div class="flex-1 bg-white p-4 rounded shadow relative">  
+            <h2 class="text-lg font-bold mb-2">历史正确率趋势</h2>  
+            <svg id="line-chart" class="w-full h-full"></svg>  
+            <div id="line-tooltip" class="tooltip"></div>  
+        </div>  
+    </div>  
+</div>  
 
-<script>
-// =========== (1) 知识点与示例题 =============
-const knowledgeQuestions = {
-  "科学记数法": {
-    basic:   "如 2.95×10^8，了解数字与 10 的幂的组合形式",
-    medium:  "对比 2.95×10^8 与 2.95×10^-8 的含义，阴差阳错可能?",
-    advanced:"当数据非常大或非常小时如何使用科学记数法保留有效数字"
-  },
-  "大数与计量": {
-    basic:   "常见单位：亿、万、k、M、G 等",
-    medium:  "如何在国际单位制下换算 1亿 = 1×10^8？",
-    advanced:"将人民币计价或人口数量级与科学记数法相结合"
-  },
-  "数据处理与表示": {
-    basic:   "理解在统计或报表中常用千、万、亿缩写",
-    medium:  "简化巨大数值时需要观测其数量级，保证精度与可读性",
-    advanced:"综合信息学、统计学，合理选取数据单位和精度，避免误差"
-  }
-};
+<script>  
+// ================ (1) 知识点对应示例题 ================  
+const knowledgeQuestions = {  
+    "数的性质": {  
+        basic: "理解数的基本性质",  
+        medium: "掌握相反数与绝对值的关系",  
+        advanced: "应用绝对值与立方根解决复杂问题"  
+    },  
+    "绝对值": {  
+        basic: "了解绝对值的定义与计算",  
+        medium: "掌握绝对值在算式中的应用",  
+        advanced: "解决包含绝对值的方程"  
+    },  
+    "立方根": {  
+        basic: "理解立方根的概念",  
+        medium: "掌握立方根的计算",  
+        advanced: "应用立方根解决实际问题"  
+    }  
+};  
 
-// =========== (2) 力导向图节点数据信息 ===========
-const graphData = {
-  nodes: [
-    { id: "Q11", type: "question", name: "第11题" },
-    { id: "K1",  type: "knowledge", name: "科学记数法" },
-    { id: "K2",  type: "knowledge", name: "大数与计量" },
-    { id: "K1a", type: "sub-knowledge", name: "数据处理与表示" }
-  ],
-  links: [
-    { source: "Q11", target: "K1" },
-    { source: "Q11", target: "K2" },
-    { source: "K1",  target: "K1a" }
-  ]
-};
+// ================ (2) 力导向图数据 ================  
+const graphData = {  
+    nodes: [  
+        { id: "Q11", type: "question", name: "第11题" },  
+        { id: "K1", type: "knowledge", name: "数的性质" },  
+        { id: "K2", type: "knowledge", name: "绝对值" },  
+        { id: "K3", type: "knowledge", name: "立方根" }  
+    ],  
+    links: [  
+        { source: "Q11", target: "K1" },  
+        { source: "Q11", target: "K2" },  
+        { source: "Q11", target: "K3" }  
+    ]  
+};  
 
-// =========== (3) 绘制左侧力导向图 ===========
-const width = document.getElementById("left-panel").clientWidth;
-const height = document.getElementById("left-panel").clientHeight;
+// ================ (3) 力导向图绘制 ================  
+const width = document.getElementById("left-panel").clientWidth;  
+const height = document.getElementById("left-panel").clientHeight;  
 
-const svgGraph = d3.select("#graph-svg")
-  .attr("width", width)
-  .attr("height", height);
+const svgGraph = d3.select("#graph-svg")  
+    .attr("width", width)  
+    .attr("height", height);  
 
-const simulation = d3.forceSimulation(graphData.nodes)
-  .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(110))
-  .force("charge", d3.forceManyBody().strength(-300))
-  .force("center", d3.forceCenter(width / 2, height / 2))
-  .on("tick", ticked);
+const simulation = d3.forceSimulation(graphData.nodes)  
+    .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(110))  
+    .force("charge", d3.forceManyBody().strength(-300))  
+    .force("center", d3.forceCenter(width / 2, height / 2))  
+    .on("tick", ticked);  
 
-const link = svgGraph.selectAll("line.link")
-  .data(graphData.links)
-  .enter()
-  .append("line")
-  .attr("class", "link");
+const link = svgGraph.selectAll("line.link")  
+    .data(graphData.links)  
+    .enter()  
+    .append("line")  
+    .attr("class", "link");  
 
-const node = svgGraph.selectAll("g.node")
-  .data(graphData.nodes)
-  .enter()
-  .append("g")
-  .attr("class", "node");
+const node = svgGraph.selectAll("g.node")  
+    .data(graphData.nodes)  
+    .enter()  
+    .append("g")  
+    .attr("class", "node");  
 
-const tooltipGraph = d3.select("#graph-tooltip");
+const tooltipGraph = d3.select("#graph-tooltip");  
 
-node.append("circle")
-  .attr("r", d => d.type === "question" ? 18 : (d.type === "knowledge" ? 14 : 10))
-  .attr("fill", d => {
-    if (d.type === "question")   return "#fca5a5"; // 浅红
-    if (d.type === "knowledge") return "#93c5fd"; // 浅蓝
-    return "#a7f3d0";                               // 浅绿色 (子知识点)
-  })
-  .on("mouseover", (event, d) => {
-    let htmlStr = "";
-    if (d.type === "question") {
-      htmlStr = `题号：<strong>${d.name}</strong>`;
-    } else {
-      htmlStr = `知识点：<strong>${d.name}</strong>`;
-      const qSet = knowledgeQuestions[d.name];
-      if (qSet) {
-        htmlStr += `
-          <br/><strong>基础题：</strong>${qSet.basic}
-          <br/><strong>中等题：</strong>${qSet.medium}
-          <br/><strong>较难题：</strong>${qSet.advanced}
-        `;
-      } else {
-        htmlStr += "<br/>暂无示例题";
-      }
-    }
-    tooltipGraph
-      .style("opacity", 1)
-      .html(htmlStr)
-      .style("left", (event.pageX + 10) + "px")
-      .style("top", (event.pageY - 10) + "px");
-  })
-  .on("mouseout", () => tooltipGraph.style("opacity", 0));
+node.append("circle")  
+    .attr("r", d => d.type === "question" ? 18 : 14)  
+    .attr("fill", d => {  
+        if (d.type === "question") return "#fca5a5"; // 浅红  
+        return "#93c5fd"; // 浅蓝  
+    })  
+    .on("mouseover", (event, d) => {  
+        let htmlStr = "";  
+        if (d.type === "question") {  
+            htmlStr = `题号：<strong>${d.name}</strong>`;  
+        } else {  
+            htmlStr = `知识点：<strong>${d.name}</strong>`;  
+            const qSet = knowledgeQuestions[d.name];  
+            if (qSet) {  
+                htmlStr += `  
+                    <br/><strong>基础题：</strong>${qSet.basic}  
+                    <br/><strong>中等题：</strong>${qSet.medium}  
+                    <br/><strong>较难题：</strong>${qSet.advanced}  
+                `;  
+            } else {  
+                htmlStr += "<br/>暂无示例题";  
+            }  
+        }  
+        tooltipGraph  
+            .style("opacity", 1)  
+            .html(htmlStr)  
+            .style("left", (event.pageX + 10) + "px")  
+            .style("top", (event.pageY - 10) + "px");  
+    })  
+    .on("mouseout", () => tooltipGraph.style("opacity", 0));  
 
-node.append("text")
-  .text(d => d.name)
-  .attr("x", 20)
-  .attr("y", 4)
-  .attr("font-size", "12px")
-  .attr("fill", "#333")
-  .attr("font-weight", d => (d.type === "question" ? "bold" : "normal"));
+node.append("text")  
+    .text(d => d.name)  
+    .attr("x", 20)  
+    .attr("y", 4)  
+    .attr("font-size", "12px")  
+    .attr("fill", "#333")  
+    .attr("font-weight", d => (d.type === "question" ? "bold" : "normal"));  
 
-function ticked() {
-  link
-    .attr("x1", d => d.source.x)
-    .attr("y1", d => d.source.y)
-    .attr("x2", d => d.target.x)
-    .attr("y2", d => d.target.y);
+function ticked() {  
+    link  
+        .attr("x1", d => d.source.x)  
+        .attr("y1", d => d.source.y)  
+        .attr("x2", d => d.target.x)  
+        .attr("y2", d => d.target.y);  
 
-  node
-    .attr("transform", d => `translate(${d.x}, ${d.y})`);
-}
+    node.attr("transform", d => `translate(${d.x}, ${d.y})`);  
+}  
 
-// =========== (4) 历史正确率折线图 ===========
-const trendData = [
-  { time: "测验1", accuracy: 0.57 },
-  { time: "测验2", accuracy: 0.60 },
-  { time: "测验3", accuracy: 0.65 },
-  { time: "测验4", accuracy: 0.69 },
-  { time: "测验5", accuracy: 0.70 }
-];
+// ================ (4) 历史正确率折线图 ================  
+const trendData = [  
+    { time: "测验1", accuracy: 0.70 },  
+    { time: "测验2", accuracy: 0.78 },  
+    { time: "测验3", accuracy: 0.75 },  
+    { time: "测验4", accuracy: 0.80 },  
+    { time: "测验5", accuracy: 0.79 }  
+];  
 
-const lineChartWidth = document.getElementById("line-chart").clientWidth;
-const lineChartHeight = document.getElementById("line-chart").clientHeight;
+const lineChartWidth = document.getElementById("line-chart").clientWidth;  
+const lineChartHeight = document.getElementById("line-chart").clientHeight;  
 
-const margin = { top: 20, right: 20, bottom: 30, left: 40 };
-const innerWidth = lineChartWidth - margin.left - margin.right;
-const innerHeight = lineChartHeight - margin.top - margin.bottom;
+const margin = { top: 20, right: 20, bottom: 30, left: 40 };  
+const innerWidth = lineChartWidth - margin.left - margin.right;  
+const innerHeight = lineChartHeight - margin.top - margin.bottom;  
 
-const xScale = d3.scalePoint()
-  .domain(trendData.map(d => d.time))
-  .range([0, innerWidth])
-  .padding(0.5);
+const xScale = d3.scalePoint()  
+    .domain(trendData.map(d => d.time))  
+    .range([0, innerWidth])  
+    .padding(0.5);  
 
-const yScale = d3.scaleLinear()
-  .domain([0, 1])
-  .range([innerHeight, 0]);
+const yScale = d3.scaleLinear()  
+    .domain([0, 1])  
+    .range([innerHeight, 0]);  
 
-const svgLine = d3.select("#line-chart")
-  .attr("width", lineChartWidth)
-  .attr("height", lineChartHeight)
-  .append("g")
-  .attr("transform", `translate(${margin.left},${margin.top})`);
+const svgLine = d3.select("#line-chart")  
+    .attr("width", lineChartWidth)  
+    .attr("height", lineChartHeight)  
+    .append("g")  
+    .attr("transform", `translate(${margin.left},${margin.top})`);  
 
-const xAxis = d3.axisBottom(xScale);
-const yAxis = d3.axisLeft(yScale).tickFormat(d3.format(".0%"));
+const xAxis = d3.axisBottom(xScale);  
+const yAxis = d3.axisLeft(yScale).tickFormat(d3.format(".0%"));  
 
-svgLine.append("g")
-  .attr("class", "line-chart-axis")
-  .attr("transform", `translate(0, ${innerHeight})`)
-  .call(xAxis);
+svgLine.append("g")  
+    .attr("class", "line-chart-axis")  
+    .attr("transform", `translate(0, ${innerHeight})`)  
+    .call(xAxis);  
 
-svgLine.append("g")
-  .attr("class", "line-chart-axis")
-  .call(yAxis);
+svgLine.append("g")  
+    .attr("class", "line-chart-axis")  
+    .call(yAxis);  
 
-const lineGenerator = d3.line()
-  .x(d => xScale(d.time))
-  .y(d => yScale(d.accuracy));
+const lineGenerator = d3.line()  
+    .x(d => xScale(d.time))  
+    .y(d => yScale(d.accuracy));  
 
-svgLine.append("path")
-  .datum(trendData)
-  .attr("class", "line")
-  .attr("d", lineGenerator)
-  .attr("stroke", "#f97316");
+svgLine.append("path")  
+    .datum(trendData)  
+    .attr("class", "line")  
+    .attr("d", lineGenerator)  
+    .attr("stroke", "#f97316");  
 
-const tooltipLine = d3.select("#line-tooltip");
+const tooltipLine = d3.select("#line-tooltip");  
 
-svgLine.selectAll(".dot")
-  .data(trendData)
-  .enter()
-  .append("circle")
-  .attr("class", "dot")
-  .attr("r", 4)
-  .attr("cx", d => xScale(d.time))
-  .attr("cy", d => yScale(d.accuracy))
-  .on("mouseover", (event, d) => {
-    tooltipLine
-      .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(1)}%</strong>`)
-      .style("opacity", 1)
-      .style("left", (event.pageX + 10) + "px")
-      .style("top", (event.pageY - 10) + "px");
-  })
-  .on("mouseout", () => {
-    tooltipLine.style("opacity", 0);
-  });
-</script>
+svgLine.selectAll(".dot")  
+    .data(trendData)  
+    .enter()  
+    .append("circle")  
+    .attr("class", "dot")  
+    .attr("r", 4)  
+    .attr("cx", d => xScale(d.time))  
+    .attr("cy", d => yScale(d.accuracy))  
+    .on("mouseover", (event, d) => {  
+        tooltipLine  
+            .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(1)}%</strong>`)  
+            .style("opacity", 1)  
+            .style("left", (event.pageX + 10) + "px")  
+            .style("top", (event.pageY - 10) + "px");  
+    })  
+    .on("mouseout", () => {  
+        tooltipLine.style("opacity", 0);  
+    });  
+</script>  
 
-<!-- 悬浮提示 -->
-<div id="line-tooltip" class="tooltip"></div>
-
-</body>
-</html>
+<!-- 提示层 -->  
+<div id="line-tooltip" class="tooltip"></div>  
+</body>  
+</html>  
