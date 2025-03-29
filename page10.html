@@ -2,7 +2,7 @@
 <html lang="zh">  
 <head>  
     <meta charset="UTF-8" />  
-    <title>第10题 - 题目描述</title>  
+    <title>第10题 - 几何题目</title>  
     <!-- Tailwind CSS -->  
     <script src="https://cdn.tailwindcss.com"></script>  
     <!-- D3.js v6 -->  
@@ -45,23 +45,27 @@
         <div class="bg-white p-4 rounded shadow">  
             <h1 class="text-xl font-bold mb-2">题号：第10题</h1>  
             <p class="mb-2">  
-                请在此处填写题目描述。  
+                如图，\(AB\) 与 \(HN\) 交于点 \(E\)，点 \(G\) 在直线 \(CD\) 上，\(GF\) 交 \(AB\) 于点 \(M\)，  
+                \(\angle FMA = \angle FGC\)，\(\angle FEN = 2\angle NEB\)，  
+                \(\angle EHG = 2\angle EFM\)，\(\angle EHG + \angle EFM = 90°\);  
+                \(3\angle EHG - \angle EFM = 180°\)。  
             </p>  
+            <p>下列说法中，正确的是（ ）</p>  
             <div class="mb-4">  
                 <input type="checkbox" id="option1" />  
-                <label for="option1">A. 选项1</label>  
+                <label for="option1">A. ①②</label>  
             </div>  
             <div class="mb-4">  
                 <input type="checkbox" id="option2" />  
-                <label for="option2">B. 选项2</label>  
+                <label for="option2">B. ①④</label>  
             </div>  
             <div class="mb-4">  
                 <input type="checkbox" id="option3" />  
-                <label for="option3">C. 选项3</label>  
+                <label for="option3">C. ②④</label>  
             </div>  
             <div class="mb-4">  
                 <input type="checkbox" id="option4" />  
-                <label for="option4">D. 选项4</label>  
+                <label for="option4">D. ①②④</label>  
             </div>  
             <p>当前掌握率：<span class="text-green-600 font-medium">21.1%</span></p>  
             <p>历史正确率：<span class="text-yellow-600 font-medium">65%</span></p>  
@@ -71,8 +75,8 @@
         <div class="bg-white p-4 rounded shadow">  
             <h2 class="text-lg font-bold mb-2">直接关联知识点</h2>  
             <ul class="list-disc list-inside text-gray-700">  
-                <li>知识点1</li>  
-                <li>知识点2</li>  
+                <li>几何性质</li>  
+                <li>角的关系</li>  
             </ul>  
         </div>  
 
@@ -80,13 +84,13 @@
         <div class="bg-white p-4 rounded shadow overflow-auto">  
             <h2 class="text-lg font-bold mb-2">相关题目的定位与层次</h2>  
             <p class="mb-2">  
-                <strong>定义：</strong>该题考察相关的数学概念和方法。  
+                <strong>定义：</strong>该题考察几何图形中的角度关系和推理能力。  
             </p>  
             <p class="mb-2">  
-                <strong>针对性：</strong>强化学生对该知识点的理解和运用。  
+                <strong>针对性：</strong>帮助学生理解几何图形的基本性质。  
             </p>  
             <p class="mb-2">  
-                <strong>层次性：</strong>可扩展到更复杂的问题和场景。  
+                <strong>层次性：</strong>可扩展到更复杂的几何问题。  
             </p>  
         </div>  
 
@@ -102,15 +106,15 @@
 <script>  
 // ================ (1) 知识点对应示例题 ================  
 const knowledgeQuestions = {  
-    "知识点1": {  
-        basic: "基本概念",  
-        medium: "中等概念",  
-        advanced: "高级应用"  
+    "几何性质": {  
+        basic: "理解基本几何图形的性质",  
+        medium: "掌握几何图形中的角度关系",  
+        advanced: "应用几何知识解决复杂问题"  
     },  
-    "知识点2": {  
-        basic: "基本概念",  
-        medium: "中等概念",  
-        advanced: "高级应用"  
+    "角的关系": {  
+        basic: "了解角的基本性质",  
+        medium: "掌握角的计算与应用",  
+        advanced: "在几何问题中应用角的关系"  
     }  
 };  
 
@@ -118,8 +122,8 @@ const knowledgeQuestions = {
 const graphData = {  
     nodes: [  
         { id: "Q10", type: "question", name: "第10题" },  
-        { id: "K1", type: "knowledge", name: "知识点1" },  
-        { id: "K2", type: "knowledge", name: "知识点2" }  
+        { id: "K1", type: "knowledge", name: "几何性质" },  
+        { id: "K2", type: "knowledge", name: "角的关系" }  
     ],  
     links: [  
         { source: "Q10", target: "K1" },  
