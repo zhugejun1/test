@@ -2,7 +2,7 @@
 <html lang="zh">  
 <head>  
     <meta charset="UTF-8" />  
-    <title>第8题 - 题目描述</title>  
+    <title>第8题 - 不等式题目</title>  
     <!-- Tailwind CSS -->  
     <script src="https://cdn.tailwindcss.com"></script>  
     <!-- D3.js v6 -->  
@@ -45,23 +45,23 @@
         <div class="bg-white p-4 rounded shadow">  
             <h1 class="text-xl font-bold mb-2">题号：第8题</h1>  
             <p class="mb-2">  
-                请在此处填写题目描述。  
+                满足 \(-\sqrt{5} < x < \sqrt{13}\) 的整数 \(x\) 的个数是（ ）  
             </p>  
             <div class="mb-4">  
                 <input type="checkbox" id="option1" />  
-                <label for="option1">A. 选项1</label>  
+                <label for="option1">A. 4</label>  
             </div>  
             <div class="mb-4">  
                 <input type="checkbox" id="option2" />  
-                <label for="option2">B. 选项2</label>  
+                <label for="option2">B. 5</label>  
             </div>  
             <div class="mb-4">  
                 <input type="checkbox" id="option3" />  
-                <label for="option3">C. 选项3</label>  
+                <label for="option3">C. 6</label>  
             </div>  
             <div class="mb-4">  
                 <input type="checkbox" id="option4" />  
-                <label for="option4">D. 选项4</label>  
+                <label for="option4">D. 7</label>  
             </div>  
             <p>当前掌握率：<span class="text-green-600 font-medium">42.1%</span></p>  
             <p>历史正确率：<span class="text-yellow-600 font-medium">65%</span></p>  
@@ -71,8 +71,8 @@
         <div class="bg-white p-4 rounded shadow">  
             <h2 class="text-lg font-bold mb-2">直接关联知识点</h2>  
             <ul class="list-disc list-inside text-gray-700">  
-                <li>知识点1</li>  
-                <li>知识点2</li>  
+                <li>不等式</li>  
+                <li>平方根的性质</li>  
             </ul>  
         </div>  
 
@@ -80,13 +80,13 @@
         <div class="bg-white p-4 rounded shadow overflow-auto">  
             <h2 class="text-lg font-bold mb-2">相关题目的定位与层次</h2>  
             <p class="mb-2">  
-                <strong>定义：</strong>该题考察相关的数学概念和方法。  
+                <strong>定义：</strong>该题考察不等式的解决方法及整数范围的查找。  
             </p>  
             <p class="mb-2">  
-                <strong>针对性：</strong>强化学生对该知识点的理解和运用。  
+                <strong>针对性：</strong>加强对不等式的理解及应用。  
             </p>  
             <p class="mb-2">  
-                <strong>层次性：</strong>可扩展到更复杂的问题和场景。  
+                <strong>层次性：</strong>可扩展到涉及更多变量的不等式问题。  
             </p>  
         </div>  
 
@@ -102,15 +102,15 @@
 <script>  
 // ================ (1) 知识点对应示例题 ================  
 const knowledgeQuestions = {  
-    "知识点1": {  
-        basic: "基本概念",  
-        medium: "中等概念",  
-        advanced: "高级应用"  
+    "不等式": {  
+        basic: "理解不等式的基本性质",  
+        medium: "掌握不等式的求解方法",  
+        advanced: "应用不等式解决复杂问题"  
     },  
-    "知识点2": {  
-        basic: "基本概念",  
-        medium: "中等概念",  
-        advanced: "高级应用"  
+    "平方根的性质": {  
+        basic: "了解平方根的定义",  
+        medium: "掌握平方根的运算性质",  
+        advanced: "在不等式中应用平方根"  
     }  
 };  
 
@@ -118,8 +118,8 @@ const knowledgeQuestions = {
 const graphData = {  
     nodes: [  
         { id: "Q8", type: "question", name: "第8题" },  
-        { id: "K1", type: "knowledge", name: "知识点1" },  
-        { id: "K2", type: "knowledge", name: "知识点2" }  
+        { id: "K1", type: "knowledge", name: "不等式" },  
+        { id: "K2", type: "knowledge", name: "平方根的性质" }  
     ],  
     links: [  
         { source: "Q8", target: "K1" },  
@@ -208,8 +208,8 @@ function ticked() {
 const trendData = [  
     { time: "测验1", accuracy: 0.40 },  
     { time: "测验2", accuracy: 0.38 },  
-    { time: "测验3", accuracy: 0.37 },  
-    { time: "测验4", accuracy: 0.35 },  
+    { time: "测验3", accuracy: 0.45 },  
+    { time: "测验4", accuracy: 0.50 },  
     { time: "测验5", accuracy: 0.42 }  
 ];  
 
