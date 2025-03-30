@@ -49,28 +49,8 @@
             <p class="mb-4">（2）探究 \(\angle MEN\) 与 \(\angle MHN\) 的数量关系，并给予证明；（4分）</p>  
             <p><img src="path_to_your_image.jpg" alt="几何示例" class="w-full h-auto" /></p>  
 
-            <p>当前掌握率：<span class="text-green-600 font-medium">10.5%</span></p>  
-            <p>历史正确率：<span class="text-yellow-600 font-medium">68%</span></p>  
-        </div>  
-
-        <!-- 知识点 -->  
-        <div class="bg-white p-4 rounded shadow">  
-            <h2 class="text-lg font-bold mb-2">直接关联知识点</h2>  
-            <ul class="list-disc list-inside text-gray-700">  
-                <li>平行线的性质</li>  
-                <li>角度的和与差的性质</li>  
-                <li>几何证明技巧</li>  
-            </ul>  
-        </div>  
-
-        <!-- 次级知识点 -->  
-        <div class="bg-white p-4 rounded shadow">  
-            <h2 class="text-lg font-bold mb-2">次级知识点</h2>  
-            <ul class="list-disc list-inside text-gray-700">  
-                <li style="color: #000;">平行线与交叉线的角度关系</li>  
-                <li style="color: #000;">角与边的关系</li>  
-                <li style="color: #000;">几何作图与推理</li>  
-            </ul>  
+            <p>当前掌握率：<span class="text-green-600 font-medium">0%</span></p>  
+            <p>历史正确率：<span class="text-yellow-600 font-medium">10%</span></p>  
         </div>  
 
         <!-- 相关内容说明 -->  
@@ -105,21 +85,6 @@ const knowledgeQuestions = {
         basic: "掌握基本几何证明方法",  
         medium: "运用几何证明解决问题",  
         advanced: "综合性几何问题的复杂证明"  
-    },  
-    "平行线与交叉线的角度关系": {  
-        basic: "熟悉平行线与交叉线的基本角度关系",  
-        medium: "应用角度关系推导其他结果",  
-        advanced: "将角度关系与几何图形结合进行分析"  
-    },  
-    "角与边的关系": {  
-        basic: "理解角和边之间的基础关系",  
-        medium: "运用边的长度与角的大小间的关系解决问题",  
-        advanced: "复杂图形中的角边关系推导"  
-    },  
-    "几何作图与推理": {  
-        basic: "掌握基本几何作图技巧",  
-        medium: "结合作图推理解决相关几何问题",  
-        advanced: "多种作图技巧结合的综合应用"  
     }  
 };  
 
@@ -129,18 +94,12 @@ const graphData = {
         { id: "Q23", type: "question", name: "第23题" },  
         { id: "K1", type: "knowledge", name: "平行线的性质" },  
         { id: "K2", type: "knowledge", name: "角度的和与差的性质" },  
-        { id: "K3", type: "knowledge", name: "几何证明技巧" },  
-        { id: "K4", type: "sub-knowledge", name: "平行线与交叉线的角度关系" },  
-        { id: "K5", type: "sub-knowledge", name: "角与边的关系" },  
-        { id: "K6", type: "sub-knowledge", name: "几何作图与推理" }  
+        { id: "K3", type: "knowledge", name: "几何证明技巧" }  
     ],  
     links: [  
         { source: "Q23", target: "K1" },  
         { source: "Q23", target: "K2" },  
-        { source: "Q23", target: "K3" },  
-        { source: "K1", target: "K4" },  
-        { source: "K2", target: "K5" },  
-        { source: "K3", target: "K6" }  
+        { source: "Q23", target: "K3" }  
     ]  
 };  
 
@@ -173,16 +132,12 @@ const node = svgGraph.selectAll("g.node")
 const tooltipGraph = d3.select("#graph-tooltip");  
 
 node.append("circle")  
-    .attr("r", d => d.type === "question" ? 18 : (d.type === "knowledge" ? 14 : 10))  
-    .attr("fill", d => {  
-        if (d.type === "question") return "#fca5a5"; // 浅红  
-        if (d.type === "knowledge") return "#93c5fd"; // 浅蓝  
-        return "#88e5c8"; // 浅绿色  
-    })  
+    .attr("r", d => d.type === "question" ? 18 : 14)  
+    .attr("fill", d => d.type === "question" ? "#fca5a5" : "#93c5fd")  
     .on("mouseover", (event, d) => {  
         let htmlStr = `节点：<strong>${d.name}</strong>`;  
-        
-        if (d.type === "knowledge" || d.type === "sub-knowledge") {  
+
+        if (d.type === "knowledge") {  
             const qSet = knowledgeQuestions[d.name];  
             if (qSet) {  
                 htmlStr += `  
@@ -208,8 +163,7 @@ node.append("text")
     .attr("x", 20)  
     .attr("y", 4)  
     .attr("font-size", "12px")  
-    .attr("fill", "#333")  
-    .attr("font-weight", d => (d.type === "question" ? "bold" : "normal"));  
+    .attr("fill", "#333");  
 
 function ticked() {  
     link  
@@ -223,11 +177,11 @@ function ticked() {
 
 // ================ (4) 历史正确率折线图 ================  
 const trendData = [  
-    { time: "测验1", accuracy: 0.10 },  
-    { time: "测验2", accuracy: 0.12 },  
-    { time: "测验3", accuracy: 0.15 },  
-    { time: "测验4", accuracy: 0.17 },  
-    { time: "测验5", accuracy: 0.18 }  
+    { time: "测验1", accuracy: 0.0 },  
+    { time: "测验2", accuracy: 0.03 },  
+    { time: "测验3", accuracy: 0.05 },  
+    { time: "测验4", accuracy: 0.07 },  
+    { time: "测验5", accuracy: 0.1 }  
 ];  
 
 const lineChartWidth = document.getElementById("line-chart").clientWidth;  
@@ -243,7 +197,7 @@ const xScale = d3.scalePoint()
     .padding(0.5);  
 
 const yScale = d3.scaleLinear()  
-    .domain([0, 1])  
+    .domain([0, 0.15])  
     .range([innerHeight, 0]);  
 
 const svgLine = d3.select("#line-chart")  
@@ -286,7 +240,7 @@ svgLine.selectAll(".dot")
     .attr("cy", d => yScale(d.accuracy))  
     .on("mouseover", (event, d) => {  
         tooltipLine  
-            .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(1)}%</strong>`)  
+            .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(2)}%</strong>`)  
             .style("opacity", 1)  
             .style("left", (event.pageX + 10) + "px")  
             .style("top", (event.pageY - 10) + "px");  
