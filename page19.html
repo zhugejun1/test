@@ -2,7 +2,7 @@
 <html lang="zh">  
 <head>  
     <meta charset="UTF-8" />  
-    <title>第19题 - 几何题目</title>  
+    <title>第19题 - 几何问题</title>  
     <!-- Tailwind CSS -->  
     <script src="https://cdn.tailwindcss.com"></script>  
     <!-- D3.js v6 -->  
@@ -44,32 +44,47 @@
         <!-- 题干描述区域 -->  
         <div class="bg-white p-4 rounded shadow">  
             <h1 class="text-xl font-bold mb-2">题号：第19题</h1>  
-            <p class="mb-4">如图，点 \( G, D, F \) 共线，且 \( \angle 1 + \angle 2 = 180^\circ \)，\( \angle B = \angle 3 \)，求证：\( \angle AED = \angle 4 \).</p>  
+            <p class="mb-4">如图，点 \(G, D, F\) 共线，且 \( \angle 1 + \angle 2 = 180^\circ \)，\( \angle B = \angle 3 \)，求证： \( \angle AED = \angle 4 \)。</p>  
+            <p class="mb-4">要证明：\( \angle L2 = \angle L BDF \)（_______________），</p>  
+            <p class="mb-4">\( EF \parallel AB \)（_______________），</p>  
+            <p class="mb-4">\( \angle L3 = \angle ADE \)（_______________），</p>  
+            <p class="mb-4">\( \angle L3 = \angle B = \angle ADE \)（_______________），</p>  
+            <p class="mb-4">\( DE \parallel BC \)（_______________），</p>  
+            <p class="mb-4">\( LAED = LACB \)（_______________），</p>  
+            <p class="mb-4">\( LACB = \angle 4 \)（_______________），</p>  
+            <p class="mb-4">\( LB = \angle 4\)（_______________），</p>  
+            <p class="mb-4">\( LAED = \angle 4 \)（_______________）。</p>  
 
-            <div class="mb-4">  
-                <label for="answer19" class="block">答案：</label>  
-                <input type="text" id="answer19" class="border p-2 rounded" />  
-            </div>  
-            
+            <p><img src="path_to_your_image.jpg" alt="几何示例" class="w-full h-auto" /></p>  
+
             <p>当前掌握率：<span class="text-green-600 font-medium">63.2%</span></p>  
-            <p>历史正确率：<span class="text-yellow-600 font-medium">65%</span></p>  
+            <p>历史正确率：<span class="text-yellow-600 font-medium">68%</span></p>  
         </div>  
 
         <!-- 知识点 -->  
         <div class="bg-white p-4 rounded shadow">  
-            <h2 class="text-lg font-bold mb-2">相关知识点</h2>  
+            <h2 class="text-lg font-bold mb-2">直接关联知识点</h2>  
             <ul class="list-disc list-inside text-gray-700">  
-                <li>平行线与角的关系</li>  
-                <li>对顶角</li>  
+                <li>平行线的性质</li>  
+                <li>角度和的性质</li>  
+                <li>几何证明方法</li>  
+            </ul>  
+        </div>  
+
+        <!-- 次级知识点 -->  
+        <div class="bg-white p-4 rounded shadow">  
+            <h2 class="text-lg font-bold mb-2">次级知识点</h2>  
+            <ul class="list-disc list-inside text-gray-700">  
+                <li style="color: #000;">几何平行线与相交线的关系</li>  
+                <li style="color: #000;">内角和与外角的关系</li>  
+                <li style="color: #000;">三角形相似性的运用</li>  
             </ul>  
         </div>  
 
         <!-- 相关内容说明 -->  
         <div class="bg-white p-4 rounded shadow">  
-            <h2 class="text-lg font-bold mb-2">计算细节说明</h2>  
-            <p class="mb-2">  
-                本题考察几何图形中角度关系的理解。  
-            </p>  
+            <h2 class="text-lg font-bold mb-2">相关内容说明</h2>  
+            <p class="mb-2">本题探讨几何图形中角度与平行线的关系，帮助学生理解几何推理和证明的过程。</p>  
         </div>  
 
         <!-- 历史正确率折线图 -->  
@@ -82,20 +97,47 @@
 </div>  
 
 <script>  
-// ================ (1) 力导向图数据 ================  
+// ================ (1) 知识点对应示例题 ================  
+const knowledgeQuestions = {  
+    "平行线的性质": {  
+        basic: "平行线穿插所形成的角度关系",  
+        medium: "平行线的应用和计算问题",  
+        advanced: "在多边形中应用平行线性质"  
+    },  
+    "角度和的性质": {  
+        basic: "款法角和的定义",  
+        medium: "计算角和的问题",  
+        advanced: "在几何证明中的应用"  
+    },  
+    "几何证明方法": {  
+        basic: "基础几何证明技巧",  
+        medium: "应用几何方法进行推理",  
+        advanced: "复杂几何问题的完整证明"  
+    }  
+};  
+
+// ================ (2) 力导向图数据 ================  
 const graphData = {  
     nodes: [  
         { id: "Q19", type: "question", name: "第19题" },  
-        { id: "K1", type: "knowledge", name: "平行线与角的关系" },  
-        { id: "K2", type: "knowledge", name: "对顶角" }  
+        { id: "K1", type: "knowledge", name: "平行线的性质" },  
+        { id: "K2", type: "knowledge", name: "角度和的性质" },  
+        { id: "K3", type: "knowledge", name: "几何证明方法" },  
+        { id: "K4", type: "sub-knowledge", name: "几何平行线与相交线的关系" },  
+        { id: "K5", type: "sub-knowledge", name: "内角和与外角的关系" },  
+        { id: "K6", type: "sub-knowledge", name: "三角形相似性的运用" }  
     ],  
     links: [  
         { source: "Q19", target: "K1" },  
-        { source: "Q19", target: "K2" }  
+        { source: "Q19", target: "K2" },  
+        { source: "Q19", target: "K3" },  
+        { source: "K1", target: "K4" },  
+        { source: "K2", target: "K5" },  
+        { source: "K3", target: "K6" }  
     ]  
 };  
 
-// ================ (2) 力导向图绘制 ================  
+// ================ (3) 力导向图绘制 ================  
 const width = document.getElementById("left-panel").clientWidth;  
 const height = document.getElementById("left-panel").clientHeight;  
 
@@ -124,13 +166,28 @@ const node = svgGraph.selectAll("g.node")
 const tooltipGraph = d3.select("#graph-tooltip");  
 
 node.append("circle")  
-    .attr("r", d => d.type === "question" ? 18 : 14)  
+    .attr("r", d => d.type === "question" ? 18 : (d.type === "knowledge" ? 14 : 10))  
     .attr("fill", d => {  
         if (d.type === "question") return "#fca5a5"; // 浅红  
-        return "#93c5fd"; // 浅蓝  
+        if (d.type === "knowledge") return "#93c5fd"; // 浅蓝  
+        return "#88e5c8"; // 浅绿色  
     })  
     .on("mouseover", (event, d) => {  
-        let htmlStr = `题号：<strong>${d.name}</strong>`;  
+        let htmlStr = `节点：<strong>${d.name}</strong>`;  
+
+        if (d.type === "knowledge" || d.type === "sub-knowledge") {  
+            const qSet = knowledgeQuestions[d.name];  
+            if (qSet) {  
+                htmlStr += `  
+                    <br/><strong>基础题：</strong>${qSet.basic}  
+                    <br/><strong>中等题：</strong>${qSet.medium}  
+                    <br/><strong>较难题：</strong>${qSet.advanced}  
+                `;  
+            } else {  
+                htmlStr += "<br/>暂无示例题";  
+            }  
+        }  
+
         tooltipGraph  
             .style("opacity", 1)  
             .html(htmlStr)  
@@ -157,13 +214,13 @@ function ticked() {
     node.attr("transform", d => `translate(${d.x}, ${d.y})`);  
 }  
 
-// ================ (3) 历史正确率折线图 ================  
+// ================ (4) 历史正确率折线图 ================  
 const trendData = [  
-    { time: "测验1", accuracy: 0.60 },  
-    { time: "测验2", accuracy: 0.65 },  
-    { time: "测验3", accuracy: 0.70 },  
-    { time: "测验4", accuracy: 0.68 },  
-    { time: "测验5", accuracy: 0.63 }  
+    { time: "测验1", accuracy: 0.0 },  
+    { time: "测验2", accuracy: 0.05 },  
+    { time: "测验3", accuracy: 0.10 },  
+    { time: "测验4", accuracy: 0.12 },  
+    { time: "测验5", accuracy: 0.15 }  
 ];  
 
 const lineChartWidth = document.getElementById("line-chart").clientWidth;  
