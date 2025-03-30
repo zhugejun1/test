@@ -2,7 +2,7 @@
 <html lang="zh">  
 <head>  
     <meta charset="UTF-8" />  
-    <title>第17（2） - 数学题目</title>  
+    <title>第17（2）题 - 数学题目</title>  
     <!-- Tailwind CSS -->  
     <script src="https://cdn.tailwindcss.com"></script>  
     <!-- D3.js v6 -->  
@@ -52,23 +52,29 @@
         <!-- 题干描述区域 -->  
         <div class="bg-white p-4 rounded shadow">  
             <h1 class="text-xl font-bold mb-2">题号：第17（2）题</h1>  
-            <p class="mb-4">计算：</p>  
-            <p class="mb-4">\( |\sqrt{2} - \sqrt{3}| + 2\sqrt{2} \)</p>  
+            <p class="mb-4">求下列各式中 \( x \) 的值：</p>  
+            <p class="mb-4">\( x^2 - 4x + 4 = 0 \)</p>  
 
             <div class="mb-4">  
-                <label for="answer2" class="block">答案：</label>  
-                <input type="text" id="answer2" class="border p-2 rounded" />  
+                <label for="answer17_2" class="block">答案：</label>  
+                <input type="text" id="answer17_2" class="border p-2 rounded" />  
             </div>  
             
-            <p>当前掌握率：<span class="text-green-600 font-medium">29.73%</span></p>  
+            <p>当前掌握率：<span class="text-green-600 font-medium">35.14%</span></p>  
             <p>历史正确率：<span class="text-yellow-600 font-medium">60%</span></p>  
         </div>  
 
         <!-- 相关内容说明 -->  
-        <div class="bg-white p-4 rounded shadow">  
-            <h2 class="text-lg font-bold mb-2">计算细节说明</h2>  
+        <div class="bg-white p-4 rounded shadow overflow-auto">  
+            <h2 class="text-lg font-bold mb-2">相关题目的定位与层次</h2>  
             <p class="mb-2">  
-                本题测试对绝对值和平方根的理解。  
+                <strong>定义：</strong>考察一元二次方程的解法。  
+            </p>  
+            <p class="mb-2">  
+                <strong>针对性：</strong>帮助学生理解二次方程的根的性质及其解法。  
+            </p>  
+            <p class="mb-2">  
+                <strong>层次性：</strong>可以扩展到复杂的高次方程问题。  
             </p>  
         </div>  
 
@@ -82,12 +88,26 @@
 </div>  
 
 <script>  
-// ================ (1) 力导向图数据 ================  
+// ================ (1) 知识点对应示例题 ================  
+const knowledgeQuestions = {  
+    "一元二次方程": {  
+        basic: "理解一元二次方程的解与性质",  
+        medium: "掌握一元二次方程的求解方法",  
+        advanced: "应用一元二次方程解决实际问题"  
+    },  
+    "配方法": {  
+        basic: "了解配方法的基本概念",  
+        medium: "掌握配方法的应用",  
+        advanced: "解决复杂的方程问题"  
+    }  
+};  
+
+// ================ (2) 力导向图数据 ================  
 const graphData = {  
     nodes: [  
         { id: "Q17_2", type: "question", name: "第17（2）题" },  
-        { id: "K1", type: "knowledge", name: "平方根与绝对值" },  
-        { id: "K2", type: "knowledge", name: "基本运算规则" }  
+        { id: "K1", type: "knowledge", name: "一元二次方程" },  
+        { id: "K2", type: "knowledge", name: "配方法" }  
     ],  
     links: [  
         { source: "Q17_2", target: "K1" },  
@@ -95,7 +115,7 @@ const graphData = {
     ]  
 };  
 
-// ================ (2) 力导向图绘制 ================  
+// ================ (3) 力导向图绘制 ================  
 const width = document.getElementById("left-panel").clientWidth;  
 const height = document.getElementById("left-panel").clientHeight;  
 
@@ -130,7 +150,22 @@ node.append("circle")
         return "#93c5fd"; // 浅蓝  
     })  
     .on("mouseover", (event, d) => {  
-        let htmlStr = `题号：<strong>${d.name}</strong>`;  
+        let htmlStr = "";  
+        if (d.type === "question") {  
+            htmlStr = `题号：<strong>${d.name}</strong>`;  
+        } else {  
+            htmlStr = `知识点：<strong>${d.name}</strong>`;  
+            const qSet = knowledgeQuestions[d.name];  
+            if (qSet) {  
+                htmlStr += `  
+                    <br/><strong>基础题：</strong>${qSet.basic}  
+                    <br/><strong>中等题：</strong>${qSet.medium}  
+                    <br/><strong>较难题：</strong>${qSet.advanced}  
+                `;  
+            } else {  
+                htmlStr += "<br/>暂无示例题";  
+            }  
+        }  
         tooltipGraph  
             .style("opacity", 1)  
             .html(htmlStr)  
@@ -157,13 +192,13 @@ function ticked() {
     node.attr("transform", d => `translate(${d.x}, ${d.y})`);  
 }  
 
-// ================ (3) 历史正确率折线图 ================  
+// ================ (4) 历史正确率折线图 ================  
 const trendData = [  
-    { time: "测验1", accuracy: 0.50 },  
-    { time: "测验2", accuracy: 0.55 },  
-    { time: "测验3", accuracy: 0.53 },  
-    { time: "测验4", accuracy: 0.58 },  
-    { time: "测验5", accuracy: 0.60 }  
+    { time: "测验1", accuracy: 0.45 },  
+    { time: "测验2", accuracy: 0.50 },  
+    { time: "测验3", accuracy: 0.55 },  
+    { time: "测验4", accuracy: 0.52 },  
+    { time: "测验5", accuracy: 0.51 }  
 ];  
 
 const lineChartWidth = document.getElementById("line-chart").clientWidth;  
