@@ -7,6 +7,16 @@
     <script src="https://cdn.tailwindcss.com"></script>  
     <!-- D3.js v6 -->  
     <script src="https://d3js.org/d3.v6.min.js"></script>  
+
+    <!-- MathJax 引入 -->  
+    <script>  
+        MathJax = {  
+            tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] },  
+            svg: { fontCache: "global" }  
+        };  
+    </script>  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.min.js"></script>  
+
     <style>  
         body { margin: 0; font-family: Arial, sans-serif; background-color: #f6f9fc; }  
         .node circle { cursor: pointer; }  
@@ -18,7 +28,7 @@
         .line-chart-axis path, .line-chart-axis line { fill: none; stroke: #ccc; }  
         .dot { fill: #ff5722; stroke: #fff; stroke-width: 1px; cursor: pointer; }  
         .dot:hover { opacity: 0.8; }  
-    </style>  
+    </style> 
 </head>  
 <body class="h-screen w-screen overflow-hidden bg-gray-100">  
 
