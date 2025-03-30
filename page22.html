@@ -2,7 +2,7 @@
 <html lang="zh">  
 <head>  
     <meta charset="UTF-8" />  
-    <title>第22题 - 窗口设计几何问题</title>  
+    <title>第22题 - 几何问题</title>  
     <!-- Tailwind CSS -->  
     <script src="https://cdn.tailwindcss.com"></script>  
     <!-- D3.js v6 -->  
@@ -13,7 +13,7 @@
         .node circle:hover { fill: #333; }  
         .node text { pointer-events: none; font-size: 10px; fill: #333; }  
         line.link { stroke: #ccc; stroke-width: 1.5px; }  
-        .tooltip { position: absolute; min-width: 120px; padding: 8px; font-size: 12px; background: rgba(255, 255, 255, 0.9); border: 1px solid #ccc; border-radius: 4px; pointer-events: none; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); opacity: 0; transition: opacity 0.2s; z-index: 999; }  
+        .tooltip { position: absolute; min-width: 120px; padding: 8px; font-size: 12px; background: rgba(255, 255, 255, 0.9); border: 1px solid #ccc; border-radius: 4px; pointer-events: none; box-shadow: 0 2px 5px rgba(0,0,0,0.15); opacity: 0; transition: opacity 0.2s; z-index: 999; }  
         .line { fill: none; stroke-width: 2px; }  
         .line-chart-axis path, .line-chart-axis line { fill: none; stroke: #ccc; }  
         .dot { fill: #ff5722; stroke: #fff; stroke-width: 1px; cursor: pointer; }  
@@ -44,47 +44,41 @@
         <!-- 题干描述区域 -->  
         <div class="bg-white p-4 rounded shadow">  
             <h1 class="text-xl font-bold mb-2">题号：第22题</h1>  
-            <p class="mb-2">  
-                问题背景：教室改造采光窗户，如图 (1)，窗口上半部分是两个正方形组成的矩形，下半部分是两个长方形组成的矩形。  
-            </p>  
-            <p class="mb-2">   
-                建立模型，如图 (2)，不考虑边框的宽度，窗户抽象成几何形状，图中有线段长 10.5 m，设 AE 的长度为 x m；   
-            </p>  
-            <p class="mb-2">   
-                (1) 直接用 x 的式子表示出矩形窗户 AEFD 和矩形窗户 BCFE 的透光面积；   
-            </p>  
-            <p class="mb-2">   
-                (2) 当窗户的总面积为 2.5 m² 时，求 BE 的长；   
-            </p>  
-            <p class="mb-2">   
-                (3) 窗户的面积越大，采光效果越好，基于美观的考虑，要求 BE > EF，请设计一个使采光效果最好的方案，确定 AE 的长。   
-            </p>  
-            <p>当前掌握率：<span class="text-green-600 font-medium">67%</span></p>  
-            <p>历史正确率：<span class="text-yellow-600 font-medium">65%</span></p>  
+            <p class="mb-4">小明同学用两个小正方形纸片做拼图构造大的正方形的游戏：</p>  
+            <p class="mb-4">（1）如图1，\(S_1 = 1\)，\(S_2 = 4\)，拼成的大正方形\(A_1B_1C_1D_1\)边长为__________；（1分）</p>  
+            <p class="mb-4">如图2，\(S_1 = 1\)，\(S_2 = 4\)，拼成的大正方形\(A_2B_2C_2D_2\)边长为__________；（1分）</p>  
+            <p class="mb-4">如图3，\(S_1 = 1\)，\(S_2 = 25\)，拼成的大正方形\(A_3B_3C_3D_3\)边长为__________。（1分）</p>  
+            <p class="mb-4">（2）若将（1）中的图3拼成的正方形\(A_3B_3C_3D_3\)边的方向撇斜，能否拼出一个面积为24且宽度比为3:2的长方形？若能，请说明理由。（7分）</p>  
+            <p><img src="path_to_your_image.jpg" alt="拼图示例" class="w-full h-auto" /></p>  
+
+            <p>当前掌握率：<span class="text-green-600 font-medium">31.6%</span></p>  
+            <p>历史正确率：<span class="text-yellow-600 font-medium">68%</span></p>  
         </div>  
 
         <!-- 知识点 -->  
         <div class="bg-white p-4 rounded shadow">  
             <h2 class="text-lg font-bold mb-2">直接关联知识点</h2>  
             <ul class="list-disc list-inside text-gray-700">  
-                <li>长方形与正方形的性质</li>  
-                <li>面积和透光面积的计算</li>  
-                <li>几何抽象与设计优化</li>  
+                <li>正方形的性质</li>  
+                <li>面积和周长的计算</li>  
+                <li>比例和相似性</li>  
+            </ul>  
+        </div>  
+
+        <!-- 次级知识点 -->  
+        <div class="bg-white p-4 rounded shadow">  
+            <h2 class="text-lg font-bold mb-2">次级知识点</h2>  
+            <ul class="list-disc list-inside text-gray-700">  
+                <li style="color: #facc15;">拼图的组合与面积关系</li>  
+                <li style="color: #facc15;">长方形与正方形的转换</li>  
+                <li style="color: #facc15;">几何图形的性质运用</li>  
             </ul>  
         </div>  
 
         <!-- 相关内容说明 -->  
-        <div class="bg-white p-4 rounded shadow overflow-auto">  
-            <h2 class="text-lg font-bold mb-2">相关题目的定位与层次</h2>  
-            <p class="mb-2">  
-                <strong>定义：</strong>该题结合窗户设计与几何模型，通过几何面积的需求，更好地理解面积与透光的关系。  
-            </p>  
-            <p class="mb-2">  
-                <strong>针对性：</strong>加强对几何图形性质与面积关系的理解，特别是长方形和正方形的组合特性。  
-            </p>  
-            <p class="mb-2">  
-                <strong>层次性：</strong>可扩展到更多几何体的透光设计，结合数据分析与几何研究提升学生的综合能力。  
-            </p>  
+        <div class="bg-white p-4 rounded shadow">  
+            <h2 class="text-lg font-bold mb-2">相关内容说明</h2>  
+            <p class="mb-2">本题探讨正方形和长方形之间的关系，帮助学生理解几何拼图和面积计算。</p>  
         </div>  
 
         <!-- 历史正确率折线图 -->  
@@ -99,20 +93,35 @@
 <script>  
 // ================ (1) 知识点对应示例题 ================  
 const knowledgeQuestions = {  
-    "长方形与正方形的性质": {  
-        basic: "掌握正方形、长方形的面积公式及性质",  
-        medium: "求解两种形状组合后的面积关系",  
-        advanced: "复杂的图形面积组合及最优化设计"  
+    "正方形的性质": {  
+        basic: "正方形的定义与特征",  
+        medium: "计算正方形的面积与周长",  
+        advanced: "正方形与其他平行四边形的关系"  
     },  
-    "面积和透光面积的计算": {  
-        basic: "面积与相关的几何图形的计算",  
-        medium: "通过几何图形面积推导提出相关问题",  
-        advanced: "引入比例关系与数据分析探究最优解"  
+    "面积和周长的计算": {  
+        basic: "面积和周长的基本公式",  
+        medium: "结合正方形和长方形进行计算",  
+        advanced: "复杂形状的周长与面积计算"  
     },  
-    "几何抽象与设计优化": {  
-        basic: "几何图形的简化与组合关系",  
-        medium: "基于几个固定条件展开的多种设计",  
-        advanced: "探索设计中的视觉与美学效果"  
+    "比例和相似性": {  
+        basic: "了解比例和相似性概念",  
+        medium: "运用比例解决实际问题",  
+        advanced: "相似图形之间的面积和周长关系"  
+    },  
+    "拼图的组合与面积关系": {  
+        basic: "简单拼图的组合",  
+        medium: "拼出特定面积的拼图",  
+        advanced: "复杂条件下的拼图组合"  
+    },  
+    "长方形与正方形的转换": {  
+        basic: "理解长方形和正方形的关系",  
+        medium: "计算长方形的转化面积",  
+        advanced: "结合比例进行面积计算"  
+    },  
+    "几何图形的性质运用": {  
+        basic: "几何图形基本性质的理解",  
+        medium: "运用几何性质解决问题",  
+        advanced: "综合性几何问题的应用"  
     }  
 };  
 
@@ -120,14 +129,20 @@ const knowledgeQuestions = {
 const graphData = {  
     nodes: [  
         { id: "Q22", type: "question", name: "第22题" },  
-        { id: "K1",  type: "knowledge", name: "长方形与正方形的性质" },  
-        { id: "K2",  type: "knowledge", name: "面积和透光面积的计算"},  
-        { id: "K1a", type: "sub-knowledge", name: "几何抽象与设计优化" }  
+        { id: "K1", type: "knowledge", name: "正方形的性质" },  
+        { id: "K2", type: "knowledge", name: "面积和周长的计算" },  
+        { id: "K3", type: "knowledge", name: "比例和相似性" },  
+        { id: "K4", type: "sub-knowledge", name: "拼图的组合与面积关系" },  
+        { id: "K5", type: "sub-knowledge", name: "长方形与正方形的转换" },  
+        { id: "K6", type: "sub-knowledge", name: "几何图形的性质运用" }  
     ],  
     links: [  
         { source: "Q22", target: "K1" },  
         { source: "Q22", target: "K2" },  
-        { source: "K1",  target: "K1a" }  
+        { source: "Q22", target: "K3" },  
+        { source: "K1", target: "K4" },  
+        { source: "K2", target: "K5" },  
+        { source: "K3", target: "K6" }  
     ]  
 };  
 
@@ -162,16 +177,14 @@ const tooltipGraph = d3.select("#graph-tooltip");
 node.append("circle")  
     .attr("r", d => d.type === "question" ? 18 : (d.type === "knowledge" ? 14 : 10))  
     .attr("fill", d => {  
-        if (d.type === "question") return "#fca5a5";  // 浅红  
+        if (d.type === "question") return "#fca5a5"; // 浅红  
         if (d.type === "knowledge") return "#93c5fd"; // 浅蓝  
-        return "#a7f3d0";                               // 浅绿  
+        return "#a7f3d0"; // 浅绿  
     })  
     .on("mouseover", (event, d) => {  
-        let htmlStr = "";  
-        if (d.type === "question") {  
-            htmlStr = `题号：<strong>${d.name}</strong>`;  
-        } else {  
-            htmlStr = `知识点：<strong>${d.name}</strong>`;  
+        let htmlStr = `节点：<strong>${d.name}</strong>`;  
+        
+        if (d.type === "knowledge" || d.type === "sub-knowledge") {  
             const qSet = knowledgeQuestions[d.name];  
             if (qSet) {  
                 htmlStr += `  
@@ -183,15 +196,14 @@ node.append("circle")
                 htmlStr += "<br/>暂无示例题";  
             }  
         }  
+
         tooltipGraph  
             .style("opacity", 1)  
             .html(htmlStr)  
             .style("left", (event.pageX + 10) + "px")  
             .style("top", (event.pageY - 10) + "px");  
     })  
-    .on("mouseout", () => {  
-        tooltipGraph.style("opacity", 0);  
-    });  
+    .on("mouseout", () => tooltipGraph.style("opacity", 0));  
 
 node.append("text")  
     .text(d => d.name)  
@@ -207,16 +219,17 @@ function ticked() {
         .attr("y1", d => d.source.y)  
         .attr("x2", d => d.target.x)  
         .attr("y2", d => d.target.y);  
+
     node.attr("transform", d => `translate(${d.x}, ${d.y})`);  
 }  
 
 // ================ (4) 历史正确率折线图 ================  
 const trendData = [  
-    { time: "测验1", accuracy: 0.55 },  
-    { time: "测验2", accuracy: 0.58 },  
-    { time: "测验3", accuracy: 0.61 },  
-    { time: "测验4", accuracy: 0.64 },  
-    { time: "测验5", accuracy: 0.66 }  
+    { time: "测验1", accuracy: 0.52 },  
+    { time: "测验2", accuracy: 0.54 },  
+    { time: "测验3", accuracy: 0.56 },  
+    { time: "测验4", accuracy: 0.58 },  
+    { time: "测验5", accuracy: 0.60 }  
 ];  
 
 const lineChartWidth = document.getElementById("line-chart").clientWidth;  
