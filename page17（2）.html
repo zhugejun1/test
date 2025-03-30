@@ -7,6 +7,14 @@
     <script src="https://cdn.tailwindcss.com"></script>  
     <!-- D3.js v6 -->  
     <script src="https://d3js.org/d3.v6.min.js"></script>  
+    <!-- MathJax 引入 -->  
+    <script>  
+        MathJax = {  
+            tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] },  
+            svg: { fontCache: "global" }  
+        };  
+    </script>  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.min.js"></script>  
     <style>  
         body { margin: 0; font-family: Arial, sans-serif; background-color: #f6f9fc; }  
         .node circle { cursor: pointer; }  
@@ -52,17 +60,8 @@
                 <input type="text" id="answer2" class="border p-2 rounded" />  
             </div>  
             
-            <p>当前掌握率：<span class="text-green-600 font-medium">63.2%</span></p>  
-            <p>历史正确率：<span class="text-yellow-600 font-medium">65%</span></p>  
-        </div>  
-
-        <!-- 知识点 -->  
-        <div class="bg-white p-4 rounded shadow">  
-            <h2 class="text-lg font-bold mb-2">相关知识点</h2>  
-            <ul class="list-disc list-inside text-gray-700">  
-                <li>平方根与绝对值</li>  
-                <li>基本运算规则</li>  
-            </ul>  
+            <p>当前掌握率：<span class="text-green-600 font-medium">29.73%</span></p>  
+            <p>历史正确率：<span class="text-yellow-600 font-medium">60%</span></p>  
         </div>  
 
         <!-- 相关内容说明 -->  
@@ -160,11 +159,11 @@ function ticked() {
 
 // ================ (3) 历史正确率折线图 ================  
 const trendData = [  
-    { time: "测验1", accuracy: 0.60 },  
-    { time: "测验2", accuracy: 0.65 },  
-    { time: "测验3", accuracy: 0.62 },  
-    { time: "测验4", accuracy: 0.61 },  
-    { time: "测验5", accuracy: 0.63 }  
+    { time: "测验1", accuracy: 0.50 },  
+    { time: "测验2", accuracy: 0.55 },  
+    { time: "测验3", accuracy: 0.53 },  
+    { time: "测验4", accuracy: 0.58 },  
+    { time: "测验5", accuracy: 0.60 }  
 ];  
 
 const lineChartWidth = document.getElementById("line-chart").clientWidth;  
