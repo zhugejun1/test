@@ -2,7 +2,7 @@
 <html lang="zh">  
 <head>  
     <meta charset="UTF-8" />  
-    <title>第24题 - 抛物线问题</title>  
+    <title>第24题 - 几何问题</title>  
     <!-- Tailwind CSS -->  
     <script src="https://cdn.tailwindcss.com"></script>  
     <!-- D3.js v6 -->  
@@ -44,19 +44,12 @@
         <!-- 题干描述区域 -->  
         <div class="bg-white p-4 rounded shadow">  
             <h1 class="text-xl font-bold mb-2">题号：第24题</h1>  
-            <p class="mb-2">  
-                如图，抛物线 y = ax² + bx + c 与 x 轴交于点 A (-8, 0)， O (0, 0) 两点，与直线 y = kx 交于点 B (-10, 5)。  
-            </p>  
-            <p class="mb-2">   
-                (1) 直接写出 a、b、k 的值；  
-            </p>  
-            <p class="mb-2">   
-                (2) 取点 C (-2.5, 0)，在抛物线上取点 P，使 ∠PBO = ∠ACB，求点 P 的坐标；  
-            </p>  
-            <p class="mb-2">   
-                (3) 点 Q 是抛物线上的动点，直线 AQ， BQ 分别与抛物线的对称轴相交于 G， F 两点，M 是抛物线的顶点，求 MF / MG 的值。  
-            </p>  
-            <p>当前掌握率：<span class="text-green-600 font-medium">71%</span></p>  
+            <p class="mb-4">如图，点\(A\)落在点\(F\)处。已知 \( \angle DEF + \angle LCBF = \angle A L = \angle EF \)，请证明她的结论；（3分）</p>  
+            <p class="mb-4">如图2，点\(M\)在\(AD\)上，点\(N\)在\(BC\)上，连接\(MN\)交\(BC\)于\(R\)，点\(D\)的对应点落在\(H\)处，点\(C\)的对应点落在\(G\)处。请明确她的结论。（4分）</p>  
+            <p class="mb-4">如图3，在（2）的条件下，将四边形\(MHGN\)改成得到四边形\(RPQN\)，点\(H\)的对应点落在\(P\)处，点\(G\)落到点\(Q\)处，猜想 \( \angle ABF, \angle LNQ \)与 \( \angle MRN \)的数量关系，并证明你的结论。（5分）</p>  
+            <p><img src="path_to_your_image.jpg" alt="几何示例" class="w-full h-auto" /></p>  
+
+            <p>当前掌握率：<span class="text-green-600 font-medium">0%</span></p>  
             <p>历史正确率：<span class="text-yellow-600 font-medium">68%</span></p>  
         </div>  
 
@@ -64,24 +57,26 @@
         <div class="bg-white p-4 rounded shadow">  
             <h2 class="text-lg font-bold mb-2">直接关联知识点</h2>  
             <ul class="list-disc list-inside text-gray-700">  
-                <li>抛物线的性质和方程</li>  
-                <li>角度与三角关系</li>  
-                <li>对称轴及其性质</li>  
+                <li>平行线与角度的性质</li>  
+                <li>几何证明方法</li>  
+                <li>四边形的性质</li>  
+            </ul>  
+        </div>  
+
+        <!-- 次级知识点 -->  
+        <div class="bg-white p-4 rounded shadow">  
+            <h2 class="text-lg font-bold mb-2">次级知识点</h2>  
+            <ul class="list-disc list-inside text-gray-700">  
+                <li style="color: #000;">角度和的性质</li>  
+                <li style="color: #000;">四边形内角和</li>  
+                <li style="color: #000;">三角形的相似性</li>  
             </ul>  
         </div>  
 
         <!-- 相关内容说明 -->  
-        <div class="bg-white p-4 rounded shadow overflow-auto">  
-            <h2 class="text-lg font-bold mb-2">相关题目的定位与层次</h2>  
-            <p class="mb-2">  
-                <strong>定义：</strong>该题探讨抛物线与直线的交点、角度关系，以及抛物线的对称性质，帮助学生理解几何图形之间的关系。  
-            </p>  
-            <p class="mb-2">  
-                <strong>针对性：</strong>加强对抛物线及一系列几何关系的理解与应用，特别在多个条件下求解交点及相关角度。  
-            </p>  
-            <p class="mb-2">  
-                <strong>层次性：</strong>可扩展到更复杂的三维图形和多变量几何问题，提升几何推理及数据分析能力。  
-            </p>  
+        <div class="bg-white p-4 rounded shadow">  
+            <h2 class="text-lg font-bold mb-2">相关内容说明</h2>  
+            <p class="mb-2">本题探讨几何图形的性质和角度关系，旨在帮助学生理解几何推理和证明。</p>  
         </div>  
 
         <!-- 历史正确率折线图 -->  
@@ -96,20 +91,20 @@
 <script>  
 // ================ (1) 知识点对应示例题 ================  
 const knowledgeQuestions = {  
-    "抛物线的性质和方程": {  
-        basic: "抛物线的基本特性及其对应方程的理解",  
-        medium: "求解抛物线的交点及对称性",  
-        advanced: "结合多条件进行抛物线的综合运用"  
+    "平行线与角度的性质": {  
+        basic: "平行线穿插所形成的角度关系",  
+        medium: "应用平行线性质进行角度计算",  
+        advanced: "复杂几何问题中的平行线解释"  
     },  
-    "角度与三角关系": {  
-        basic: "认识角度变化对几何图形造成的影响",  
-        medium: "运用三角关系求解多边形内外角",  
-        advanced: "复杂角度与几何关系的结合求解"  
+    "几何证明方法": {  
+        basic: "学习基础的几何证明技巧",  
+        medium: "应用几何证明解决相关问题",  
+        advanced: "综合几何证据与证明"  
     },  
-    "对称轴及其性质": {  
-        basic: "学习抛物线的对称轴概念及计算",  
-        medium: "运用对称性求解复合问题",  
-        advanced: "结合多个定理进行对称性分析"  
+    "四边形的性质": {  
+        basic: "理解四边形的基本性质",  
+        medium: "运用四边形的性质求解问题",  
+        advanced: "复杂条件下的四边形性质分析"  
     }  
 };  
 
@@ -117,14 +112,20 @@ const knowledgeQuestions = {
 const graphData = {  
     nodes: [  
         { id: "Q24", type: "question", name: "第24题" },  
-        { id: "K1",  type: "knowledge", name: "抛物线的性质和方程" },  
-        { id: "K2",  type: "knowledge", name: "角度与三角关系" },  
-        { id: "K1a", type: "sub-knowledge", name: "对称轴及其性质" }  
+        { id: "K1", type: "knowledge", name: "平行线与角度的性质" },  
+        { id: "K2", type: "knowledge", name: "几何证明方法" },  
+        { id: "K3", type: "knowledge", name: "四边形的性质" },  
+        { id: "K4", type: "sub-knowledge", name: "角度和的性质" },  
+        { id: "K5", type: "sub-knowledge", name: "四边形内角和" },  
+        { id: "K6", type: "sub-knowledge", name: "三角形的相似性" }  
     ],  
     links: [  
         { source: "Q24", target: "K1" },  
         { source: "Q24", target: "K2" },  
-        { source: "K1",  target: "K1a" }  
+        { source: "Q24", target: "K3" },  
+        { source: "K1", target: "K4" },  
+        { source: "K2", target: "K5" },  
+        { source: "K3", target: "K6" }  
     ]  
 };  
 
@@ -159,16 +160,14 @@ const tooltipGraph = d3.select("#graph-tooltip");
 node.append("circle")  
     .attr("r", d => d.type === "question" ? 18 : (d.type === "knowledge" ? 14 : 10))  
     .attr("fill", d => {  
-        if (d.type === "question") return "#fca5a5";  // 浅红  
+        if (d.type === "question") return "#fca5a5"; // 浅红  
         if (d.type === "knowledge") return "#93c5fd"; // 浅蓝  
-        return "#a7f3d0";                               // 浅绿  
+        return "#88e5c8"; // 浅绿色  
     })  
     .on("mouseover", (event, d) => {  
-        let htmlStr = "";  
-        if (d.type === "question") {  
-            htmlStr = `题号：<strong>${d.name}</strong>`;  
-        } else {  
-            htmlStr = `知识点：<strong>${d.name}</strong>`;  
+        let htmlStr = `节点：<strong>${d.name}</strong>`;  
+
+        if (d.type === "knowledge" || d.type === "sub-knowledge") {  
             const qSet = knowledgeQuestions[d.name];  
             if (qSet) {  
                 htmlStr += `  
@@ -180,15 +179,14 @@ node.append("circle")
                 htmlStr += "<br/>暂无示例题";  
             }  
         }  
+
         tooltipGraph  
             .style("opacity", 1)  
             .html(htmlStr)  
             .style("left", (event.pageX + 10) + "px")  
             .style("top", (event.pageY - 10) + "px");  
     })  
-    .on("mouseout", () => {  
-        tooltipGraph.style("opacity", 0);  
-    });  
+    .on("mouseout", () => tooltipGraph.style("opacity", 0));  
 
 node.append("text")  
     .text(d => d.name)  
@@ -210,11 +208,11 @@ function ticked() {
 
 // ================ (4) 历史正确率折线图 ================  
 const trendData = [  
-    { time: "测验1", accuracy: 0.54 },  
-    { time: "测验2", accuracy: 0.58 },  
-    { time: "测验3", accuracy: 0.61 },  
-    { time: "测验4", accuracy: 0.66 },  
-    { time: "测验5", accuracy: 0.68 }  
+    { time: "测验1", accuracy: 0.0 },  
+    { time: "测验2", accuracy: 0.05 },  
+    { time: "测验3", accuracy: 0.10 },  
+    { time: "测验4", accuracy: 0.12 },  
+    { time: "测验5", accuracy: 0.15 }  
 ];  
 
 const lineChartWidth = document.getElementById("line-chart").clientWidth;  
