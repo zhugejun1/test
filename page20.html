@@ -54,18 +54,8 @@
                 <input type="text" id="answer20" class="border p-2 rounded" />  
             </div>  
             
-            <p>当前掌握率：<span class="text-green-600 font-medium">36.8%</span></p>  
-            <p>历史正确率：<span class="text-yellow-600 font-medium">65%</span></p>  
-        </div>  
-
-        <!-- 知识点 -->  
-        <div class="bg-white p-4 rounded shadow">  
-            <h2 class="text-lg font-bold mb-2">直接关联知识点</h2>  
-            <ul class="list-disc list-inside text-gray-700">  
-                <li>平方根的性质</li>  
-                <li>一元一次方程的解法</li>  
-                <li>代数表达式的变换</li>  
-            </ul>  
+            <p>当前掌握率：<span class="text-green-600 font-medium">10.81%</span></p>  
+            <p>历史正确率：<span class="text-yellow-600 font-medium">15%</span></p>  
         </div>  
 
         <!-- 相关内容说明 -->  
@@ -100,21 +90,6 @@ const knowledgeQuestions = {
         basic: "代数的基本运算",  
         medium: "代数表达式的合并与化简",  
         advanced: "结合多种变换的方法"  
-    },  
-    "平方根的性质示例": {  
-        basic: "基本平方根求解",  
-        medium: "平方根与方程结合",  
-        advanced: "复杂平方根的应用"  
-    },  
-    "一元一次方程示例": {  
-        basic: "求解简单方程",  
-        medium: "带变量的方程应用",  
-        advanced: "复杂方程的合并与解决"  
-    },  
-    "代数表达式变换示例": {  
-        basic: "基本代数运算",  
-        medium: "代数式简化",  
-        advanced: "表达式的复杂变换"  
     }  
 };  
 
@@ -124,18 +99,12 @@ const graphData = {
         { id: "Q20", type: "question", name: "第20题" },  
         { id: "K1", type: "knowledge", name: "平方根的性质" },  
         { id: "K2", type: "knowledge", name: "一元一次方程的解法" },  
-        { id: "K3", type: "knowledge", name: "代数表达式的变换" },  
-        { id: "K1a", type: "sub-knowledge", name: "平方根的性质示例" },  
-        { id: "K2a", type: "sub-knowledge", name: "一元一次方程示例" },  
-        { id: "K3a", type: "sub-knowledge", name: "代数表达式变换示例" }  
+        { id: "K3", type: "knowledge", name: "代数表达式的变换" }  
     ],  
     links: [  
         { source: "Q20", target: "K1" },  
         { source: "Q20", target: "K2" },  
-        { source: "Q20", target: "K3" },  
-        { source: "K1", target: "K1a" },  
-        { source: "K2", target: "K2a" },  
-        { source: "K3", target: "K3a" }  
+        { source: "Q20", target: "K3" }  
     ]  
 };  
 
@@ -177,7 +146,7 @@ node.append("circle")
     .on("mouseover", (event, d) => {  
         let htmlStr = `节点：<strong>${d.name}</strong>`;  
         
-        if (d.type === "knowledge" || d.type === "sub-knowledge") {  
+        if (d.type === "knowledge") {  
             const qSet = knowledgeQuestions[d.name];  
             if (qSet) {  
                 htmlStr += `  
@@ -185,8 +154,6 @@ node.append("circle")
                     <br/><strong>中等题：</strong>${qSet.medium}  
                     <br/><strong>较难题：</strong>${qSet.advanced}  
                 `;  
-            } else {  
-                htmlStr += "<br/>暂无示例题";  
             }  
         }  
 
@@ -218,11 +185,11 @@ function ticked() {
 
 // ================ (4) 历史正确率折线图 ================  
 const trendData = [  
-    { time: "测验1", accuracy: 0.40 },  
-    { time: "测验2", accuracy: 0.35 },  
-    { time: "测验3", accuracy: 0.38 },  
-    { time: "测验4", accuracy: 0.36 },  
-    { time: "测验5", accuracy: 0.37 }  
+    { time: "测验1", accuracy: 0.05 },  
+    { time: "测验2", accuracy: 0.08 },  
+    { time: "测验3", accuracy: 0.10 },  
+    { time: "测验4", accuracy: 0.12 },  
+    { time: "测验5", accuracy: 0.1081 }  
 ];  
 
 const lineChartWidth = document.getElementById("line-chart").clientWidth;  
@@ -238,7 +205,7 @@ const xScale = d3.scalePoint()
     .padding(0.5);  
 
 const yScale = d3.scaleLinear()  
-    .domain([0, 1])  
+    .domain([0, 0.15])  
     .range([innerHeight, 0]);  
 
 const svgLine = d3.select("#line-chart")  
@@ -281,7 +248,7 @@ svgLine.selectAll(".dot")
     .attr("cy", d => yScale(d.accuracy))  
     .on("mouseover", (event, d) => {  
         tooltipLine  
-            .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(1)}%</strong>`)  
+            .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(2)}%</strong>`)  
             .style("opacity", 1)  
             .style("left", (event.pageX + 10) + "px")  
             .style("top", (event.pageY - 10) + "px");  
