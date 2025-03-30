@@ -64,6 +64,20 @@
             <p>历史正确率：<span class="text-yellow-600 font-medium">60%</span></p>  
         </div>  
 
+        <!-- 知识点与相关题目适应的层次 -->  
+        <div class="bg-white p-4 rounded shadow">  
+            <h2 class="text-lg font-bold mb-2">相关知识点与题目</h2>  
+            <ul class="list-disc list-inside text-gray-700">  
+                <li>立方根的计算</li>  
+                <li>一元三次方程解法</li>  
+                <li>基本代数公式应用</li>  
+            </ul>  
+            <h3 class="font-bold mb-1">示例题：</h3>  
+            <p class="mb-2"><strong>基础题：</strong> \( x^3 = 8 \)</p>  
+            <p class="mb-2"><strong>中等题：</strong> \( 2x^3 - 2 = 0 \)</p>  
+            <p><strong>提高题：</strong> \( x^3 + 4x^2 - 4 = 0 \)</p>  
+        </div>  
+
         <!-- 相关内容说明 -->  
         <div class="bg-white p-4 rounded shadow">  
             <h2 class="text-lg font-bold mb-2">计算细节说明</h2>  
@@ -159,11 +173,11 @@ function ticked() {
 
 // ================ (3) 历史正确率折线图 ================  
 const trendData = [  
-    { time: "测验1", accuracy: 0.40 },  
-    { time: "测验2", accuracy: 0.45 },  
-    { time: "测验3", accuracy: 0.50 },  
-    { time: "测验4", accuracy: 0.55 },  
-    { time: "测验5", accuracy: 0.52 }  
+    { time: "测验1", accuracy: 0.30 },  
+    { time: "测验2", accuracy: 0.32 },  
+    { time: "测验3", accuracy: 0.28 },  
+    { time: "测验4", accuracy: 0.33 },  
+    { time: "测验5", accuracy: 0.35 }  
 ];  
 
 const lineChartWidth = document.getElementById("line-chart").clientWidth;  
