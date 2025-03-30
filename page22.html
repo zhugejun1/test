@@ -51,28 +51,8 @@
             <p class="mb-4">（2）若将（1）中的图3拼成的正方形\(A_3B_3C_3D_3\)边的方向撇斜，能否拼出一个面积为24且宽度比为3:2的长方形？若能，请说明理由。（7分）</p>  
             <p><img src="path_to_your_image.jpg" alt="拼图示例" class="w-full h-auto" /></p>  
 
-            <p>当前掌握率：<span class="text-green-600 font-medium">31.6%</span></p>  
-            <p>历史正确率：<span class="text-yellow-600 font-medium">68%</span></p>  
-        </div>  
-
-        <!-- 知识点 -->  
-        <div class="bg-white p-4 rounded shadow">  
-            <h2 class="text-lg font-bold mb-2">直接关联知识点</h2>  
-            <ul class="list-disc list-inside text-gray-700">  
-                <li>正方形的性质</li>  
-                <li>面积和周长的计算</li>  
-                <li>比例和相似性</li>  
-            </ul>  
-        </div>  
-
-        <!-- 次级知识点 -->  
-        <div class="bg-white p-4 rounded shadow">  
-            <h2 class="text-lg font-bold mb-2">次级知识点</h2>  
-            <ul class="list-disc list-inside text-gray-700">  
-                <li style="color: #facc15;">拼图的组合与面积关系</li>  
-                <li style="color: #facc15;">长方形与正方形的转换</li>  
-                <li style="color: #facc15;">几何图形的性质运用</li>  
-            </ul>  
+            <p>当前掌握率：<span class="text-green-600 font-medium">8.11%</span></p>  
+            <p>历史正确率：<span class="text-yellow-600 font-medium">15%</span></p>  
         </div>  
 
         <!-- 相关内容说明 -->  
@@ -107,21 +87,6 @@ const knowledgeQuestions = {
         basic: "了解比例和相似性概念",  
         medium: "运用比例解决实际问题",  
         advanced: "相似图形之间的面积和周长关系"  
-    },  
-    "拼图的组合与面积关系": {  
-        basic: "简单拼图的组合",  
-        medium: "拼出特定面积的拼图",  
-        advanced: "复杂条件下的拼图组合"  
-    },  
-    "长方形与正方形的转换": {  
-        basic: "理解长方形和正方形的关系",  
-        medium: "计算长方形的转化面积",  
-        advanced: "结合比例进行面积计算"  
-    },  
-    "几何图形的性质运用": {  
-        basic: "几何图形基本性质的理解",  
-        medium: "运用几何性质解决问题",  
-        advanced: "综合性几何问题的应用"  
     }  
 };  
 
@@ -131,18 +96,12 @@ const graphData = {
         { id: "Q22", type: "question", name: "第22题" },  
         { id: "K1", type: "knowledge", name: "正方形的性质" },  
         { id: "K2", type: "knowledge", name: "面积和周长的计算" },  
-        { id: "K3", type: "knowledge", name: "比例和相似性" },  
-        { id: "K4", type: "sub-knowledge", name: "拼图的组合与面积关系" },  
-        { id: "K5", type: "sub-knowledge", name: "长方形与正方形的转换" },  
-        { id: "K6", type: "sub-knowledge", name: "几何图形的性质运用" }  
+        { id: "K3", type: "knowledge", name: "比例和相似性" }  
     ],  
     links: [  
         { source: "Q22", target: "K1" },  
         { source: "Q22", target: "K2" },  
-        { source: "Q22", target: "K3" },  
-        { source: "K1", target: "K4" },  
-        { source: "K2", target: "K5" },  
-        { source: "K3", target: "K6" }  
+        { source: "Q22", target: "K3" }  
     ]  
 };  
 
@@ -175,16 +134,12 @@ const node = svgGraph.selectAll("g.node")
 const tooltipGraph = d3.select("#graph-tooltip");  
 
 node.append("circle")  
-    .attr("r", d => d.type === "question" ? 18 : (d.type === "knowledge" ? 14 : 10))  
-    .attr("fill", d => {  
-        if (d.type === "question") return "#fca5a5"; // 浅红  
-        if (d.type === "knowledge") return "#93c5fd"; // 浅蓝  
-        return "#a7f3d0"; // 浅绿  
-    })  
+    .attr("r", d => d.type === "question" ? 18 : 14)  
+    .attr("fill", d => d.type === "question" ? "#fca5a5" : "#93c5fd")  
     .on("mouseover", (event, d) => {  
         let htmlStr = `节点：<strong>${d.name}</strong>`;  
-        
-        if (d.type === "knowledge" || d.type === "sub-knowledge") {  
+
+        if (d.type === "knowledge") {  
             const qSet = knowledgeQuestions[d.name];  
             if (qSet) {  
                 htmlStr += `  
@@ -210,8 +165,7 @@ node.append("text")
     .attr("x", 20)  
     .attr("y", 4)  
     .attr("font-size", "12px")  
-    .attr("fill", "#333")  
-    .attr("font-weight", d => (d.type === "question" ? "bold" : "normal"));  
+    .attr("fill", "#333");  
 
 function ticked() {  
     link  
@@ -225,11 +179,11 @@ function ticked() {
 
 // ================ (4) 历史正确率折线图 ================  
 const trendData = [  
-    { time: "测验1", accuracy: 0.52 },  
-    { time: "测验2", accuracy: 0.54 },  
-    { time: "测验3", accuracy: 0.56 },  
-    { time: "测验4", accuracy: 0.58 },  
-    { time: "测验5", accuracy: 0.60 }  
+    { time: "测验1", accuracy: 0.05 },  
+    { time: "测验2", accuracy: 0.065 },  
+    { time: "测验3", accuracy: 0.075 },  
+    { time: "测验4", accuracy: 0.08 },  
+    { time: "测验5", accuracy: 0.0811 }  
 ];  
 
 const lineChartWidth = document.getElementById("line-chart").clientWidth;  
@@ -245,7 +199,7 @@ const xScale = d3.scalePoint()
     .padding(0.5);  
 
 const yScale = d3.scaleLinear()  
-    .domain([0, 1])  
+    .domain([0, 0.1])  
     .range([innerHeight, 0]);  
 
 const svgLine = d3.select("#line-chart")  
@@ -288,7 +242,7 @@ svgLine.selectAll(".dot")
     .attr("cy", d => yScale(d.accuracy))  
     .on("mouseover", (event, d) => {  
         tooltipLine  
-            .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(1)}%</strong>`)  
+            .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(2)}%</strong>`)  
             .style("opacity", 1)  
             .style("left", (event.pageX + 10) + "px")  
             .style("top", (event.pageY - 10) + "px");  
