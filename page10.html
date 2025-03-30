@@ -1,4 +1,4 @@
-<!DOCTYPE html>  
+ <!DOCTYPE html>  
 <html lang="zh">  
 <head>  
     <meta charset="UTF-8" />  
@@ -28,7 +28,8 @@
         .line-chart-axis path, .line-chart-axis line { fill: none; stroke: #ccc; }  
         .dot { fill: #ff5722; stroke: #fff; stroke-width: 1px; cursor: pointer; }  
         .dot:hover { opacity: 0.8; }  
-    </style>  </head>  
+    </style>  
+</head>  
 <body class="h-screen w-screen overflow-hidden bg-gray-100">  
 
 <!-- 顶部：返回按钮 -->  
@@ -76,8 +77,8 @@
                 <input type="checkbox" id="option4" />  
                 <label for="option4">D. ①②④</label>  
             </div>  
-            <p>当前掌握率：<span class="text-green-600 font-medium">21.1%</span></p>  
-            <p>历史正确率：<span class="text-yellow-600 font-medium">65%</span></p>  
+            <p>当前掌握率：<span class="text-green-600 font-medium">7.89%</span></p>  
+            <p>历史正确率：<span class="text-yellow-600 font-medium">7.8%</span></p>  
         </div>  
 
         <!-- 知识点 -->  
@@ -219,11 +220,11 @@ function ticked() {
 
 // ================ (4) 历史正确率折线图 ================  
 const trendData = [  
-    { time: "测验1", accuracy: 0.20 },  
-    { time: "测验2", accuracy: 0.25 },  
-    { time: "测验3", accuracy: 0.22 },  
-    { time: "测验4", accuracy: 0.30 },  
-    { time: "测验5", accuracy: 0.21 }  
+    { time: "测验1", accuracy: 0.05 },  
+    { time: "测验2", accuracy: 0.08 },  
+    { time: "测验3", accuracy: 0.07 },  
+    { time: "测验4", accuracy: 0.09 },  
+    { time: "测验5", accuracy: 0.0789 }  
 ];  
 
 const lineChartWidth = document.getElementById("line-chart").clientWidth;  
@@ -282,7 +283,7 @@ svgLine.selectAll(".dot")
     .attr("cy", d => yScale(d.accuracy))  
     .on("mouseover", (event, d) => {  
         tooltipLine  
-            .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(1)}%</strong>`)  
+            .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(2)}%</strong>`)  
             .style("opacity", 1)  
             .style("left", (event.pageX + 10) + "px")  
             .style("top", (event.pageY - 10) + "px");  
