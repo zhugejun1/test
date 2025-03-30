@@ -60,19 +60,18 @@
 
         <!-- 知识点 -->  
         <div class="bg-white p-4 rounded shadow">  
-            <h2 class="text-lg font-bold mb-2">相关知识点</h2>  
+            <h2 class="text-lg font-bold mb-2">直接关联知识点</h2>  
             <ul class="list-disc list-inside text-gray-700">  
                 <li>平方根的性质</li>  
                 <li>一元一次方程的解法</li>  
+                <li>代数表达式的变换</li>  
             </ul>  
         </div>  
 
         <!-- 相关内容说明 -->  
         <div class="bg-white p-4 rounded shadow">  
-            <h2 class="text-lg font-bold mb-2">计算细节说明</h2>  
-            <p class="mb-2">  
-                本题考察平方根和代数运算的基础。  
-            </p>  
+            <h2 class="text-lg font-bold mb-2">相关内容说明</h2>  
+            <p class="mb-2">本题考察平方根和代数运算的基础。</p>  
         </div>  
 
         <!-- 历史正确率折线图 -->  
@@ -85,20 +84,62 @@
 </div>  
 
 <script>  
-// ================ (1) 力导向图数据 ================  
+// ================ (1) 知识点对应示例题 ================  
+const knowledgeQuestions = {  
+    "平方根的性质": {  
+        basic: "平方根的定义与基本性质",  
+        medium: "求解简单平方根方程",  
+        advanced: "结合条件求解复杂平方根问题"  
+    },  
+    "一元一次方程的解法": {  
+        basic: "基础方程求解",  
+        medium: "带有字母的方程求解",  
+        advanced: "复杂方程组的求解"  
+    },  
+    "代数表达式的变换": {  
+        basic: "代数的基本运算",  
+        medium: "代数表达式的合并与化简",  
+        advanced: "结合多种变换的方法"  
+    },  
+    "平方根的性质示例": {  
+        basic: "基本平方根求解",  
+        medium: "平方根与方程结合",  
+        advanced: "复杂平方根的应用"  
+    },  
+    "一元一次方程示例": {  
+        basic: "求解简单方程",  
+        medium: "带变量的方程应用",  
+        advanced: "复杂方程的合并与解决"  
+    },  
+    "代数表达式变换示例": {  
+        basic: "基本代数运算",  
+        medium: "代数式简化",  
+        advanced: "表达式的复杂变换"  
+    }  
+};  
+
+// ================ (2) 力导向图数据 ================  
 const graphData = {  
     nodes: [  
         { id: "Q20", type: "question", name: "第20题" },  
         { id: "K1", type: "knowledge", name: "平方根的性质" },  
-        { id: "K2", type: "knowledge", name: "代数运算" }  
+        { id: "K2", type: "knowledge", name: "一元一次方程的解法" },  
+        { id: "K3", type: "knowledge", name: "代数表达式的变换" },  
+        { id: "K1a", type: "sub-knowledge", name: "平方根的性质示例" },  
+        { id: "K2a", type: "sub-knowledge", name: "一元一次方程示例" },  
+        { id: "K3a", type: "sub-knowledge", name: "代数表达式变换示例" }  
     ],  
     links: [  
         { source: "Q20", target: "K1" },  
-        { source: "Q20", target: "K2" }  
+        { source: "Q20", target: "K2" },  
+        { source: "Q20", target: "K3" },  
+        { source: "K1", target: "K1a" },  
+        { source: "K2", target: "K2a" },  
+        { source: "K3", target: "K3a" }  
     ]  
 };  
 
-// ================ (2) 力导向图绘制 ================  
+// ================ (3) 力导向图绘制 ================  
 const width = document.getElementById("left-panel").clientWidth;  
 const height = document.getElementById("left-panel").clientHeight;  
 
@@ -127,13 +168,28 @@ const node = svgGraph.selectAll("g.node")
 const tooltipGraph = d3.select("#graph-tooltip");  
 
 node.append("circle")  
-    .attr("r", d => d.type === "question" ? 18 : 14)  
+    .attr("r", d => d.type === "question" ? 18 : (d.type === "knowledge" ? 14 : 10))  
     .attr("fill", d => {  
         if (d.type === "question") return "#fca5a5"; // 浅红  
-        return "#93c5fd"; // 浅蓝  
+        if (d.type === "knowledge") return "#93c5fd"; // 浅蓝  
+        return "#a7f3d0"; // 浅绿  
     })  
     .on("mouseover", (event, d) => {  
-        let htmlStr = `题号：<strong>${d.name}</strong>`;  
+        let htmlStr = `节点：<strong>${d.name}</strong>`;  
+        
+        if (d.type === "knowledge" || d.type === "sub-knowledge") {  
+            const qSet = knowledgeQuestions[d.name];  
+            if (qSet) {  
+                htmlStr += `  
+                    <br/><strong>基础题：</strong>${qSet.basic}  
+                    <br/><strong>中等题：</strong>${qSet.medium}  
+                    <br/><strong>较难题：</strong>${qSet.advanced}  
+                `;  
+            } else {  
+                htmlStr += "<br/>暂无示例题";  
+            }  
+        }  
+
         tooltipGraph  
             .style("opacity", 1)  
             .html(htmlStr)  
@@ -160,7 +216,7 @@ function ticked() {
     node.attr("transform", d => `translate(${d.x}, ${d.y})`);  
 }  
 
-// ================ (3) 历史正确率折线图 ================  
+// ================ (4) 历史正确率折线图 ================  
 const trendData = [  
     { time: "测验1", accuracy: 0.40 },  
     { time: "测验2", accuracy: 0.35 },  
