@@ -50,27 +50,7 @@
             <p><img src="path_to_your_image.jpg" alt="几何示例" class="w-full h-auto" /></p>  
 
             <p>当前掌握率：<span class="text-green-600 font-medium">0%</span></p>  
-            <p>历史正确率：<span class="text-yellow-600 font-medium">68%</span></p>  
-        </div>  
-
-        <!-- 知识点 -->  
-        <div class="bg-white p-4 rounded shadow">  
-            <h2 class="text-lg font-bold mb-2">直接关联知识点</h2>  
-            <ul class="list-disc list-inside text-gray-700">  
-                <li>平行线与角度的性质</li>  
-                <li>几何证明方法</li>  
-                <li>四边形的性质</li>  
-            </ul>  
-        </div>  
-
-        <!-- 次级知识点 -->  
-        <div class="bg-white p-4 rounded shadow">  
-            <h2 class="text-lg font-bold mb-2">次级知识点</h2>  
-            <ul class="list-disc list-inside text-gray-700">  
-                <li style="color: #000;">角度和的性质</li>  
-                <li style="color: #000;">四边形内角和</li>  
-                <li style="color: #000;">三角形的相似性</li>  
-            </ul>  
+            <p>历史正确率：<span class="text-yellow-600 font-medium">10%</span></p>  
         </div>  
 
         <!-- 相关内容说明 -->  
@@ -114,18 +94,12 @@ const graphData = {
         { id: "Q24", type: "question", name: "第24题" },  
         { id: "K1", type: "knowledge", name: "平行线与角度的性质" },  
         { id: "K2", type: "knowledge", name: "几何证明方法" },  
-        { id: "K3", type: "knowledge", name: "四边形的性质" },  
-        { id: "K4", type: "sub-knowledge", name: "角度和的性质" },  
-        { id: "K5", type: "sub-knowledge", name: "四边形内角和" },  
-        { id: "K6", type: "sub-knowledge", name: "三角形的相似性" }  
+        { id: "K3", type: "knowledge", name: "四边形的性质" }  
     ],  
     links: [  
         { source: "Q24", target: "K1" },  
         { source: "Q24", target: "K2" },  
-        { source: "Q24", target: "K3" },  
-        { source: "K1", target: "K4" },  
-        { source: "K2", target: "K5" },  
-        { source: "K3", target: "K6" }  
+        { source: "Q24", target: "K3" }  
     ]  
 };  
 
@@ -158,16 +132,12 @@ const node = svgGraph.selectAll("g.node")
 const tooltipGraph = d3.select("#graph-tooltip");  
 
 node.append("circle")  
-    .attr("r", d => d.type === "question" ? 18 : (d.type === "knowledge" ? 14 : 10))  
-    .attr("fill", d => {  
-        if (d.type === "question") return "#fca5a5"; // 浅红  
-        if (d.type === "knowledge") return "#93c5fd"; // 浅蓝  
-        return "#88e5c8"; // 浅绿色  
-    })  
+    .attr("r", d => d.type === "question" ? 18 : 14)  
+    .attr("fill", d => d.type === "question" ? "#fca5a5" : "#93c5fd")  
     .on("mouseover", (event, d) => {  
         let htmlStr = `节点：<strong>${d.name}</strong>`;  
 
-        if (d.type === "knowledge" || d.type === "sub-knowledge") {  
+        if (d.type === "knowledge") {  
             const qSet = knowledgeQuestions[d.name];  
             if (qSet) {  
                 htmlStr += `  
@@ -193,8 +163,7 @@ node.append("text")
     .attr("x", 20)  
     .attr("y", 4)  
     .attr("font-size", "12px")  
-    .attr("fill", "#333")  
-    .attr("font-weight", d => (d.type === "question" ? "bold" : "normal"));  
+    .attr("fill", "#333");  
 
 function ticked() {  
     link  
@@ -209,10 +178,10 @@ function ticked() {
 // ================ (4) 历史正确率折线图 ================  
 const trendData = [  
     { time: "测验1", accuracy: 0.0 },  
-    { time: "测验2", accuracy: 0.05 },  
-    { time: "测验3", accuracy: 0.10 },  
-    { time: "测验4", accuracy: 0.12 },  
-    { time: "测验5", accuracy: 0.15 }  
+    { time: "测验2", accuracy: 0.02 },  
+    { time: "测验3", accuracy: 0.05 },  
+    { time: "测验4", accuracy: 0.07 },  
+    { time: "测验5", accuracy: 0.1 }  
 ];  
 
 const lineChartWidth = document.getElementById("line-chart").clientWidth;  
@@ -228,7 +197,7 @@ const xScale = d3.scalePoint()
     .padding(0.5);  
 
 const yScale = d3.scaleLinear()  
-    .domain([0, 1])  
+    .domain([0, 0.15])  
     .range([innerHeight, 0]);  
 
 const svgLine = d3.select("#line-chart")  
@@ -271,7 +240,7 @@ svgLine.selectAll(".dot")
     .attr("cy", d => yScale(d.accuracy))  
     .on("mouseover", (event, d) => {  
         tooltipLine  
-            .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(1)}%</strong>`)  
+            .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(2)}%</strong>`)  
             .style("opacity", 1)  
             .style("left", (event.pageX + 10) + "px")  
             .style("top", (event.pageY - 10) + "px");  
