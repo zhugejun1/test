@@ -1,66 +1,122 @@
+<!DOCTYPE html>  
+<html lang="zh">  
+<head>  
+  <meta charset="UTF-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+  <title>七下数学3月月考</title>  
+  <!-- 引入 Tailwind CSS 和 D3.js -->  
+  <script src="https://cdn.tailwindcss.com"></script>  
+  <script src="https://d3js.org/d3.v7.min.js"></script>  
+  <style>  
+    @keyframes cardEntrance {  
+      from { opacity: 0; transform: translateY(20px); }  
+      to { opacity: 1; transform: translateY(0); }  
+    }  
+    .question-card {  
+      animation: cardEntrance 0.6s ease-out both;  
+    }  
+  </style>  
+</head>  
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen flex flex-col items-center p-8">  
 
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-  <meta charset="UTF-8">
-  <title>1～24 题目入口示例</title>
-  <!-- 引入 Tailwind CSS（开发环境） -->
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-8">
+  <!-- 动态标题 -->  
+  <h1 class="text-4xl font-bold text-gray-800 mb-10 animate-pulse">  
+    <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">  
+      七下数学3月月考  
+    </span>  
+  </h1>  
 
-  <h1 class="text-2xl font-bold mb-6">题目列表（1～24）</h1>
+  <!-- 题目容器 -->  
+  <div id="questions" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full max-w-6xl"></div>  
 
-  <!-- 容器：用网格布局显示24个题目按钮 -->
-  <div id="questions" class="grid grid-cols-6 gap-6"></div>
+  <script>  
+    document.addEventListener("DOMContentLoaded", () => {  
+      // 生成题目数据  
+      const questions = [];  
+      for (let i = 1; i <= 16; i++) questions.push({ id: i, rate: Math.random() * 100 });  
+      ['17(1)', '17(2)', '18(1)', '18(2)'].forEach(id => questions.push({ id, rate: Math.random() * 100 }));  
+      for (let i = 19; i <= 24; i++) questions.push({ id, rate: Math.random() * 100 });  
 
-  <script>
-    // 随机生成示例正确率
-    // 实际使用时，可将这段改为从后端或本地文件获取真实数据
-    const questions = [];
-    for (let i = 1; i <= 24; i++) {
-      const rate = Math.floor(Math.random() * 101); // 0～100之间的随机数
-      questions.push({ id: i, rate });
-    }
+      // 颜色比例尺  
+      const colorScale = d3.scaleLinear()  
+        .domain([0, 100])  
+        .range(["#ef4444", "#4ade80"]);  
 
-    // 不同正确率对应不同的背景颜色
-    // 你也可以根据实际需求微调区间和颜色
-    function getColorClass(rate) {
-      if (rate < 40) return "bg-red-500";    // 低正确率，红色
-      if (rate < 60) return "bg-orange-400"; // 较低正确率，橙色
-      if (rate < 80) return "bg-yellow-400"; // 中等正确率，黄色
-      return "bg-green-500";                // 较高正确率，绿色
-    }
+      // 创建带数值的环形图  
+      function createRateChart(container, rate) {  
+        const svgSize = 80; // 图大小  
+        const arcWidth = 10; // 图宽度  
 
-    // 获取容器
-    const container = document.getElementById("questions");
+        const svg = d3.select(container)  
+          .append("svg")  
+          .attr("width", svgSize)  
+          .attr("height", svgSize);  
 
-    // 动态生成 1～24 按钮及正确率
-    questions.forEach(({ id, rate }) => {
-      // 创建外层容器
-      const wrapper = document.createElement("div");
-      wrapper.className = "flex flex-col items-center";
+        // 创建背景环  
+        svg.append("path")  
+          .attr("d", d3.arc()  
+            .innerRadius(svgSize / 2 - arcWidth)  
+            .outerRadius(svgSize / 2)  
+            .startAngle(-Math.PI / 2)  
+            .endAngle(Math.PI * 2)  
+          )  
+          .attr("transform", `translate(${svgSize / 2},${svgSize / 2})`)  
+          .attr("fill", "#e5e7eb");  
 
-      // 创建按钮（数字）
-      const link = document.createElement("a");
-      link.href = `page${id}.html`; // 这里可改成实际链接，如 page1.html
-      link.textContent = id;
-      link.className = `
-        text-white font-semibold rounded-full w-12 h-12 flex items-center justify-center shadow-lg
-        hover:opacity-90 transition-opacity
-        ${getColorClass(rate)}
-      `;
+        // 创建动态前景环  
+        svg.append("path")  
+          .attr("fill", colorScale(rate))  
+          .attr("transform", `translate(${svgSize / 2},${svgSize / 2})`)  
+          .transition()  
+          .duration(1000)  
+          .attrTween("d", () => {  
+            const interpolate = d3.interpolate(0, rate);  
+            return t => d3.arc()  
+              .innerRadius(svgSize / 2 - arcWidth)  
+              .outerRadius(svgSize / 2)  
+              .startAngle(-Math.PI / 2)  
+              .endAngle((interpolate(t) / 100) * Math.PI * 2 - Math.PI / 2)();  
+          });  
 
-      // 创建正确率文本
-      const rateEl = document.createElement("p");
-      rateEl.textContent = `正确率：${rate}%`;
-      rateEl.className = "mt-2 text-sm text-gray-600";
+        // 显示中央数值 (具体正确率)  
+        svg.append("text")  
+          .attr("x", svgSize / 2)  
+          .attr("y", svgSize / 2 + 5)  
+          .attr("text-anchor", "middle")  
+          .attr("font-size", "14px")  
+          .attr("font-weight", "bold")  
+          .attr("fill", "#374151")  
+          .text(`${Math.round(rate)}%`);  
+      }  
 
-      // 组合
-      wrapper.appendChild(link);
-      wrapper.appendChild(rateEl);
-      container.appendChild(wrapper);
-    });
-  </script>
-</body>
-</html>
+      // 动态生成题目卡片  
+      const container = document.getElementById("questions");  
+      if (!container) {  
+        console.error("Questions container is not found.");  
+        return;  
+      }  
+
+      questions.forEach(({ id, rate }, i) => {  
+        const card = document.createElement("div");  
+        card.className = "question-card flex flex-col items-center p-4 bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow";  
+        card.style.animationDelay = `${i * 0.1}s`;  
+
+        // 添加题目标题  
+        const title = document.createElement("h2");  
+        title.textContent = `第 ${id} 题`;  
+        title.className = "text-base font-medium text-blue-600 mb-4";  
+        card.appendChild(title);  
+
+        // 添加环形图  
+        const chartContainer = document.createElement("div");  
+        createRateChart(chartContainer, rate);  
+        card.appendChild(chartContainer);  
+
+        // 添加到题目外层容器  
+        container.appendChild(card);  
+      });  
+    });  
+  </script>  
+
+</body>  
+</html>  
