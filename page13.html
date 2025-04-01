@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>  
     <!-- D3.js v6 -->  
     <script src="https://d3js.org/d3.v6.min.js"></script>  
-
     <!-- MathJax 引入 -->  
     <script>  
         MathJax = {  
@@ -56,28 +55,16 @@
             <h1 class="text-xl font-bold mb-2">题号：第13题</h1>  
             <p class="mb-4">若 \( \sqrt{7} \) 的整数部分为 \( a \)，\( \sqrt{5} \) 的小数部分为 \( b \)，</p>  
             <p class="mb-4">则 \( a + b = \) _____.</p>  
-
-            <div class="mb-4">  
-                <label for="answer1" class="block">答案：</label>  
-                <input type="text" id="answer1" class="border p-2 rounded" />  
-            </div>  
-            
+            <p>选项：  
+                <ul class="list-disc pl-5">  
+                    <li>A. 5.645</li>  
+                    <li>B. 5.6454</li>  
+                    <li>C. 5.64554</li>  
+                    <li>D. 5.64</li>  
+                </ul>  
+            </p>  
             <p>当前掌握率：<span class="text-green-600 font-medium">62.16%</span></p>  
             <p>历史正确率：<span class="text-yellow-600 font-medium">59%</span></p>  
-        </div>  
-
-        <!-- 相关内容说明 -->  
-        <div class="bg-white p-4 rounded shadow overflow-auto">  
-            <h2 class="text-lg font-bold mb-2">相关题目的定位与层次</h2>  
-            <p class="mb-2">  
-                <strong>定义：</strong>该题考察根号的整数部分与小数部分的概念。  
-            </p>  
-            <p class="mb-2">  
-                <strong>针对性：</strong>帮助学生理解数值分解的基本方法。  
-            </p>  
-            <p class="mb-2">  
-                <strong>层次性：</strong>可以扩展到更复杂的数值问题。  
-            </p>  
         </div>  
 
         <!-- 历史正确率折线图 -->  
@@ -101,6 +88,16 @@ const knowledgeQuestions = {
         basic: "了解整数部分与小数部分的定义",  
         medium: "掌握如何求得数的整数与小数部分",  
         advanced: "在复杂数据中找到数的各部分"  
+    },  
+    "根号计算示例": {  
+        basic: "举出根号的计算实例",  
+        medium: "根据题目求根号",  
+        advanced: "在复杂计算中使用根号"  
+    },  
+    "小数与整数转换": {  
+        basic: "理解小数与整数之间的关系",  
+        medium: "掌握小数转整数的技巧",  
+        advanced: "在应用中进行小数与整数的转换"  
     }  
 };  
 
@@ -109,11 +106,15 @@ const graphData = {
     nodes: [  
         { id: "Q13", type: "question", name: "第13题" },  
         { id: "K1", type: "knowledge", name: "根号的性质" },  
-        { id: "K2", type: "knowledge", name: "整数部分与小数部分" }  
+        { id: "K2", type: "knowledge", name: "整数部分与小数部分" },  
+        { id: "K1_1", type: "knowledge", name: "根号计算示例" },  
+        { id: "K2_1", type: "knowledge", name: "小数与整数转换" }  
     ],  
     links: [  
         { source: "Q13", target: "K1" },  
-        { source: "Q13", target: "K2" }  
+        { source: "Q13", target: "K2" },  
+        { source: "K1", target: "K1_1" },  
+        { source: "K2", target: "K2_1" }  
     ]  
 };  
 
@@ -196,11 +197,11 @@ function ticked() {
 
 // ================ (4) 历史正确率折线图 ================  
 const trendData = [  
-    { time: "测验1", accuracy: 0.59 },  
-    { time: "测验2", accuracy: 0.62 },  
-    { time: "测验3", accuracy: 0.60 },  
-    { time: "测验4", accuracy: 0.61 },  
-    { time: "测验5", accuracy: 0.65 }  
+    { time: "测验1", accuracy: 0.55 },  
+    { time: "测验2", accuracy: 0.60 },  
+    { time: "测验3", accuracy: 0.58 },  
+    { time: "测验4", accuracy: 0.66 },  
+    { time: "测验5", accuracy: 0.70 }  
 ];  
 
 const lineChartWidth = document.getElementById("line-chart").clientWidth;  
