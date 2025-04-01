@@ -1,4 +1,5 @@
-  <!DOCTYPE html>  
+
+    <!DOCTYPE html>  
 <html lang="zh">  
 <head>  
     <meta charset="UTF-8" />  
@@ -48,13 +49,13 @@
         <div id="graph-tooltip" class="tooltip"></div>  
     </div>  
 
-    <!-- 右侧：题目信息 -->  
+    <!-- 右侧：题目信息和历史趋势图 -->  
     <div id="right-panel" class="w-1/2 h-full flex flex-col p-4 space-y-4">  
 
-        <!-- 题干描述区域 -->  
+        <!-- 题目信息 -->  
         <div class="bg-white p-4 rounded shadow">  
             <h1 class="text-xl font-bold mb-2">题号：第7题</h1>  
-            <p class="mb-2">  
+            <p class="mb-4">  
                 实数a，b，c在数轴上对应的点的位置如图所示，则  
                 \(\sqrt{c^2 - (\sqrt{a})^2} + (\sqrt[3]{a + b})^3\)的值为（ ）  
             </p>  
@@ -78,20 +79,6 @@
             <p>历史正确率：<span class="text-yellow-600 font-medium">35%</span></p>  
         </div>  
 
-        <!-- 相关内容说明 -->  
-        <div class="bg-white p-4 rounded shadow overflow-auto">  
-            <h2 class="text-lg font-bold mb-2">相关题目的定位与层次</h2>  
-            <p class="mb-2">  
-                <strong>定义：</strong>该题考察平方根和立方根的基本性质，通过数轴理解不同数字的关系。  
-            </p>  
-            <p class="mb-2">  
-                <strong>针对性：</strong>加强对代数与几何的结合理解。  
-            </p>  
-            <p class="mb-2">  
-                <strong>层次性：</strong>可以引入更复杂的代数式，提升学生计算与推理能力。  
-            </p>  
-        </div>  
-
         <!-- 历史正确率折线图 -->  
         <div class="flex-1 bg-white p-4 rounded shadow relative">  
             <h2 class="text-lg font-bold mb-2">历史正确率趋势</h2>  
@@ -102,7 +89,7 @@
 </div>  
 
 <script>  
-// ================ (1) 知识点对应示例题 ================  
+// 知识点与示例题数据  
 const knowledgeQuestions = {  
     "平方根的性质": {  
         basic: "理解平方根的定义与性质",  
@@ -113,23 +100,30 @@ const knowledgeQuestions = {
         basic: "了解立方根的定义及其计算",  
         medium: "掌握立方根在方程中的应用",  
         advanced: "讨论包含立方根的代数式"  
+    },  
+    "数轴模型扩展": {  
+        basic: "理解数轴基本模型",  
+        medium: "解决数轴与代数结合问题",  
+        advanced: "拓展数轴模型到更复杂的组合问题"  
     }  
 };  
 
-// ================ (2) 力导向图数据 ================  
+// 力导向图数据  
 const graphData = {  
     nodes: [  
         { id: "Q7", type: "question", name: "第7题" },  
         { id: "K1", type: "knowledge", name: "平方根的性质" },  
-        { id: "K2", type: "knowledge", name: "立方根的性质" }  
+        { id: "K2", type: "knowledge", name: "立方根的性质" },  
+        { id: "K3", type: "knowledge", name: "数轴模型扩展" }  
     ],  
     links: [  
         { source: "Q7", target: "K1" },  
-        { source: "Q7", target: "K2" }  
+        { source: "Q7", target: "K2" },  
+        { source: "K2", target: "K3" }  
     ]  
 };  
 
-// ================ (3) 力导向图绘制 ================  
+// 力导向图绘制  
 const width = document.getElementById("left-panel").clientWidth;  
 const height = document.getElementById("left-panel").clientHeight;  
 
@@ -159,10 +153,7 @@ const tooltipGraph = d3.select("#graph-tooltip");
 
 node.append("circle")  
     .attr("r", d => d.type === "question" ? 18 : 14)  
-    .attr("fill", d => {  
-        if (d.type === "question") return "#fca5a5"; // 浅红  
-        return "#93c5fd"; // 浅蓝  
-    })  
+    .attr("fill", d => (d.type === "question" ? "#fca5a5" : "#93c5fd"))  
     .on("mouseover", (event, d) => {  
         let htmlStr = "";  
         if (d.type === "question") {  
@@ -206,13 +197,13 @@ function ticked() {
     node.attr("transform", d => `translate(${d.x}, ${d.y})`);  
 }  
 
-// ================ (4) 历史正确率折线图 ================  
+// 历史正确率折线图  
 const trendData = [  
     { time: "测验1", accuracy: 0.30 },  
-    { time: "测验2", accuracy: 0.35 },  
-    { time: "测验3", accuracy: 0.28 },  
-    { time: "测验4", accuracy: 0.32 },  
-    { time: "测验5", accuracy: 0.35 }  
+    { time: "测验2", accuracy: 0.32 },  
+    { time: "测验3", accuracy: 0.34 },  
+    { time: "测验4", accuracy: 0.35 },  
+    { time: "测验5", accuracy: 0.37 }  
 ];  
 
 const lineChartWidth = document.getElementById("line-chart").clientWidth;  
@@ -280,8 +271,5 @@ svgLine.selectAll(".dot")
         tooltipLine.style("opacity", 0);  
     });  
 </script>  
-
-<!-- 提示层 -->  
-<div id="line-tooltip" class="tooltip"></div>  
 </body>  
 </html>  
