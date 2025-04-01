@@ -21,7 +21,7 @@
         .node circle:hover { fill: #333; }  
         .node text { pointer-events: none; font-size: 10px; fill: #333; }  
         line.link { stroke: #ccc; stroke-width: 1.5px; }  
-        .tooltip { position: absolute; min-width: 120px; padding: 8px; font-size: 12px; background: rgba(255, 255, 255, 0.9); border: 1px solid #ccc; border-radius: 4px; pointer-events: none; box-shadow: 0 2px 5px rgba(0,0,0,0.15); opacity: 0; transition: opacity 0.2s; z-index: 999; }  
+        .tooltip { position: absolute; min-width: 120px; padding: 8px; font-size: 12px; background: rgba(255, 255, 255, 0.9); border: 1px solid #ccc; border-radius: 4px; pointer-events: none; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); opacity: 0; transition: opacity 0.2s; z-index: 999; }  
         .line { fill: none; stroke-width: 2px; }  
         .line-chart-axis path, .line-chart-axis line { fill: none; stroke: #ccc; }  
         .dot { fill: #ff5722; stroke: #fff; stroke-width: 1px; cursor: pointer; }  
@@ -54,28 +54,9 @@
             <h1 class="text-xl font-bold mb-2">题号：第17（2）题</h1>  
             <p class="mb-4">求下列各式中 \( x \) 的值：</p>  
             <p class="mb-4">\( x^2 - 4x + 4 = 0 \)</p>  
-
-            <div class="mb-4">  
-                <label for="answer17_2" class="block">答案：</label>  
-                <input type="text" id="answer17_2" class="border p-2 rounded" />  
-            </div>  
             
             <p>当前掌握率：<span class="text-green-600 font-medium">35.14%</span></p>  
             <p>历史正确率：<span class="text-yellow-600 font-medium">60%</span></p>  
-        </div>  
-
-        <!-- 相关内容说明 -->  
-        <div class="bg-white p-4 rounded shadow overflow-auto">  
-            <h2 class="text-lg font-bold mb-2">相关题目的定位与层次</h2>  
-            <p class="mb-2">  
-                <strong>定义：</strong>考察一元二次方程的解法。  
-            </p>  
-            <p class="mb-2">  
-                <strong>针对性：</strong>帮助学生理解二次方程的根的性质及其解法。  
-            </p>  
-            <p class="mb-2">  
-                <strong>层次性：</strong>可以扩展到复杂的高次方程问题。  
-            </p>  
         </div>  
 
         <!-- 历史正确率折线图 -->  
@@ -99,6 +80,16 @@ const knowledgeQuestions = {
         basic: "了解配方法的基本概念",  
         medium: "掌握配方法的应用",  
         advanced: "解决复杂的方程问题"  
+    },  
+    "求根公式": {  
+        basic: "理解求根公式的应用",  
+        medium: "掌握求根公式的推导与使用",  
+        advanced: "使用求根公式解决复杂问题"  
+    },  
+    "图像法": {  
+        basic: "了解图像法的基本思路",  
+        medium: "掌握如何通过图像解方程",  
+        advanced: "使用图像法解决更高级的代数问题"  
     }  
 };  
 
@@ -107,11 +98,15 @@ const graphData = {
     nodes: [  
         { id: "Q17_2", type: "question", name: "第17（2）题" },  
         { id: "K1", type: "knowledge", name: "一元二次方程" },  
-        { id: "K2", type: "knowledge", name: "配方法" }  
+        { id: "K2", type: "knowledge", name: "配方法" },  
+        { id: "K3", type: "knowledge", name: "求根公式" },  
+        { id: "K4", type: "knowledge", name: "图像法" }  
     ],  
     links: [  
         { source: "Q17_2", target: "K1" },  
-        { source: "Q17_2", target: "K2" }  
+        { source: "Q17_2", target: "K2" },  
+        { source: "K1", target: "K3" },  // 一元二次方程与求根公式  
+        { source: "K1", target: "K4" }   // 一元二次方程与图像法  
     ]  
 };  
 
@@ -194,11 +189,11 @@ function ticked() {
 
 // ================ (4) 历史正确率折线图 ================  
 const trendData = [  
-    { time: "测验1", accuracy: 0.45 },  
-    { time: "测验2", accuracy: 0.50 },  
-    { time: "测验3", accuracy: 0.55 },  
-    { time: "测验4", accuracy: 0.52 },  
-    { time: "测验5", accuracy: 0.51 }  
+    { time: "测验1", accuracy: 0.40 },  
+    { time: "测验2", accuracy: 0.45 },  
+    { time: "测验3", accuracy: 0.38 },  
+    { time: "测验4", accuracy: 0.42 },  
+    { time: "测验5", accuracy: 0.47 }  
 ];  
 
 const lineChartWidth = document.getElementById("line-chart").clientWidth;  
