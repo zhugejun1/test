@@ -53,28 +53,9 @@
         <div class="bg-white p-4 rounded shadow">  
             <h1 class="text-xl font-bold mb-2">题号：第15题</h1>  
             <p class="mb-4">若 \( \angle 1 \) 与 \( \angle 2 \) 的两边分别平行，\( \angle 1 \) 是 \( \angle 2 \) 余角的3倍，则 \( \angle 1 = \) _____.</p>  
-
-            <div class="mb-4">  
-                <label for="answer1" class="block">答案：</label>  
-                <input type="text" id="answer1" class="border p-2 rounded" />  
-            </div>  
             
             <p>当前掌握率：<span class="text-green-600 font-medium">21.62%</span></p>  
             <p>历史正确率：<span class="text-yellow-600 font-medium">60%</span></p>  
-        </div>  
-
-        <!-- 相关内容说明 -->  
-        <div class="bg-white p-4 rounded shadow overflow-auto">  
-            <h2 class="text-lg font-bold mb-2">相关题目的定位与层次</h2>  
-            <p class="mb-2">  
-                <strong>定义：</strong>考察余角的定义及其与平行线的关系。  
-            </p>  
-            <p class="mb-2">  
-                <strong>针对性：</strong>帮助学生理解角度的基本性质与相互关系。  
-            </p>  
-            <p class="mb-2">  
-                <strong>层次性：</strong>可以扩展到包括其他角度关系的几何问题。  
-            </p>  
         </div>  
 
         <!-- 历史正确率折线图 -->  
@@ -94,6 +75,16 @@ const knowledgeQuestions = {
         medium: "掌握余角的性质和计算",  
         advanced: "应用余角解决复杂问题"  
     },  
+    "平行线与同位角": {  
+        basic: "了解同位角的定义",  
+        medium: "掌握同位角的性质和计算",  
+        advanced: "应用同位角解决复杂问题"  
+    },  
+    "余角的性质": {  
+        basic: "了解余角的基本性质",  
+        medium: "掌握余角与其它角度的关系",  
+        advanced: "应用余角性质解决题目"  
+    },  
     "平行线的性质": {  
         basic: "了解平行线的基本性质",  
         medium: "掌握平行线与角度之间的关系",  
@@ -106,11 +97,15 @@ const graphData = {
     nodes: [  
         { id: "Q15", type: "question", name: "第15题" },  
         { id: "K1", type: "knowledge", name: "余角" },  
-        { id: "K2", type: "knowledge", name: "平行线的性质" }  
+        { id: "K2", type: "knowledge", name: "平行线与同位角" },  
+        { id: "K3", type: "knowledge", name: "余角的性质" },  
+        { id: "K4", type: "knowledge", name: "平行线的性质" }  
     ],  
     links: [  
         { source: "Q15", target: "K1" },  
-        { source: "Q15", target: "K2" }  
+        { source: "Q15", target: "K2" },  
+        { source: "K1", target: "K3" },  // 余角与余角的性质相连  
+        { source: "K2", target: "K4" }   // 平行线与同位角连接到平行线的性质  
     ]  
 };  
 
@@ -194,10 +189,10 @@ function ticked() {
 // ================ (4) 历史正确率折线图 ================  
 const trendData = [  
     { time: "测验1", accuracy: 0.30 },  
-    { time: "测验2", accuracy: 0.28 },  
+    { time: "测验2", accuracy: 0.25 },  
     { time: "测验3", accuracy: 0.35 },  
     { time: "测验4", accuracy: 0.32 },  
-    { time: "测验5", accuracy: 0.31 }  
+    { time: "测验5", accuracy: 0.40 }  
 ];  
 
 const lineChartWidth = document.getElementById("line-chart").clientWidth;  
