@@ -7,58 +7,97 @@
     <script src="https://cdn.tailwindcss.com"></script>  
     <!-- D3.js v6 -->  
     <script src="https://d3js.org/d3.v6.min.js"></script>  
+    <!-- MathJax 配置 -->  
+    <script>  
+        MathJax = {  
+            tex: {inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]]},  
+            svg: {fontCache: "global"}  
+        };  
+    </script>  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.min.js"></script>  
     <style>  
-        body { margin: 0; font-family: Arial, sans-serif; background-color: #f6f9fc; }  
-        .node circle { cursor: pointer; }  
-        .node circle:hover { fill: #333; }  
-        .node text { pointer-events: none; font-size: 10px; fill: #333; }  
-        line.link { stroke: #ccc; stroke-width: 1.5px; }  
-        .tooltip { position: absolute; min-width: 120px; padding: 8px; font-size: 12px; background: rgba(255, 255, 255, 0.9); border: 1px solid #ccc; border-radius: 4px; pointer-events: none; box-shadow: 0 2px 5px rgba(0,0,0,0.15); opacity: 0; transition: opacity 0.2s; z-index: 999; }  
-        .line { fill: none; stroke-width: 2px; }  
-        .line-chart-axis path, .line-chart-axis line { fill: none; stroke: #ccc; }  
-        .dot { fill: #ff5722; stroke: #fff; stroke-width: 1px; cursor: pointer; }  
-        .dot:hover { opacity: 0.8; }  
+        body {  
+            margin: 0;  
+            font-family: Arial, sans-serif;  
+            background-color: #f6f9fc;  
+        }  
+        .node circle {  
+            cursor: pointer;  
+            transition: fill 0.3s;  
+        }  
+        .node circle:hover {  
+            fill: #333;  
+        }  
+        .node text {  
+            pointer-events: none;  
+            font-size: 12px;  
+            fill: #333;  
+        }  
+        line.link {  
+            stroke: #ccc;  
+            stroke-width: 1.5px;  
+        }  
+        .tooltip {  
+            position: absolute;  
+            min-width: 150px;  
+            padding: 8px;  
+            font-size: 12px;  
+            background: rgba(255, 255, 255, 0.9);  
+            border: 1px solid #ccc;  
+            border-radius: 4px;  
+            pointer-events: none;  
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);  
+            opacity: 0;  
+            transition: opacity 0.2s;  
+            z-index: 999;  
+        }  
+        .line {  
+            fill: none;  
+            stroke-width: 2px;  
+        }  
+        .line-chart-axis path,  
+        .line-chart-axis line {  
+            fill: none;  
+            stroke: #ccc;  
+        }  
+        .dot {  
+            fill: #ff5722;  
+            stroke: #fff;  
+            stroke-width: 1px;  
+            cursor: pointer;  
+        }  
+        .dot:hover {  
+            opacity: 0.8;  
+        }  
     </style>  
 </head>  
 <body class="h-screen w-screen overflow-hidden bg-gray-100">  
-
 <!-- 顶部：返回按钮 -->  
 <div class="p-4 bg-white shadow">  
-    <button class="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 transition-colors" onclick="location.href='index.html'">  
+    <button class="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 transition-colors"  
+        onclick="location.href='index.html'">  
         返回题目列表  
     </button>  
 </div>  
-
-<!-- 主体：左侧力导向图 + 右侧题目信息 -->  
+<!-- 主体部分 -->  
 <div class="flex h-[calc(100vh-64px)]">  
-
     <!-- 左侧：力导向图 -->  
     <div id="left-panel" class="w-1/2 h-full bg-white relative">  
         <svg id="graph-svg" class="w-full h-full"></svg>  
         <div id="graph-tooltip" class="tooltip"></div>  
     </div>  
-
     <!-- 右侧：题目信息 -->  
     <div id="right-panel" class="w-1/2 h-full flex flex-col p-4 space-y-4">  
-
-        <!-- 题干描述区域 -->  
+        <!-- 题目描述 -->  
         <div class="bg-white p-4 rounded shadow">  
             <h1 class="text-xl font-bold mb-2">题号：第23题</h1>  
-            <p class="mb-4">已知直线 \(AB \parallel CD\)、\(M, N\) 分别在线 \(AB, CD\) 上，\(H\) 为平面里一点，连接 \(HM, HN\)。</p>  
-            <p class="mb-4">（1）如图1，延长 \(HN\) 至 \(G\)，\(\angle BME = 25^\circ\)、\(\angle LEND = 75^\circ\)，则 \(LHD\) 的度数为______；（2分）</p>  
-            <p class="mb-4">（2）探究 \(\angle MEN\) 与 \(\angle MHN\) 的数量关系，并给予证明；（4分）</p>  
+            <p class="mb-4">已知直线 \( AB \parallel CD \)，\( M, N \) 分别在线 \( AB, CD \) 上，\( H \) 为平面里一点，连接 \( HM, HN \)。</p>  
+            <p class="mb-4">（1）如图1，延长 \( HN \) 至 \( G \)，\(\angle BME = 25^\circ\)、\(\angle LEND = 75^\circ\)，则 \( LHD \) 的度数为______；</p>  
+            <p class="mb-4">（2）探究 \(\angle MEN\) 与 \(\angle MHN\) 的数量关系，并给予证明。</p>  
             <p><img src="path_to_your_image.jpg" alt="几何示例" class="w-full h-auto" /></p>  
-
             <p>当前掌握率：<span class="text-green-600 font-medium">0%</span></p>  
             <p>历史正确率：<span class="text-yellow-600 font-medium">10%</span></p>  
         </div>  
-
-        <!-- 相关内容说明 -->  
-        <div class="bg-white p-4 rounded shadow">  
-            <h2 class="text-lg font-bold mb-2">相关内容说明</h2>  
-            <p class="mb-2">本题探讨几何中的平行线与角度关系，旨在帮助学生理解几何推理和证明。</p>  
-        </div>  
-
         <!-- 历史正确率折线图 -->  
         <div class="flex-1 bg-white p-4 rounded shadow relative">  
             <h2 class="text-lg font-bold mb-2">历史正确率趋势</h2>  
@@ -67,52 +106,70 @@
         </div>  
     </div>  
 </div>  
-
 <script>  
-// ================ (1) 知识点对应示例题 ================  
+/* 知识点和次级知识点的数据 */  
 const knowledgeQuestions = {  
     "平行线的性质": {  
-        basic: "平行线的定义",  
-        medium: "计算平行线相关的角度",  
-        advanced: "复杂平行线与几何问题的综合应用"  
+        basic: "平行线的定义与角度关系",  
+        medium: "求解平行线内同位角与外角",  
+        advanced: "计算平行线的组合几何问题"  
     },  
     "角度的和与差的性质": {  
-        basic: "理解角度和与差的概念",  
-        medium: "应用角度关系解决基本问题",  
-        advanced: "复杂条件下的角度关系推导"  
+        basic: "理解角度和与差的基本公式",  
+        medium: "几何条件下的角度关系推导",  
+        advanced: "角和与差的复杂证明"  
     },  
     "几何证明技巧": {  
-        basic: "掌握基本几何证明方法",  
-        medium: "运用几何证明解决问题",  
-        advanced: "综合性几何问题的复杂证明"  
+        basic: "基本几何图形的证明",  
+        medium: "结合多种几何条件的证明",  
+        advanced: "高级几何图形之间关系证明"  
+    },  
+    /* 次级知识点示例 */  
+    "平行线引出的角度应用": {  
+        basic: "公式直接应用",  
+        medium: "灵活运用公式",  
+        advanced: "解决更复杂问题"  
+    },  
+    "角的三角形性质": {  
+        basic: "三点中发现组合",  
+        medium: "归纳组合，求最优解",  
+        advanced: "位置加已知点证明系统"  
     }  
-};  
+}  
+</script>  
+下面将补充并完成**力导向图的构建**、**正确率趋势图模拟生成**以及**工具交互功能**代码。所有次级知识点将自然扩展，并具备相同的基础功能。  
 
-// ================ (2) 力导向图数据 ================  
+完整代码继续如下：  
+
+```html  
+<script>  
+// 力导向图数据，包括知识点和次级知识点  
 const graphData = {  
     nodes: [  
         { id: "Q23", type: "question", name: "第23题" },  
         { id: "K1", type: "knowledge", name: "平行线的性质" },  
         { id: "K2", type: "knowledge", name: "角度的和与差的性质" },  
-        { id: "K3", type: "knowledge", name: "几何证明技巧" }  
+        { id: "K3", type: "knowledge", name: "几何证明技巧" },  
+        { id: "K4", type: "sub-knowledge", name: "平行线引出的角度应用" },  
+        { id: "K5", type: "sub-knowledge", name: "角的三角形性质" }  
     ],  
     links: [  
         { source: "Q23", target: "K1" },  
         { source: "Q23", target: "K2" },  
-        { source: "Q23", target: "K3" }  
+        { source: "Q23", target: "K3" },  
+        { source: "K1", target: "K4" },  
+        { source: "K2", target: "K5" }  
     ]  
 };  
 
-// ================ (3) 力导向图绘制 ================  
+// 绘制力导向图  
 const width = document.getElementById("left-panel").clientWidth;  
 const height = document.getElementById("left-panel").clientHeight;  
 
-const svgGraph = d3.select("#graph-svg")  
-    .attr("width", width)  
-    .attr("height", height);  
+const svgGraph = d3.select("#graph-svg").attr("width", width).attr("height", height);  
 
 const simulation = d3.forceSimulation(graphData.nodes)  
-    .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(110))  
+    .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(120))  
     .force("charge", d3.forceManyBody().strength(-300))  
     .force("center", d3.forceCenter(width / 2, height / 2))  
     .on("tick", ticked);  
@@ -132,42 +189,32 @@ const node = svgGraph.selectAll("g.node")
 const tooltipGraph = d3.select("#graph-tooltip");  
 
 node.append("circle")  
-    .attr("r", d => d.type === "question" ? 18 : 14)  
-    .attr("fill", d => d.type === "question" ? "#fca5a5" : "#93c5fd")  
+    .attr("r", d => (d.type === "question" ? 18 : 14))  
+    .attr("fill", d => (d.type === "question" ? "#fca5a5" : "#93c5fd"))  
     .on("mouseover", (event, d) => {  
-        let htmlStr = `节点：<strong>${d.name}</strong>`;  
-
-        if (d.type === "knowledge") {  
+        let html = `<strong>${d.name}</strong>`;  
+        if (knowledgeQuestions[d.name]) {  
             const qSet = knowledgeQuestions[d.name];  
-            if (qSet) {  
-                htmlStr += `  
-                    <br/><strong>基础题：</strong>${qSet.basic}  
-                    <br/><strong>中等题：</strong>${qSet.medium}  
-                    <br/><strong>较难题：</strong>${qSet.advanced}  
-                `;  
-            } else {  
-                htmlStr += "<br/>暂无示例题";  
-            }  
+            html += `  
+                <br/><strong>基础题：</strong>${qSet.basic}  
+                <br/><strong>中等题：</strong>${qSet.medium}  
+                <br/><strong>较难题：</strong>${qSet.advanced}`;  
         }  
-
         tooltipGraph  
             .style("opacity", 1)  
-            .html(htmlStr)  
-            .style("left", (event.pageX + 10) + "px")  
-            .style("top", (event.pageY - 10) + "px");  
+            .html(html)  
+            .style("left", `${event.pageX + 10}px`)  
+            .style("top", `${event.pageY - 10}px`);  
     })  
     .on("mouseout", () => tooltipGraph.style("opacity", 0));  
 
 node.append("text")  
     .text(d => d.name)  
     .attr("x", 20)  
-    .attr("y", 4)  
-    .attr("font-size", "12px")  
-    .attr("fill", "#333");  
+    .attr("y", 5);  
 
 function ticked() {  
-    link  
-        .attr("x1", d => d.source.x)  
+    link.attr("x1", d => d.source.x)  
         .attr("y1", d => d.source.y)  
         .attr("x2", d => d.target.x)  
         .attr("y2", d => d.target.y);  
@@ -175,13 +222,13 @@ function ticked() {
     node.attr("transform", d => `translate(${d.x}, ${d.y})`);  
 }  
 
-// ================ (4) 历史正确率折线图 ================  
+// 模拟历史正确率数据绘制折线图  
 const trendData = [  
-    { time: "测验1", accuracy: 0.0 },  
+    { time: "测验1", accuracy: 0.00 },  
     { time: "测验2", accuracy: 0.03 },  
     { time: "测验3", accuracy: 0.05 },  
     { time: "测验4", accuracy: 0.07 },  
-    { time: "测验5", accuracy: 0.1 }  
+    { time: "测验5", accuracy: 0.10 }  
 ];  
 
 const lineChartWidth = document.getElementById("line-chart").clientWidth;  
@@ -206,29 +253,23 @@ const svgLine = d3.select("#line-chart")
     .append("g")  
     .attr("transform", `translate(${margin.left},${margin.top})`);  
 
-const xAxis = d3.axisBottom(xScale);  
-const yAxis = d3.axisLeft(yScale).tickFormat(d3.format(".0%"));  
-
 svgLine.append("g")  
     .attr("class", "line-chart-axis")  
     .attr("transform", `translate(0, ${innerHeight})`)  
-    .call(xAxis);  
+    .call(d3.axisBottom(xScale));  
 
 svgLine.append("g")  
     .attr("class", "line-chart-axis")  
-    .call(yAxis);  
-
-const lineGenerator = d3.line()  
-    .x(d => xScale(d.time))  
-    .y(d => yScale(d.accuracy));  
+    .call(d3.axisLeft(yScale).tickFormat(d3.format(".0%")));  
 
 svgLine.append("path")  
     .datum(trendData)  
     .attr("class", "line")  
-    .attr("d", lineGenerator)  
+    .attr("d", d3.line()  
+        .x(d => xScale(d.time))  
+        .y(d => yScale(d.accuracy))  
+    )  
     .attr("stroke", "#f97316");  
-
-const tooltipLine = d3.select("#line-tooltip");  
 
 svgLine.selectAll(".dot")  
     .data(trendData)  
@@ -239,18 +280,14 @@ svgLine.selectAll(".dot")
     .attr("cx", d => xScale(d.time))  
     .attr("cy", d => yScale(d.accuracy))  
     .on("mouseover", (event, d) => {  
-        tooltipLine  
-            .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(2)}%</strong>`)  
+        tooltipGraph.html(`${d.time}<br/><strong>${(d.accuracy * 100).toFixed(2)}%</strong>`)  
             .style("opacity", 1)  
-            .style("left", (event.pageX + 10) + "px")  
-            .style("top", (event.pageY - 10) + "px");  
+            .style("left", `${event.pageX + 10}px`)  
+            .style("top", `${event.pageY - 10}px`);  
     })  
-    .on("mouseout", () => {  
-        tooltipLine.style("opacity", 0);  
-    });  
+    .on("mouseout", () => tooltipGraph.style("opacity", 0));  
 </script>  
-
-<!-- 提示层 -->  
+<!-- 提示工具 -->  
 <div id="line-tooltip" class="tooltip"></div>  
 </body>  
 </html>  
