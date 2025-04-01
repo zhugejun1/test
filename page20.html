@@ -7,6 +7,10 @@
     <script src="https://cdn.tailwindcss.com"></script>  
     <!-- D3.js v6 -->  
     <script src="https://d3js.org/d3.v6.min.js"></script>  
+    <!-- MathJax CDN -->  
+    <script type="text/javascript" id="MathJax-script" async  
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>  
+
     <style>  
         body { margin: 0; font-family: Arial, sans-serif; background-color: #f6f9fc; }  
         .node circle { cursor: pointer; }  
@@ -29,42 +33,31 @@
     </button>  
 </div>  
 
-<!-- 主体：左侧力导向图 + 右侧题目信息 -->  
+<!-- 主体部分 -->  
 <div class="flex h-[calc(100vh-64px)]">  
 
-    <!-- 左侧：力导向图 -->  
+    <!-- 左侧力导向图 -->  
     <div id="left-panel" class="w-1/2 h-full bg-white relative">  
         <svg id="graph-svg" class="w-full h-full"></svg>  
         <div id="graph-tooltip" class="tooltip"></div>  
     </div>  
 
-    <!-- 右侧：题目信息 -->  
+    <!-- 右侧题目信息区域 -->  
     <div id="right-panel" class="w-1/2 h-full flex flex-col p-4 space-y-4">  
 
-        <!-- 题干描述区域 -->  
+        <!-- 题目内容 -->  
         <div class="bg-white p-4 rounded shadow">  
             <h1 class="text-xl font-bold mb-2">题号：第20题</h1>  
             <p class="mb-4">已知：</p>  
             <p class="mb-4">\( \sqrt{a - 17} + 2\sqrt{34 - 2a} = b + 8 \)</p>  
             <p class="mb-4">求（1）\( a \) 的值</p>  
             <p class="mb-4">求（2）\( a^2 - b^2 \) 的平方根</p>  
-
-            <div class="mb-4">  
-                <label for="answer20" class="block">答案：</label>  
-                <input type="text" id="answer20" class="border p-2 rounded" />  
-            </div>  
             
             <p>当前掌握率：<span class="text-green-600 font-medium">10.81%</span></p>  
             <p>历史正确率：<span class="text-yellow-600 font-medium">15%</span></p>  
         </div>  
 
-        <!-- 相关内容说明 -->  
-        <div class="bg-white p-4 rounded shadow">  
-            <h2 class="text-lg font-bold mb-2">相关内容说明</h2>  
-            <p class="mb-2">本题考察平方根和代数运算的基础。</p>  
-        </div>  
-
-        <!-- 历史正确率折线图 -->  
+        <!-- 历史正确率趋势图 -->  
         <div class="flex-1 bg-white p-4 rounded shadow relative">  
             <h2 class="text-lg font-bold mb-2">历史正确率趋势</h2>  
             <svg id="line-chart" class="w-full h-full"></svg>  
@@ -74,7 +67,7 @@
 </div>  
 
 <script>  
-// ================ (1) 知识点对应示例题 ================  
+// ================ 知识点与次级知识点问题分布 ================  
 const knowledgeQuestions = {  
     "平方根的性质": {  
         basic: "平方根的定义与基本性质",  
@@ -90,25 +83,39 @@ const knowledgeQuestions = {
         basic: "代数的基本运算",  
         medium: "代数表达式的合并与化简",  
         advanced: "结合多种变换的方法"  
+    },  
+    "平方根的高级性质": {  
+        basic: "平方根扩展计算",  
+        medium: "条件较复杂的平方根问题",  
+        advanced: "结合多知识点解平方根问题"  
+    },  
+    "方程的灵活变形": {  
+        basic: "常规方程的灵活变形",  
+        medium: "复杂条件下的变形求解",  
+        advanced: "结合多条件的灵活变形"  
     }  
 };  
 
-// ================ (2) 力导向图数据 ================  
+// ================ 力导向图数据（包含次级知识点） ================  
 const graphData = {  
     nodes: [  
         { id: "Q20", type: "question", name: "第20题" },  
         { id: "K1", type: "knowledge", name: "平方根的性质" },  
         { id: "K2", type: "knowledge", name: "一元一次方程的解法" },  
-        { id: "K3", type: "knowledge", name: "代数表达式的变换" }  
+        { id: "K3", type: "knowledge", name: "代数表达式的变换" },  
+        { id: "K11", type: "knowledge", name: "平方根的高级性质" },  
+        { id: "K21", type: "knowledge", name: "方程的灵活变形" }  
     ],  
     links: [  
         { source: "Q20", target: "K1" },  
         { source: "Q20", target: "K2" },  
-        { source: "Q20", target: "K3" }  
+        { source: "Q20", target: "K3" },  
+        { source: "K1", target: "K11" },  
+        { source: "K2", target: "K21" }  
     ]  
 };  
 
-// ================ (3) 力导向图绘制 ================  
+// ================ 力导向图绘制 ================  
 const width = document.getElementById("left-panel").clientWidth;  
 const height = document.getElementById("left-panel").clientHeight;  
 
@@ -179,16 +186,15 @@ function ticked() {
         .attr("y1", d => d.source.y)  
         .attr("x2", d => d.target.x)  
         .attr("y2", d => d.target.y);  
-
     node.attr("transform", d => `translate(${d.x}, ${d.y})`);  
 }  
 
-// ================ (4) 历史正确率折线图 ================  
+// ================ 历史正确率折线图 ================  
 const trendData = [  
-    { time: "测验1", accuracy: 0.05 },  
+    { time: "测验1", accuracy: 0.06 },  
     { time: "测验2", accuracy: 0.08 },  
     { time: "测验3", accuracy: 0.10 },  
-    { time: "测验4", accuracy: 0.12 },  
+    { time: "测验4", accuracy: 0.11 },  
     { time: "测验5", accuracy: 0.1081 }  
 ];  
 
@@ -258,7 +264,7 @@ svgLine.selectAll(".dot")
     });  
 </script>  
 
-<!-- 提示层 -->  
+<!-- 提示框 -->  
 <div id="line-tooltip" class="tooltip"></div>  
 </body>  
 </html>  
