@@ -1,4 +1,4 @@
-<!DOCTYPE html>  
+    <!DOCTYPE html>  
 <html lang="zh">  
 <head>  
     <meta charset="UTF-8" />  
@@ -15,7 +15,7 @@
         .node circle:hover { fill: #333; }  
         .node text { pointer-events: none; font-size: 10px; fill: #333; }  
         line.link { stroke: #ccc; stroke-width: 1.5px; }  
-        .tooltip { position: absolute; min-width: 120px; padding: 8px; font-size: 12px; background: rgba(255, 255, 255, 0.9); border: 1px solid #ccc; border-radius: 4px; pointer-events: none; box-shadow: 0 2px 5px rgba(0,0,0,0.15); opacity: 0; transition: opacity 0.2s; z-index: 999; }  
+        .tooltip { position: absolute; min-width: 150px; padding: 8px; font-size: 12px; background: rgba(255, 255, 255, 0.9); border: 1px solid #ccc; border-radius: 4px; pointer-events: none; box-shadow: 0 2px 5px rgba(0,0,0,0.15); opacity: 0; transition: opacity 0.2s; z-index: 999; }  
         .line { fill: none; stroke-width: 2px; }  
         .line-chart-axis path, .line-chart-axis line { fill: none; stroke: #ccc; }  
         .dot { fill: #ff5722; stroke: #fff; stroke-width: 1px; cursor: pointer; }  
@@ -31,7 +31,6 @@
     </button>  
 </div>  
 
-<!-- 主体：左侧力导向图 + 右侧题目信息 -->  
 <div class="flex h-[calc(100vh-64px)]">  
 
     <!-- 左侧：力导向图 -->  
@@ -47,48 +46,24 @@
         <div class="bg-white p-4 rounded shadow">  
             <h1 class="text-xl font-bold mb-2">题号：第11题</h1>  
             <p class="mb-4">√2 的相反数是 _____；</p>  
-            <p class="mb-4">3 - _____ 的绝对值是 _____；</p>  
+            <p class="mb-4">3 - π 的绝对值是 _____；</p>  
             <p class="mb-4">³√(1/27) = _____.</p>  
 
             <div class="mb-4">  
                 <label for="answer1" class="block">相反数：</label>  
-                <input type="text" id="answer1" class="border p-2 rounded" />  
+                <input type="text" id="answer1" class="border p-2 rounded w-full" />  
             </div>  
             <div class="mb-4">  
-                <label for="answer2" class="block">3 - ___________________：</label>  
-                <input type="text" id="answer2" class="border p-2 rounded" />  
+                <label for="answer2" class="block">3 - π 的绝对值：</label>  
+                <input type="text" id="answer2" class="border p-2 rounded w-full" />  
             </div>  
             <div class="mb-4">  
                 <label for="answer3" class="block">³√(1/27)：</label>  
-                <input type="text" id="answer3" class="border p-2 rounded" />  
+                <input type="text" id="answer3" class="border p-2 rounded w-full" />  
             </div>  
             
             <p>当前掌握率：<span class="text-green-600 font-medium">78.94%</span></p>  
             <p>历史正确率：<span class="text-yellow-600 font-medium">75%</span></p>  
-        </div>  
-
-        <!-- 知识点 -->  
-        <div class="bg-white p-4 rounded shadow">  
-            <h2 class="text-lg font-bold mb-2">直接关联知识点</h2>  
-            <ul class="list-disc list-inside text-gray-700">  
-                <li>数的性质</li>  
-                <li>绝对值</li>  
-                <li>立方根</li>  
-            </ul>  
-        </div>  
-
-        <!-- 相关内容说明 -->  
-        <div class="bg-white p-4 rounded shadow overflow-auto">  
-            <h2 class="text-lg font-bold mb-2">相关题目的定位与层次</h2>  
-            <p class="mb-2">  
-                <strong>定义：</strong>该题考察数的相反数、绝对值和立方根的计算。  
-            </p>  
-            <p class="mb-2">  
-                <strong>针对性：</strong>帮助学生理解数的基本性质及其运算。  
-            </p>  
-            <p class="mb-2">  
-                <strong>层次性：</strong>可以扩展到更复杂的数值运算问题。  
-            </p>  
         </div>  
 
         <!-- 历史正确率折线图 -->  
@@ -101,41 +76,54 @@
 </div>  
 
 <script>  
-// ================ (1) 知识点对应示例题 ================  
+// 知识点扩展数据  
 const knowledgeQuestions = {  
     "数的性质": {  
-        basic: "理解数的基本性质",  
-        medium: "掌握相反数与绝对值的关系",  
-        advanced: "应用绝对值与立方根解决复杂问题"  
+        basic: "数的意义及相反数",  
+        medium: "综合运算应用",  
+        advanced: "数及其变式"  
     },  
     "绝对值": {  
-        basic: "了解绝对值的定义与计算",  
-        medium: "掌握绝对值在算式中的应用",  
-        advanced: "解决包含绝对值的方程"  
+        basic: "定义及计算公式",  
+        medium: "常规应用题",  
+        advanced: "绝对值方程与不等式"  
     },  
     "立方根": {  
-        basic: "理解立方根的概念",  
-        medium: "掌握立方根的计算",  
-        advanced: "应用立方根解决实际问题"  
+        basic: "理解立方根概念",  
+        medium: "立方根的性质与计算",  
+        advanced: "立方根的综合运用"  
+    },  
+    "代数表达式": {  
+        basic: "基本代数符号与意义",  
+        medium: "代数符号代入法",  
+        advanced: "代数式提高题"  
+    },  
+    "函数与方程": {  
+        basic: "简单函数的解析",  
+        medium: "函数关系及方程式",  
+        advanced: "综合函数与高阶求解"  
     }  
 };  
 
-// ================ (2) 力导向图数据 ================  
 const graphData = {  
     nodes: [  
         { id: "Q11", type: "question", name: "第11题" },  
         { id: "K1", type: "knowledge", name: "数的性质" },  
         { id: "K2", type: "knowledge", name: "绝对值" },  
-        { id: "K3", type: "knowledge", name: "立方根" }  
+        { id: "K3", type: "knowledge", name: "立方根" },  
+        { id: "K4", type: "knowledge", name: "代数表达式" },  
+        { id: "K5", type: "knowledge", name: "函数与方程" }  
     ],  
     links: [  
         { source: "Q11", target: "K1" },  
         { source: "Q11", target: "K2" },  
-        { source: "Q11", target: "K3" }  
+        { source: "Q11", target: "K3" },  
+        { source: "K1", target: "K4" },  
+        { source: "K3", target: "K5" }  
     ]  
 };  
 
-// ================ (3) 力导向图绘制 ================  
+// 力导向图实现  
 const width = document.getElementById("left-panel").clientWidth;  
 const height = document.getElementById("left-panel").clientHeight;  
 
@@ -144,8 +132,8 @@ const svgGraph = d3.select("#graph-svg")
     .attr("height", height);  
 
 const simulation = d3.forceSimulation(graphData.nodes)  
-    .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(110))  
-    .force("charge", d3.forceManyBody().strength(-300))  
+    .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(140))  
+    .force("charge", d3.forceManyBody().strength(-400))  
     .force("center", d3.forceCenter(width / 2, height / 2))  
     .on("tick", ticked);  
 
@@ -165,27 +153,15 @@ const tooltipGraph = d3.select("#graph-tooltip");
 
 node.append("circle")  
     .attr("r", d => d.type === "question" ? 18 : 14)  
-    .attr("fill", d => {  
-        if (d.type === "question") return "#fca5a5"; // 浅红  
-        return "#93c5fd"; // 浅蓝  
-    })  
+    .attr("fill", d => (d.type === "question" ? "#fca5a5" : "#93c5fd"))  
     .on("mouseover", (event, d) => {  
-        let htmlStr = "";  
-        if (d.type === "question") {  
-            htmlStr = `题号：<strong>${d.name}</strong>`;  
-        } else {  
-            htmlStr = `知识点：<strong>${d.name}</strong>`;  
-            const qSet = knowledgeQuestions[d.name];  
-            if (qSet) {  
-                htmlStr += `  
-                    <br/><strong>基础题：</strong>${qSet.basic}  
-                    <br/><strong>中等题：</strong>${qSet.medium}  
-                    <br/><strong>较难题：</strong>${qSet.advanced}  
-                `;  
-            } else {  
-                htmlStr += "<br/>暂无示例题";  
-            }  
-        }  
+        const htmlStr = d.type === "question"  
+            ? `题号：<strong>${d.name}</strong>`  
+            : `知识点：<strong>${d.name}</strong>` +  
+              `<br/><strong>基础题：</strong>${knowledgeQuestions[d.name]?.basic}` +  
+              `<br/><strong>中等题：</strong>${knowledgeQuestions[d.name]?.medium}` +  
+              `<br/><strong>较难题：</strong>${knowledgeQuestions[d.name]?.advanced}`;  
+
         tooltipGraph  
             .style("opacity", 1)  
             .html(htmlStr)  
@@ -212,21 +188,21 @@ function ticked() {
     node.attr("transform", d => `translate(${d.x}, ${d.y})`);  
 }  
 
-// ================ (4) 历史正确率折线图 ================  
+// 历史正确率趋势数据  
 const trendData = [  
-    { time: "测验1", accuracy: 0.65 },  
-    { time: "测验2", accuracy: 0.69 },  
-    { time: "测验3", accuracy: 0.73 },  
-    { time: "测验4", accuracy: 0.75 },  
+    { time: "测验1", accuracy: 0.70 },  
+    { time: "测验2", accuracy: 0.72 },  
+    { time: "测验3", accuracy: 0.74 },  
+    { time: "测验4", accuracy: 0.77 },  
     { time: "测验5", accuracy: 0.7894 }  
 ];  
 
-const lineChartWidth = document.getElementById("line-chart").clientWidth;  
-const lineChartHeight = document.getElementById("line-chart").clientHeight;  
+const chartWidth = document.getElementById("line-chart").clientWidth;  
+const chartHeight = document.getElementById("line-chart").clientHeight;  
 
 const margin = { top: 20, right: 20, bottom: 30, left: 40 };  
-const innerWidth = lineChartWidth - margin.left - margin.right;  
-const innerHeight = lineChartHeight - margin.top - margin.bottom;  
+const innerWidth = chartWidth - margin.left - margin.right;  
+const innerHeight = chartHeight - margin.top - margin.bottom;  
 
 const xScale = d3.scalePoint()  
     .domain(trendData.map(d => d.time))  
@@ -234,12 +210,10 @@ const xScale = d3.scalePoint()
     .padding(0.5);  
 
 const yScale = d3.scaleLinear()  
-    .domain([0, 1])  
+    .domain([0.65, 0.8])  
     .range([innerHeight, 0]);  
 
 const svgLine = d3.select("#line-chart")  
-    .attr("width", lineChartWidth)  
-    .attr("height", lineChartHeight)  
     .append("g")  
     .attr("transform", `translate(${margin.left},${margin.top})`);  
 
@@ -247,13 +221,10 @@ const xAxis = d3.axisBottom(xScale);
 const yAxis = d3.axisLeft(yScale).tickFormat(d3.format(".0%"));  
 
 svgLine.append("g")  
-    .attr("class", "line-chart-axis")  
     .attr("transform", `translate(0, ${innerHeight})`)  
     .call(xAxis);  
 
-svgLine.append("g")  
-    .attr("class", "line-chart-axis")  
-    .call(yAxis);  
+svgLine.append("g").call(yAxis);  
 
 const lineGenerator = d3.line()  
     .x(d => xScale(d.time))  
@@ -262,32 +233,20 @@ const lineGenerator = d3.line()
 svgLine.append("path")  
     .datum(trendData)  
     .attr("class", "line")  
-    .attr("d", lineGenerator)  
-    .attr("stroke", "#f97316");  
-
-const tooltipLine = d3.select("#line-tooltip");  
+    .attr("fill", "none")  
+    .attr("stroke", "#f97316")  
+    .attr("stroke-width", 2)  
+    .attr("d", lineGenerator);  
 
 svgLine.selectAll(".dot")  
     .data(trendData)  
     .enter()  
     .append("circle")  
-    .attr("class", "dot")  
     .attr("r", 4)  
     .attr("cx", d => xScale(d.time))  
     .attr("cy", d => yScale(d.accuracy))  
-    .on("mouseover", (event, d) => {  
-        tooltipLine  
-            .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(2)}%</strong>`)  
-            .style("opacity", 1)  
-            .style("left", (event.pageX + 10) + "px")  
-            .style("top", (event.pageY - 10) + "px");  
-    })  
-    .on("mouseout", () => {  
-        tooltipLine.style("opacity", 0);  
-    });  
+    .attr("fill", "#ff5722");  
 </script>  
-
-<!-- 提示层 -->  
 <div id="line-tooltip" class="tooltip"></div>  
 </body>  
 </html>  
