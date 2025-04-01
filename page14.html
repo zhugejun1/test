@@ -52,29 +52,10 @@
         <!-- 题干描述区域 -->  
         <div class="bg-white p-4 rounded shadow">  
             <h1 class="text-xl font-bold mb-2">题号：第14题</h1>  
-            <p class="mb-4">若 \(\sqrt{102.02} \approx 10.1\)， \(\sqrt{10.202} = 3.19\)，则 \(\sqrt{1.0202} \approx\) ____.</p>  
-
-            <div class="mb-4">  
-                <label for="answer1" class="block">答案：</label>  
-                <input type="text" id="answer1" class="border p-2 rounded" />  
-            </div>  
+            <p class="mb-4">若 \(\sqrt{102.02} \approx 10.1\)， \(\sqrt{10.202} \approx 3.19\)，则 \(\sqrt{1.0202} \approx\) ____.</p>  
             
             <p>当前掌握率：<span class="text-green-600 font-medium">72.97%</span></p>  
             <p>历史正确率：<span class="text-yellow-600 font-medium">68%</span></p>  
-        </div>  
-
-        <!-- 相关内容说明 -->  
-        <div class="bg-white p-4 rounded shadow overflow-auto">  
-            <h2 class="text-lg font-bold mb-2">相关题目的定位与层次</h2>  
-            <p class="mb-2">  
-                <strong>定义：</strong>考察根号近似的计算能力。  
-            </p>  
-            <p class="mb-2">  
-                <strong>针对性：</strong>帮助学生理解如何进行根号的求值以及近似值的估算。  
-            </p>  
-            <p class="mb-2">  
-                <strong>层次性：</strong>可以扩展到其他根号的相关问题。  
-            </p>  
         </div>  
 
         <!-- 历史正确率折线图 -->  
@@ -98,6 +79,11 @@ const knowledgeQuestions = {
         basic: "了解近似值的估算方法",  
         medium: "掌握小数近似的计算",  
         advanced: "在复杂数据中找到数的近似形式"  
+    },  
+    "近似值的应用": {  
+        basic: "理解近似值的基本用途",  
+        medium: "在实际问题中应用近似值",  
+        advanced: "通过近似值简化复杂计算"  
     }  
 };  
 
@@ -106,11 +92,15 @@ const graphData = {
     nodes: [  
         { id: "Q14", type: "question", name: "第14题" },  
         { id: "K1", type: "knowledge", name: "根号的性质" },  
-        { id: "K2", type: "knowledge", name: "近似计算" }  
+        { id: "K2", type: "knowledge", name: "近似计算" },  
+        { id: "K1_1", type: "knowledge", name: "近似值的应用" },  
+        { id: "K2_1", type: "knowledge", name: "近似计算技巧" },  
     ],  
     links: [  
         { source: "Q14", target: "K1" },  
-        { source: "Q14", target: "K2" }  
+        { source: "Q14", target: "K2" },  
+        { source: "K1", target: "K1_1" },  
+        { source: "K2", target: "K2_1" },  
     ]  
 };  
 
@@ -193,11 +183,11 @@ function ticked() {
 
 // ================ (4) 历史正确率折线图 ================  
 const trendData = [  
-    { time: "测验1", accuracy: 0.65 },  
-    { time: "测验2", accuracy: 0.70 },  
-    { time: "测验3", accuracy: 0.73 },  
-    { time: "测验4", accuracy: 0.80 },  
-    { time: "测验5", accuracy: 0.75 }  
+    { time: "测验1", accuracy: 0.68 },  
+    { time: "测验2", accuracy: 0.72 },  
+    { time: "测验3", accuracy: 0.70 },  
+    { time: "测验4", accuracy: 0.75 },  
+    { time: "测验5", accuracy: 0.80 }  
 ];  
 
 const lineChartWidth = document.getElementById("line-chart").clientWidth;  
