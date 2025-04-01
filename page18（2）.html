@@ -54,28 +54,9 @@
             <h1 class="text-xl font-bold mb-2">题号：第18（2）题</h1>  
             <p class="mb-4">求下列式中 \( x \) 的值：</p>  
             <p class="mb-4">\( x^3 - 3 = \frac{3}{8} \)</p>  
-
-            <div class="mb-4">  
-                <label for="answer18_2" class="block">答案：</label>  
-                <input type="text" id="answer18_2" class="border p-2 rounded" />  
-            </div>  
             
             <p>当前掌握率：<span class="text-green-600 font-medium">35.14%</span></p>  
             <p>历史正确率：<span class="text-yellow-600 font-medium">60%</span></p>  
-        </div>  
-
-        <!-- 相关内容说明 -->  
-        <div class="bg-white p-4 rounded shadow overflow-auto">  
-            <h2 class="text-lg font-bold mb-2">相关题目的定位与层次</h2>  
-            <p class="mb-2">  
-                <strong>定义：</strong>考察立方方程解法及立方根的性质。  
-            </p>  
-            <p class="mb-2">  
-                <strong>针对性：</strong>帮助学生理解一元方程的根及其变化。  
-            </p>  
-            <p class="mb-2">  
-                <strong>层次性：</strong>可以扩展到高次方程和其他相关代数问题。  
-            </p>  
         </div>  
 
         <!-- 历史正确率折线图 -->  
@@ -99,6 +80,16 @@ const knowledgeQuestions = {
         basic: "了解立方根的计算方法",  
         medium: "掌握立方根的性质与运用",  
         advanced: "在实际问题中应用立方根"  
+    },  
+    "因式分解": {  
+        basic: "理解因式分解的基础知识",  
+        medium: "掌握常见三次多项式的因式分解",  
+        advanced: "应用因式分解解决较复杂的代数问题"  
+    },  
+    "图像法": {  
+        basic: "了解图像法的基本思路",  
+        medium: "掌握如何通过图像解方程",  
+        advanced: "使用图像法解决更高级的代数问题"  
     }  
 };  
 
@@ -107,11 +98,15 @@ const graphData = {
     nodes: [  
         { id: "Q18_2", type: "question", name: "第18（2）题" },  
         { id: "K1", type: "knowledge", name: "一元三次方程" },  
-        { id: "K2", type: "knowledge", name: "立方根的计算" }  
+        { id: "K2", type: "knowledge", name: "立方根的计算" },  
+        { id: "K3", type: "knowledge", name: "因式分解" },  
+        { id: "K4", type: "knowledge", name: "图像法" }  
     ],  
     links: [  
         { source: "Q18_2", target: "K1" },  
-        { source: "Q18_2", target: "K2" }  
+        { source: "Q18_2", target: "K2" },  
+        { source: "K1", target: "K3" },  // 一元三次方程与因式分解的连接  
+        { source: "K2", target: "K4" }   // 立方根的计算与图像法的连接  
     ]  
 };  
 
@@ -194,11 +189,11 @@ function ticked() {
 
 // ================ (4) 历史正确率折线图 ================  
 const trendData = [  
-    { time: "测验1", accuracy: 0.38 },  
-    { time: "测验2", accuracy: 0.40 },  
-    { time: "测验3", accuracy: 0.45 },  
-    { time: "测验4", accuracy: 0.42 },  
-    { time: "测验5", accuracy: 0.43 }  
+    { time: "测验1", accuracy: 0.39 },  
+    { time: "测验2", accuracy: 0.35 },  
+    { time: "测验3", accuracy: 0.38 },  
+    { time: "测验4", accuracy: 0.36 },  
+    { time: "测验5", accuracy: 0.40 }  
 ];  
 
 const lineChartWidth = document.getElementById("line-chart").clientWidth;  
