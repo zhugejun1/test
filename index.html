@@ -1,137 +1,156 @@
 <!DOCTYPE html>  
 <html lang="zh">  
 <head>  
-  <meta charset="UTF-8">  
-  <title>七下数学3月月考</title>  
-  <!-- 引入 Tailwind CSS 和 D3.js -->  
-  <script src="https://cdn.tailwindcss.com"></script>  
-  <script src="https://d3js.org/d3.v7.min.js"></script>  
-  <style>  
-    @keyframes cardEntrance {  
-      from { opacity: 0; transform: translateY(20px); }  
-      to { opacity: 1; transform: translateY(0); }  
-    }  
-    .question-card {  
-      animation: cardEntrance 0.6s ease-out both;  
-    }  
-    .rate-chart-title {  
-      animation: fadeIn 0.8s ease-out both;  
-    }  
-    @keyframes fadeIn {  
-      from { opacity: 0; }  
-      to { opacity: 1; }  
-    }  
-  </style>  
+    <meta charset="UTF-8">  
+    <title>七下数学3月月考</title>  
+    <!-- 引入 Tailwind CSS 和 D3.js -->  
+    <script src="https://cdn.tailwindcss.com"></script>  
+    <script src="https://d3js.org/d3.v7.min.js"></script>  
+    <style>  
+        @keyframes cardEntrance {  
+            from { opacity: 0; transform: translateY(20px); }  
+            to { opacity: 1; transform: translateY(0); }  
+        }  
+        .question-card {  
+            animation: cardEntrance 0.6s ease-out both;  
+        }  
+        .rate-chart-title {  
+            animation: fadeIn 0.8s ease-out both;  
+        }  
+        @keyframes fadeIn {  
+            from { opacity: 0; }  
+            to { opacity: 1; }  
+        }  
+    </style>  
 </head>  
 <body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen flex flex-col items-center p-8">  
 
-  <!-- 动态标题 -->  
-  <h1 class="text-4xl font-bold text-gray-800 mb-10 animate-pulse">  
-    <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">  
-      七下数学3月月考  
-    </span>  
-  </h1>  
+    <!-- 动态标题 -->  
+    <h1 class="text-4xl font-bold text-gray-800 mb-10 animate-pulse">  
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">  
+            七下数学3月月考  
+        </span>  
+    </h1>  
 
-  <!-- 题目容器 -->  
-  <div id="questions" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full max-w-6xl"></div>  
+    <!-- 题目容器 -->  
+    <div id="questions" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full max-w-6xl"></div>  
 
-  <script>  
-    // 生成题目数据  
-    const questions = [];  
-    // 添加1-16题  
-    for (let i = 1; i <= 16; i++) questions.push({ id: i, rate: Math.random() * 100 });  
-    // 添加子题，例如17(1)到18(2)  
-    ['17(1)', '17(2)', '18(1)', '18(2)'].forEach(id => questions.push({ id, rate: Math.random() * 100 }));  
-    // 添加19到24题  
-    for (let i = 19; i <= 24; i++) questions.push({ id: i, rate: Math.random() * 100 });  
+    <script>  
+        // 生成固定题目数据  
+        const questions = [  
+            { id: 1, rate: 83.78 },  
+            { id: 2, rate: 94.59 },  
+            { id: 3, rate: 78.38 },  
+            { id: 4, rate: 89.19 },  
+            { id: 5, rate: 37.84 },  
+            { id: 6, rate: 67.57 },  
+            { id: 7, rate: 35.14 },  
+            { id: 8, rate: 36.84 },  
+            { id: 9, rate: 100.00 },  
+            { id: 10, rate: 7.89 },  
+            { id: 11, rate: 78.94 },  
+            { id: 12, rate: 52.63 },  
+            { id: 13, rate: 62.16 },  
+            { id: 14, rate: 72.97 },  
+            { id: 15, rate: 21.62 },  
+            { id: 16, rate: 35.14 },  
+            { id: 17, rate: 35.14 },  
+            { id: 18, rate: 35.14 },  
+            { id: 19, rate: 51.35 },  
+            { id: 20, rate: 10.81 },  
+            { id: 21, rate: 24.32 },  
+            { id: 22, rate: 8.11 },  
+            { id: 23, rate: 0.00 },  
+            { id: 24, rate: 0.00 }  
+        ];  
 
-    // 环形图颜色比例尺  
-    const colorScale = d3.scaleLinear()  
-      .domain([0, 100])  
-      .range(["#ef4444", "#4ade80"]);  
+        // 环形图颜色比例尺  
+        const colorScale = d3.scaleLinear()  
+            .domain([0, 100])  
+            .range(["#ef4444", "#4ade80"]);  
 
-    // 创建环形图  
-    function createRateChart(container, rate) {  
-      const svgSize = 80; // SVG 尺寸  
-      const arcWidth = 8; // 环形图宽度  
+        // 创建环形图  
+        function createRateChart(container, rate) {  
+            const svgSize = 80; // SVG 尺寸  
+            const arcWidth = 8; // 环形图宽度  
 
-      const svg = d3.select(container)  
-        .append("svg")  
-        .attr("width", svgSize)  
-        .attr("height", svgSize);  
+            const svg = d3.select(container)  
+                .append("svg")  
+                .attr("width", svgSize)  
+                .attr("height", svgSize);  
 
-      const arc = d3.arc()  
-        .innerRadius(svgSize / 2 - arcWidth)  
-        .outerRadius(svgSize / 2)  
-        .startAngle(-Math.PI / 2)  
-        .endAngle((rate / 100) * 2 * Math.PI - Math.PI / 2);  
+            const arc = d3.arc()  
+                .innerRadius(svgSize / 2 - arcWidth)  
+                .outerRadius(svgSize / 2)  
+                .startAngle(-Math.PI / 2)  
+                .endAngle((rate / 100) * 2 * Math.PI - Math.PI / 2);  
 
-      // 背景弧线  
-      svg.append("path")  
-        .attr("d", d3.arc()  
-          .innerRadius(svgSize / 2 - arcWidth)  
-          .outerRadius(svgSize / 2)  
-          .startAngle(-Math.PI / 2)  
-          .endAngle(Math.PI * 2)  
-        )  
-        .attr("fill", "#e5e7eb")  
-        .attr("transform", `translate(${svgSize / 2},${svgSize / 2})`);  
+            // 背景弧线  
+            svg.append("path")  
+                .attr("d", d3.arc()  
+                    .innerRadius(svgSize / 2 - arcWidth)  
+                    .outerRadius(svgSize / 2)  
+                    .startAngle(-Math.PI / 2)  
+                    .endAngle(Math.PI * 2)  
+                )  
+                .attr("fill", "#e5e7eb")  
+                .attr("transform", `translate(${svgSize / 2},${svgSize / 2})`);  
 
-      // 动态前景弧线  
-      svg.append("path")  
-        .attr("fill", colorScale(rate))  
-        .attr("transform", `translate(${svgSize / 2},${svgSize / 2})`)  
-        .transition()  
-        .duration(1000)  
-        .attrTween("d", () => {  
-          const interpolate = d3.interpolate(0, rate);  
-          return t => arc(interpolate(t));  
+            // 动态前景弧线  
+            svg.append("path")  
+                .attr("fill", colorScale(rate))  
+                .attr("transform", `translate(${svgSize / 2},${svgSize / 2})`)  
+                .transition()  
+                .duration(1000)  
+                .attrTween("d", () => {  
+                    const interpolate = d3.interpolate(0, rate);  
+                    return t => arc(interpolate(t));  
+                });  
+
+            // 添加正确率文字  
+            svg.append("text")  
+                .attr("x", svgSize / 2)  
+                .attr("y", svgSize / 2 + 5)  
+                .attr("text-anchor", "middle")  
+                .attr("fill", "#4b5563")  
+                .attr("font-size", "12px")  
+                .text(`正确率`);  
+        }  
+
+        // 动态生成题目卡片  
+        const container = document.getElementById("questions");  
+        questions.forEach(({ id, rate }, i) => {  
+            // 创建卡片容器作为链接  
+            const link = document.createElement("a");  
+
+            // 将带括号的题号转为链接友好的形式，括号替换为横杠  
+            const sanitizedId = id.toString().replace(/\(/g, '-').replace(/\)/g, '');  
+            link.href = `page${sanitizedId}.html`; // 点击跳转到对应题目的页面  
+
+            link.style.animationDelay = `${i * 0.1}s`;  
+            link.className = "question-card flex flex-col items-center p-4 bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow";  
+
+            // 添加题目说明  
+            const title = document.createElement("div");  
+            title.textContent = `第${id}题`;  
+            title.className = "text-sm font-medium text-gray-700 mb-2";  
+            link.appendChild(title);  
+
+            // 添加环形图  
+            const chartContainer = document.createElement("div");  
+            chartContainer.className = "mb-3";  
+            createRateChart(chartContainer, rate);  
+            link.appendChild(chartContainer);  
+
+            // 添加正确率说明  
+            const rateText = document.createElement("div");  
+            rateText.textContent = `第${id}题的正确率为 ${rate.toFixed(2)}%`;  
+            rateText.className = "rate-chart-title text-xs text-gray-500 leading-snug text-center";  
+            link.appendChild(rateText);  
+
+            // 添加到容器  
+            container.appendChild(link);  
         });  
-
-      // 添加正确率文字  
-      svg.append("text")  
-        .attr("x", svgSize / 2)  
-        .attr("y", svgSize / 2 + 5)  
-        .attr("text-anchor", "middle")  
-        .attr("fill", "#4b5563")  
-        .attr("font-size", "12px")  
-        .text(`正确率`);  
-    }  
-
-    // 动态生成题目卡片  
-    const container = document.getElementById("questions");  
-    questions.forEach(({ id, rate }, i) => {  
-      // 创建卡片容器作为链接  
-      const link = document.createElement("a");  
-
-      // 将带括号的题号转为链接友好的形式，括号替换为横杠  
-      const sanitizedId = id.toString().replace(/\(/g, '-').replace(/\)/g, '');  
-      link.href = `page${sanitizedId}.html`; // 点击跳转到对应题目的页面  
-
-      link.style.animationDelay = `${i * 0.1}s`;  
-      link.className = "question-card flex flex-col items-center p-4 bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow";  
-
-      // 添加题目说明  
-      const title = document.createElement("div");  
-      title.textContent = `第${id}题`;  
-      title.className = "text-sm font-medium text-gray-700 mb-2";  
-      link.appendChild(title);  
-
-      // 添加环形图  
-      const chartContainer = document.createElement("div");  
-      chartContainer.className = "mb-3";  
-      createRateChart(chartContainer, rate);  
-      link.appendChild(chartContainer);  
-
-      // 添加正确率说明  
-      const rateText = document.createElement("div");  
-      rateText.textContent = `这是第 ${id} 题的正确率`;  
-      rateText.className = "rate-chart-title text-xs text-gray-500 leading-snug text-center";  
-      link.appendChild(rateText);  
-
-      // 添加到容器  
-      container.appendChild(link);  
-    });  
-  </script>  
+    </script>  
 </body>  
 </html>  
