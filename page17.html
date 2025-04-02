@@ -2,7 +2,7 @@
 <html lang="zh">  
 <head>  
     <meta charset="UTF-8" />  
-    <title>第17（1）题 - 数学题目</title>  
+    <title>第17题 - 数学题目</title>  
     <!-- Tailwind CSS -->  
     <script src="https://cdn.tailwindcss.com"></script>  
     <!-- D3.js v6 -->  
@@ -21,7 +21,7 @@
         .node circle:hover { fill: #333; }  
         .node text { pointer-events: none; font-size: 10px; fill: #333; }  
         line.link { stroke: #ccc; stroke-width: 1.5px; }  
-        .tooltip { position: absolute; min-width: 120px; padding: 8px; font-size: 12px; background: rgba(255, 255, 255, 0.9); border: 1px solid #ccc; border-radius: 4px; pointer-events: none; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); opacity: 0; transition: opacity 0.2s; z-index: 999; }  
+        .tooltip { position: absolute; min-width: 120px; padding: 8px; font-size: 12px; background: rgba(255, 255, 255, 0.9); border: 1px solid #ccc; border-radius: 4px; pointer-events: none; box-shadow: 0 2px 5px rgba(0,0,0,0.15); opacity: 0; transition: opacity 0.2s; z-index: 999; }  
         .line { fill: none; stroke-width: 2px; }  
         .line-chart-axis path, .line-chart-axis line { fill: none; stroke: #ccc; }  
         .dot { fill: #ff5722; stroke: #fff; stroke-width: 1px; cursor: pointer; }  
@@ -49,12 +49,20 @@
     <!-- 右侧：题目信息 -->  
     <div id="right-panel" class="w-1/2 h-full flex flex-col p-4 space-y-4">  
 
-        <!-- 题干描述区域 -->  
-        <div class="bg-white p-4 rounded shadow">  
+        <!-- 第17（1）题干描述区域 -->  
+        <div class="bg-white p-4 rounded shadow mb-4">  
             <h1 class="text-xl font-bold mb-2">题号：第17（1）题</h1>  
             <p class="mb-4">求下列各式中 \( x \) 的值：</p>  
             <p class="mb-4">\( (x - 1)^2 = 4 \)</p>  
-            
+            <p>当前掌握率：<span class="text-green-600 font-medium">35.14%</span></p>  
+            <p>历史正确率：<span class="text-yellow-600 font-medium">60%</span></p>  
+        </div>  
+
+        <!-- 第17（2）题干描述区域 -->  
+        <div class="bg-white p-4 rounded shadow mb-4">  
+            <h1 class="text-xl font-bold mb-2">题号：第17（2）题</h1>  
+            <p class="mb-4">求下列各式中 \( x \) 的值：</p>  
+            <p class="mb-4">\( x^2 - 4x + 4 = 0 \)</p>  
             <p>当前掌握率：<span class="text-green-600 font-medium">35.14%</span></p>  
             <p>历史正确率：<span class="text-yellow-600 font-medium">60%</span></p>  
         </div>  
@@ -69,7 +77,7 @@
 </div>  
 
 <script>  
-// ================ (1) 知识点对应示例题 ================  
+// ================ 知识点对应示例题 ================  
 const knowledgeQuestions = {  
     "平方根": {  
         basic: "理解平方根的概念与计算",  
@@ -77,14 +85,14 @@ const knowledgeQuestions = {
         advanced: "应用平方根解决复杂的代数问题"  
     },  
     "一元二次方程": {  
-        basic: "了解一元二次方程的标准形式",  
-        medium: "掌握一元二次方程的解法",  
-        advanced: "在各种条件下应用一元二次方程解题"  
+        basic: "理解一元二次方程的解与性质",  
+        medium: "掌握一元二次方程的求解方法",  
+        advanced: "应用一元二次方程解决实际问题"  
     },  
-    "因式分解": {  
-        basic: "理解因式分解的基础知识",  
-        medium: "掌握常见二次多项式的因式分解",  
-        advanced: "应用因式分解解决较复杂的代数问题"  
+    "配方法": {  
+        basic: "了解配方法的基本概念",  
+        medium: "掌握配方法的应用",  
+        advanced: "解决复杂的方程问题"  
     },  
     "解方程的方法": {  
         basic: "了解解方程的基本方法",  
@@ -93,24 +101,29 @@ const knowledgeQuestions = {
     }  
 };  
 
-// ================ (2) 力导向图数据 ================  
+// ================ 力导向图数据 ================  
 const graphData = {  
     nodes: [  
         { id: "Q17_1", type: "question", name: "第17（1）题" },  
+        { id: "Q17_2", type: "question", name: "第17（2）题" },  
         { id: "K1", type: "knowledge", name: "平方根" },  
         { id: "K2", type: "knowledge", name: "一元二次方程" },  
-        { id: "K3", type: "knowledge", name: "因式分解" },  
-        { id: "K4", type: "knowledge", name: "解方程的方法" }  
+        { id: "K3", type: "knowledge", name: "配方法" },  
+        { id: "K4", type: "knowledge", name: "解方程的方法" },  
+        { id: "E1", type: "example", name: "例题 1: 求平方根" },  
+        { id: "E2", type: "example", name: "例题 2: 解一元二次方程" }  
     ],  
     links: [  
         { source: "Q17_1", target: "K1" },  
-        { source: "Q17_1", target: "K2" },  
-        { source: "K1", target: "K3" },  // 平方根与因式分解的连接  
-        { source: "K2", target: "K4" }   // 一元二次方程与解方程的方法的连接  
+        { source: "Q17_2", target: "K2" },  
+        { source: "K1", target: "E1" },  // 平方根示例  
+        { source: "K2", target: "E2" },  // 一元二次方程示例  
+        { source: "K2", target: "K4" },  // 一元二次方程与解方程的方法  
+        { source: "K1", target: "K3" }   // 平方根与配方法  
     ]  
 };  
 
-// ================ (3) 力导向图绘制 ================  
+// ================ 力导向图绘制 ================  
 const width = document.getElementById("left-panel").clientWidth;  
 const height = document.getElementById("left-panel").clientHeight;  
 
@@ -187,13 +200,23 @@ function ticked() {
     node.attr("transform", d => `translate(${d.x}, ${d.y})`);  
 }  
 
-// ================ (4) 历史正确率折线图 ================  
-const trendData = [  
+// ================ 历史正确率折线图 ================  
+// 第17 (1)题历史正确率数据  
+const trendData1 = [  
     { time: "测验1", accuracy: 0.39 },  
     { time: "测验2", accuracy: 0.36 },  
     { time: "测验3", accuracy: 0.42 },  
     { time: "测验4", accuracy: 0.38 },  
     { time: "测验5", accuracy: 0.44 }  
+];  
+
+// 第17 (2)题历史正确率数据  
+const trendData2 = [  
+    { time: "测验1", accuracy: 0.40 },  
+    { time: "测验2", accuracy: 0.45 },  
+    { time: "测验3", accuracy: 0.38 },  
+    { time: "测验4", accuracy: 0.42 },  
+    { time: "测验5", accuracy: 0.47 }  
 ];  
 
 const lineChartWidth = document.getElementById("line-chart").clientWidth;  
@@ -204,7 +227,7 @@ const innerWidth = lineChartWidth - margin.left - margin.right;
 const innerHeight = lineChartHeight - margin.top - margin.bottom;  
 
 const xScale = d3.scalePoint()  
-    .domain(trendData.map(d => d.time))  
+    .domain(trendData1.map(d => d.time))  
     .range([0, innerWidth])  
     .padding(0.5);  
 
@@ -230,29 +253,60 @@ svgLine.append("g")
     .attr("class", "line-chart-axis")  
     .call(yAxis);  
 
-const lineGenerator = d3.line()  
+// 绘制第17（1）题的历史正确率线  
+const lineGenerator1 = d3.line()  
     .x(d => xScale(d.time))  
     .y(d => yScale(d.accuracy));  
 
 svgLine.append("path")  
-    .datum(trendData)  
+    .datum(trendData1)  
     .attr("class", "line")  
-    .attr("d", lineGenerator)  
-    .attr("stroke", "#f97316");  
+    .attr("d", lineGenerator1)  
+    .attr("stroke", "#f97316") // 第17（1）题的线颜色  
+
+// 绘制第17（2）题的历史正确率线  
+const lineGenerator2 = d3.line()  
+    .x(d => xScale(d.time))  
+    .y(d => yScale(d.accuracy));  
+
+svgLine.append("path")  
+    .datum(trendData2)  
+    .attr("class", "line")  
+    .attr("d", lineGenerator2)  
+    .attr("stroke", "#1d4ed8") // 第17（2）题的线颜色  
 
 const tooltipLine = d3.select("#line-tooltip");  
 
-svgLine.selectAll(".dot")  
-    .data(trendData)  
+svgLine.selectAll(".dot1")  
+    .data(trendData1)  
     .enter()  
     .append("circle")  
-    .attr("class", "dot")  
+    .attr("class", "dot1")  
     .attr("r", 4)  
     .attr("cx", d => xScale(d.time))  
     .attr("cy", d => yScale(d.accuracy))  
     .on("mouseover", (event, d) => {  
         tooltipLine  
-            .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(1)}%</strong>`)  
+            .html(`${d.time}<br/>第17（1）题正确率：<strong>${(d.accuracy * 100).toFixed(1)}%</strong>`)  
+            .style("opacity", 1)  
+            .style("left", (event.pageX + 10) + "px")  
+            .style("top", (event.pageY - 10) + "px");  
+    })  
+    .on("mouseout", () => {  
+        tooltipLine.style("opacity", 0);  
+    });  
+
+svgLine.selectAll(".dot2")  
+    .data(trendData2)  
+    .enter()  
+    .append("circle")  
+    .attr("class", "dot2")  
+    .attr("r", 4)  
+    .attr("cx", d => xScale(d.time))  
+    .attr("cy", d => yScale(d.accuracy))  
+    .on("mouseover", (event, d) => {  
+        tooltipLine  
+            .html(`${d.time}<br/>第17（2）题正确率：<strong>${(d.accuracy * 100).toFixed(1)}%</strong>`)  
             .style("opacity", 1)  
             .style("left", (event.pageX + 10) + "px")  
             .style("top", (event.pageY - 10) + "px");  
