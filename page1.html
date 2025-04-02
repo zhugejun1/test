@@ -1,244 +1,245 @@
+<!DOCTYPE html>  
+<html lang="zh">  
+<head>  
+    <meta charset="UTF-8" />  
+    <title>第1题 - 实数分类问题</title>  
+    <!-- Tailwind CSS -->  
+    <script src="https://cdn.tailwindcss.com"></script>  
+    <!-- D3.js v6 -->  
+    <script src="https://d3js.org/d3.v6.min.js"></script>  
 
-    <!DOCTYPE html>
-<html lang="zh">
-<head>
-    <meta charset="UTF-8" />
-    <title>第1题 - 实数分类问题</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- D3.js v6 -->
-    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <!-- MathJax 引入 -->  
+    <script>  
+        MathJax = {  
+            tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] },  
+            svg: { fontCache: "global" }  
+        };  
+    </script>  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.min.js"></script>  
 
-    <!-- MathJax 引入 -->
-    <script>
-        MathJax = {
-            tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] },
-            svg: { fontCache: "global" }
-        };
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.min.js"></script>
+    <style>  
+        body { margin: 0; font-family: Arial, sans-serif; background-color: #f6f9fc; }  
+        .node circle { cursor: pointer; }  
+        .node circle:hover { fill: #333; }  
+        .node text { pointer-events: none; font-size: 10px; fill: #333; }  
+        line.link { stroke: #ccc; stroke-width: 1.5px; }  
+        .tooltip { position: absolute; min-width: 120px; padding: 8px; font-size: 12px; background: rgba(255, 255, 255, 0.9); border: 1px solid #ccc; border-radius: 4px; pointer-events: none; box-shadow: 0 2px 5px rgba(0,0,0,0.15); opacity: 0; transition: opacity 0.2s; z-index: 999; }  
+        .line { fill: none; stroke-width: 2px; }  
+        .line-chart-axis path, .line-chart-axis line { fill: none; stroke: #ccc; }  
+        .dot { fill: #ff5722; stroke: #fff; stroke-width: 1px; cursor: pointer; }  
+        .dot:hover { opacity: 0.8; }  
+    </style>  
+</head>  
+<body class="h-screen w-screen overflow-hidden bg-gray-100">  
 
-    <style>
-        body { margin: 0; font-family: Arial, sans-serif; background-color: #f6f9fc; }
-        .node circle { cursor: pointer; }
-        .node circle:hover { fill: #333; }
-        .node text { pointer-events: none; font-size: 10px; fill: #333; }
-        line.link { stroke: #ccc; stroke-width: 1.5px; }
-        .tooltip { position: absolute; min-width: 120px; padding: 8px; font-size: 12px; background: rgba(255, 255, 255, 0.9); border: 1px solid #ccc; border-radius: 4px; pointer-events: none; box-shadow: 0 2px 5px rgba(0,0,0,0.15); opacity: 0; transition: opacity 0.2s; z-index: 999; }
-        .line { fill: none; stroke-width: 2px; }
-        .line-chart-axis path, .line-chart-axis line { fill: none; stroke: #ccc; }
-        .dot { fill: #ff5722; stroke: #fff; stroke-width: 1px; cursor: pointer; }
-        .dot:hover { opacity: 0.8; }
-    </style>
-</head>
-<body class="h-screen w-screen overflow-hidden bg-gray-100">
+<!-- 顶部：返回按钮 -->  
+<div class="p-4 bg-white shadow">  
+    <button class="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 transition-colors" onclick="location.href='index.html'">  
+        返回题目列表  
+    </button>  
+</div>  
 
-<!-- 顶部：返回按钮 -->
-<div class="p-4 bg-white shadow">
-    <button class="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 transition-colors" onclick="location.href='index.html'">
-        返回题目列表
-    </button>
-</div>
+<!-- 主体：左侧力导向图 + 右侧题目信息 -->  
+<div class="flex h-[calc(100vh-64px)]">  
 
-<!-- 主体：左侧力导向图 + 右侧题目信息 -->
-<div class="flex h-[calc(100vh-64px)]">
+    <!-- 左侧：力导向图 -->  
+    <div id="left-panel" class="w-1/2 h-full bg-white relative">  
+        <svg id="graph-svg" class="w-full h-full"></svg>  
+        <div id="graph-tooltip" class="tooltip"></div>  
+    </div>  
 
-    <!-- 左侧：力导向图 -->
-    <div id="left-panel" class="w-1/2 h-full bg-white relative">
-        <svg id="graph-svg" class="w-full h-full"></svg>
-        <div id="graph-tooltip" class="tooltip"></div>
-    </div>
+    <!-- 右侧：题目信息和历史正确率折线图 -->  
+    <div id="right-panel" class="w-1/2 h-full flex flex-col p-4 space-y-4">  
 
-    <!-- 右侧：题目信息 -->
-    <div id="right-panel" class="w-1/2 h-full flex flex-col p-4 space-y-4">
+        <!-- 题目信息 -->  
+        <div class="bg-white p-4 rounded shadow">  
+            <h1 class="text-xl font-bold mb-2">题号：第1题 - 实数分类问题</h1>  
+            <p class="mb-2">  
+                在实数：\( 3.14159 \)、\( \sqrt[3]{27} \)、\( 1.010010001 \)、\( \frac{\pi}{5} \)、\( \sqrt{8} \)、\( \frac{11}{3} \) 中，  
+                是无理数的有（ ）  
+            </p>  
+            <div class="mb-4">  
+                <input type="checkbox" id="option1" />  
+                <label for="option1">A. 1个</label>  
+            </div>  
+            <div class="mb-4">  
+                <input type="checkbox" id="option2" />  
+                <label for="option2">B. 2个</label>  
+            </div>  
+            <div class="mb-4">  
+                <input type="checkbox" id="option3" />  
+                <label for="option3">C. 3个</label>  
+            </div>  
+            <div class="mb-4">  
+                <input type="checkbox" id="option4" />  
+                <label for="option4">D. 4个</label>  
+            </div>  
+            <p>当前掌握率：<span class="text-green-600 font-medium">83.78%</span></p>  
+            <p>历史正确率：<span class="text-yellow-600 font-medium">35%</span></p>  
+        </div>  
 
-        <!-- 题干描述区域 -->
-        <div class="bg-white p-4 rounded shadow">
-            <h1 class="text-xl font-bold mb-2">题号：第1题</h1>
-            <p class="mb-2">
-                在实数：\( 3.14159 \)、\( \sqrt[3]{27} \)、\( 1.010010001 \)、\( \frac{\pi}{5} \)、\( \sqrt{8} \)、\( \frac{11}{3} \) 中，
-                是无理数的有（ ）
-            </p>
-            <div class="mb-4">
-                <input type="checkbox" id="option1" />
-                <label for="option1">A. 1个</label>
-            </div>
-            <div class="mb-4">
-                <input type="checkbox" id="option2" />
-                <label for="option2">B. 2个</label>
-            </div>
-            <div class="mb-4">
-                <input type="checkbox" id="option3" />
-                <label for="option3">C. 3个</label>
-            </div>
-            <div class="mb-4">
-                <input type="checkbox" id="option4" />
-                <label for="option4">D. 4个</label>
-            </div>
-            <p>当前掌握率：<span class="text-green-600 font-medium">83.78%</span></p>
-            <p>历史正确率：<span class="text-yellow-600 font-medium">35%</span></p>
-        </div>
+        <!-- 历史正确率折线图 -->  
+        <div class="flex-1 bg-white p-4 rounded shadow relative">  
+            <h2 class="text-lg font-bold mb-2">历史正确率趋势</h2>  
+            <svg id="line-chart" class="w-full h-full"></svg>  
+            <div id="line-tooltip" class="tooltip"></div>  
+        </div>  
+    </div>  
+</div>  
 
-        <!-- 相关内容说明 -->
-        <div class="bg-white p-4 rounded shadow overflow-auto">
-            <h2 class="text-lg font-bold mb-2">相关题目的定位与层次</h2>
-            <p class="mb-2">
-                <strong>定义：</strong>无理数与有理数的定义与判别。
-            </p>
-            <p class="mb-2">
-                <strong>针对性：</strong>通过对根号数的分类及\(\pi\)的性质的题目，理解无理数的分类。
-            </p>
-            <p class="mb-2">
-                <strong>层次性：</strong>结合数轴问题和复杂数值判定，提升学生对实数性质的掌握水平。
-            </p>
-        </div>
+<script>  
+    // 力导向图数据  
+    const graphData = {  
+        nodes: [  
+            { id: "Q1", type: "question", name: "第1题" },  
+            { id: "K1", type: "knowledge", name: "无理数的定义" },  
+            { id: "K2", type: "knowledge", name: "有理数与无理数分类" },  
+            { id: "K3", type: "knowledge", name: "数轴上的实数表示" },  
+            { id: "E1", type: "example", name: "简单分类题" },  
+            { id: "E2", type: "example", name: "复合数值分类" }  
+        ],  
+        links: [  
+            { source: "Q1", target: "K1" },  
+            { source: "Q1", target: "K2" },  
+            { source: "K2", target: "K3" },  
+            { source: "K1", target: "E1" },  
+            { source: "K2", target: "E2" }  
+        ]  
+    };  
 
-        <!-- 历史正确率折线图 -->
-        <div class="flex-1 bg-white p-4 rounded shadow relative">
-            <h2 class="text-lg font-bold mb-2">历史正确率趋势</h2>
-            <svg id="line-chart" class="w-full h-full"></svg>
-            <div id="line-tooltip" class="tooltip"></div>
-        </div>
-    </div>
-</div>
+    const width = document.getElementById("left-panel").clientWidth;  
+    const height = document.getElementById("left-panel").clientHeight;  
 
-<script>
-    // ================ 力导向图数据 ================
-    const graphData = {
-        nodes: [
-            { id: "Q1", type: "question", name: "第1题" },
-            { id: "K1", type: "knowledge", name: "无理数的定义" },
-            { id: "K2", type: "knowledge", name: "根号数分类" },
-            { id: "K3", type: "knowledge", name: "π的性质" }
-        ],
-        links: [
-            { source: "Q1", target: "K1" },
-            { source: "Q1", target: "K2" },
-            { source: "Q1", target: "K3" }
-        ]
-    };
+    const svgGraph = d3.select("#graph-svg")  
+        .attr("width", width)  
+        .attr("height", height);  
 
-    const width = document.getElementById("left-panel").clientWidth;
-    const height = document.getElementById("left-panel").clientHeight;
+    const simulation = d3.forceSimulation(graphData.nodes)  
+        .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(120))  
+        .force("charge", d3.forceManyBody().strength(-300))  
+        .force("center", d3.forceCenter(width / 2, height / 2))  
+        .on("tick", ticked);  
 
-    const svgGraph = d3.select("#graph-svg")
-        .attr("width", width)
-        .attr("height", height);
+    const link = svgGraph.selectAll("line.link")  
+        .data(graphData.links)  
+        .enter()  
+        .append("line")  
+        .attr("class", "link");  
 
-    const simulation = d3.forceSimulation(graphData.nodes)
-        .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(110))
-        .force("charge", d3.forceManyBody().strength(-300))
-        .force("center", d3.forceCenter(width / 2, height / 2))
-        .on("tick", ticked);
+    const node = svgGraph.selectAll("g.node")  
+        .data(graphData.nodes)  
+        .enter()  
+        .append("g")  
+        .attr("class", "node");  
 
-    const link = svgGraph.selectAll("line.link")
-        .data(graphData.links)
-        .enter()
-        .append("line")
-        .attr("class", "link");
+    const tooltipGraph = d3.select("#graph-tooltip");  
 
-    const node = svgGraph.selectAll("g.node")
-        .data(graphData.nodes)
-        .enter()
-        .append("g")
-        .attr("class", "node");
+    node.append("circle")  
+        .attr("r", d => d.type === "question" ? 18 : (d.type === "knowledge" ? 14 : 10))  
+        .attr("fill", d => {  
+            if (d.type === "question") return "#fca5a5"; // 浅红  
+            if (d.type === "knowledge") return "#93c5fd"; // 浅蓝  
+            return "#a5d8a5"; // 浅绿  
+        })  
+        .on("mouseover", (event, d) => {  
+            tooltipGraph  
+                .style("opacity", 1)  
+                .html(`<strong>${d.type === "question" ? "题目" : d.type === "knowledge" ? "知识点" : "例题"}：</strong> ${d.name}`)  
+                .style("left", `${event.pageX + 10}px`)  
+                .style("top", `${event.pageY - 10}px`);  
+        })  
+        .on("mouseout", () => tooltipGraph.style("opacity", 0));  
 
-    const tooltipGraph = d3.select("#graph-tooltip");
+    node.append("text")  
+        .text(d => d.name)  
+        .attr("x", 20)  
+        .attr("y", 4)  
+        .attr("font-size", "12px")  
+        .attr("fill", "#333");  
 
-    node.append("circle")
-        .attr("r", d => d.type === "question" ? 18 : 14)
-        .attr("fill", d => {
-            if (d.type === "question") return "#fca5a5"; // 浅红
-            return "#93c5fd"; // 浅蓝
-        })
-        .on("mouseover", (event, d) => {
-            tooltipGraph
-                .style("opacity", 1)
-                .html(d.name)
-                .style("left", `${event.pageX + 10}px`)
-                .style("top", `${event.pageY - 10}px`);
-        })
-        .on("mouseout", () => tooltipGraph.style("opacity", 0));
+    function ticked() {  
+        link  
+            .attr("x1", d => d.source.x)  
+            .attr("y1", d => d.source.y)  
+            .attr("x2", d => d.target.x)  
+            .attr("y2", d => d.target.y);  
 
-    node.append("text")
-        .text(d => d.name)
-        .attr("x", 20)
-        .attr("y", 4)
-        .attr("font-size", "12px")
-        .attr("fill", "#333");
+        node.attr("transform", d => `translate(${d.x}, ${d.y})`);  
+    }  
 
-    function ticked() {
-        link
-            .attr("x1", d => d.source.x)
-            .attr("y1", d => d.source.y)
-            .attr("x2", d => d.target.x)
-            .attr("y2", d => d.target.y);
+    // 历史正确率折线图数据  
+    const trendData = [  
+        { time: "测验1", accuracy: 0.70 },  
+        { time: "测验2", accuracy: 0.75 },  
+        { time: "测验3", accuracy: 0.78 },  
+        { time: "测验4", accuracy: 0.80 },  
+        { time: "当前", accuracy: 0.8378 }  
+    ];  
 
-        node.attr("transform", d => `translate(${d.x}, ${d.y})`);
-    }
+    const lineChartWidth = document.getElementById("line-chart").clientWidth;  
+    const lineChartHeight = document.getElementById("line-chart").clientHeight;  
 
-    // ================ 历史正确率折线图数据 ================
-    const trendData = [
-        { time: "测验1", accuracy: 0.75 },
-        { time: "测验2", accuracy: 0.78 },
-        { time: "测验3", accuracy: 0.80 },
-        { time: "测验4", accuracy: 0.82 },
-        { time: "当前", accuracy: 0.8378 }
-    ];
+    const margin = { top: 20, right: 20, bottom: 30, left: 40 };  
+    const innerWidth = lineChartWidth - margin.left - margin.right;  
+    const innerHeight = lineChartHeight - margin.top - margin.bottom;  
 
-    const lineChartWidth = document.getElementById("line-chart").clientWidth;
-    const lineChartHeight = document.getElementById("line-chart").clientHeight;
+    const xScale = d3.scalePoint()  
+        .domain(trendData.map(d => d.time))  
+        .range([0, innerWidth])  
+        .padding(0.5);  
 
-    const margin = { top: 20, right: 20, bottom: 30, left: 40 };
-    const innerWidth = lineChartWidth - margin.left - margin.right;
-    const innerHeight = lineChartHeight - margin.top - margin.bottom;
+    const yScale = d3.scaleLinear()  
+        .domain([0.6, 1]) // 根据数据设置 Y 轴范围  
+        .range([innerHeight, 0]);  
 
-    const xScale = d3.scalePoint()
-        .domain(trendData.map(d => d.time))
-        .range([0, innerWidth])
-        .padding(0.5);
+    const svgLine = d3.select("#line-chart")  
+        .attr("width", lineChartWidth)  
+        .attr("height", lineChartHeight)  
+        .append("g")  
+        .attr("transform", `translate(${margin.left},${margin.top})`);  
 
-    const yScale = d3.scaleLinear()
-        .domain([0.7, 0.85])
-        .range([innerHeight, 0]);
+    const xAxis = d3.axisBottom(xScale);  
+    const yAxis = d3.axisLeft(yScale).tickFormat(d3.format(".0%"));  
 
-    const svgLine = d3.select("#line-chart")
-        .attr("width", lineChartWidth)
-        .attr("height", lineChartHeight)
-        .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
+    svgLine.append("g")  
+        .attr("transform", `translate(0, ${innerHeight})`)  
+        .call(xAxis);  
 
-    const xAxis = d3.axisBottom(xScale);
-    const yAxis = d3.axisLeft(yScale).tickFormat(d3.format(".0%"));
+    svgLine.append("g").call(yAxis);  
 
-    svgLine.append("g")
-        .attr("transform", `translate(0, ${innerHeight})`)
-        .call(xAxis);
+    const lineGenerator = d3.line()  
+        .x(d => xScale(d.time))  
+        .y(d => yScale(d.accuracy));  
 
-    svgLine.append("g").call(yAxis);
+    svgLine.append("path")  
+        .datum(trendData)  
+        .attr("class", "line")  
+        .attr("d", lineGenerator)  
+        .attr("fill", "none")  
+        .attr("stroke", "#f97316")  
+        .attr("stroke-width", 2);  
 
-    const lineGenerator = d3.line()
-        .x(d => xScale(d.time))
-        .y(d => yScale(d.accuracy));
+    svgLine.selectAll(".dot")  
+        .data(trendData)  
+        .enter()  
+        .append("circle")  
+        .attr("class", "dot")  
+        .attr("cx", d => xScale(d.time))  
+        .attr("cy", d => yScale(d.accuracy))  
+        .attr("r", 4)  
+        .attr("fill", "#f97316")  
+        .on("mouseover", (event, d) => {  
+            d3.select("#line-tooltip")  
+                .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(1)}%</strong>`)  
+                .style("opacity", 1)  
+                .style("left", (event.pageX + 10) + "px")  
+                .style("top", (event.pageY - 10) + "px");  
+        })  
+        .on("mouseout", () => {  
+            d3.select("#line-tooltip").style("opacity", 0);  
+        });  
+</script>  
 
-    svgLine.append("path")
-        .datum(trendData)
-        .attr("d", lineGenerator)
-        .attr("fill", "none")
-        .attr("stroke", "#f97316")
-        .attr("stroke-width", 2);
-
-    svgLine.selectAll(".dot")
-        .data(trendData)
-        .enter()
-        .append("circle")
-        .attr("cx", d => xScale(d.time))
-        .attr("cy", d => yScale(d.accuracy))
-        .attr("r", 4)
-        .attr("fill", "#f97316");
-</script>
-
-<div id="line-tooltip" class="tooltip"></div>
-</body>
-</html>
+</body>  
+</html>  
 
