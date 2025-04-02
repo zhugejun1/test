@@ -2,6 +2,7 @@
 <html lang="zh">  
 <head>  
     <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
     <title>七下数学3月月考</title>  
     <!-- 引入 Tailwind CSS 和 D3.js -->  
     <script src="https://cdn.tailwindcss.com"></script>  
@@ -34,6 +35,17 @@
 
     <!-- 题目容器 -->  
     <div id="questions" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full max-w-6xl"></div>  
+
+    <!-- 使用说明 -->  
+    <div id="instructions" class="mt-10 text-center w-full max-w-2xl">  
+        <p class="text-lg font-semibold text-gray-800 mb-2">使用说明：</p>  
+        <ul class="list-disc list-inside text-gray-700 text-left">  
+            <li>每个题目代表一个数学题的正确率，单击右上角的题目卡片以查看详细信息。</li>  
+            <li>环形图表示该题目的正确率，颜色越深表示正确率越高。</li>  
+            <li>在力导向图中，您可以悬停在节点上以查看相关信息。</li>  
+            <li>您可以随着堆栈式课程的添加和课程内容的变化，查看不同的题目正确率。</li>  
+        </ul>  
+    </div>  
 
     <script>  
         // 生成固定题目数据  
