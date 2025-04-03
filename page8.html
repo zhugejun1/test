@@ -1,4 +1,4 @@
- <!DOCTYPE html>  
+<!DOCTYPE html>  
 <html lang="zh">  
 <head>  
     <meta charset="UTF-8" />  
@@ -28,6 +28,9 @@
         .line-chart-axis path, .line-chart-axis line { fill: none; stroke: #ccc; }  
         .dot { fill: #ff5722; stroke: #fff; stroke-width: 1px; cursor: pointer; }  
         .dot:hover { opacity: 0.8; }  
+        .color-legend { position: absolute; bottom: 20px; left: 20px; background: rgba(255, 255, 255, 0.95); padding: 10px; border-radius: 4px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }  
+        .legend-item { display: flex; align-items: center; margin-bottom: 5px; }  
+        .legend-color { width: 16px; height: 16px; margin-right: 8px; border-radius: 50%; }  
     </style>  
 </head>  
 <body class="h-screen w-screen overflow-hidden bg-gray-100">  
@@ -46,6 +49,31 @@
     <div id="left-panel" class="w-1/2 h-full bg-white relative">  
         <svg id="graph-svg" class="w-full h-full"></svg>  
         <div id="graph-tooltip" class="tooltip"></div>  
+        
+        <!-- 颜色对应正确率说明 -->  
+        <div class="color-legend">  
+            <h3 class="text-sm font-bold mb-2">正确率说明:</h3>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #ef4444;"></div>  
+                <span class="text-xs">低于40%</span>  
+            </div>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #f97316;"></div>  
+                <span class="text-xs">40%-60%</span>  
+            </div>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #eab308;"></div>  
+                <span class="text-xs">60%-80%</span>  
+            </div>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #22c55e;"></div>  
+                <span class="text-xs">大于80%</span>  
+            </div>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #9ca3af;"></div>  
+                <span class="text-xs">相关知识点</span>  
+            </div>  
+        </div>  
     </div>  
 
     <!-- 右侧：题目信息和历史趋势图 -->  
@@ -89,37 +117,116 @@
 <script>  
 // 知识点与示例题数据  
 const knowledgeQuestions = {  
-    "不等式": {  
-        basic: "理解不等式的基本性质",  
+    "不等式基础": {  
+        basic: "理解不等式的基本性质与符号",  
         medium: "掌握不等式的求解方法",  
-        advanced: "应用不等式解决复杂问题"  
+        advanced: "运用不等式基本性质解题",  
+        accuracy: 0.37  
     },  
     "平方根的性质": {  
-        basic: "理解平方根的定义",  
-        medium: "掌握平方根的属性",  
-        advanced: "在不等式中应用平方根"  
+        basic: "理解平方根的定义与性质",  
+        medium: "掌握平方根的运算法则",  
+        advanced: "在不等式中应用平方根",  
+        accuracy: 0.36  
     },  
     "二次不等式": {  
-        basic: "学习二次不等式的定义",  
+        basic: "学习二次不等式的基本形式",  
         medium: "掌握求解二次不等式的方法",  
-        advanced: "利用二次不等式解决复杂问题"  
+        advanced: "利用二次不等式解决复杂问题",  
+        accuracy: 0.42  
+    },  
+    "整数的性质": {  
+        basic: "理解整数的基本特性",  
+        medium: "整数的区间和范围",  
+        advanced: "整数计数问题的解决方法",  
+        accuracy: 0.45  
+    },  
+    "数轴表示法": {  
+        basic: "在数轴上表示数的位置",  
+        medium: "理解数轴上的区间",  
+        advanced: "用数轴解决不等式问题",  
+        accuracy: 0.58  
+    },  
+    "估算与取整": {  
+        basic: "数值的估算方法",  
+        medium: "向上取整与向下取整",  
+        advanced: "在实际问题中应用取整",  
+        accuracy: 0.62  
+    },  
+    "区间计数": {  
+        basic: "区间内元素的计数原理",  
+        medium: "区间长度与元素个数",  
+        advanced: "复杂区间的元素统计方法",  
+        accuracy: 0.38  
+    },  
+    "数集": {  
+        basic: "数集的概念与表示方法",  
+        medium: "数集的运算与性质",  
+        advanced: "解决数集问题的技巧",  
+        accuracy: 0.75  
+    },  
+    "函数与不等式": {  
+        basic: "函数与不等式的关系",  
+        medium: "利用函数解不等式",  
+        advanced: "函数图像与不等式解集",  
+        accuracy: 0.65,  
+        related: true  
+    },  
+    "代数基本定理": {  
+        basic: "代数基本定理的内容",  
+        medium: "代数定理在不等式中的应用",  
+        advanced: "利用代数定理解决复杂问题",  
+        accuracy: 0.55,  
+        related: true  
     }  
 };  
 
 // 设置力导向图数据  
 const graphData = {  
     nodes: [  
-        { id: "Q8", type: "question", name: "第8题" },  
-        { id: "K1", type: "knowledge", name: "不等式" },  
-        { id: "K2", type: "knowledge", name: "平方根的性质" },  
-        { id: "K3", type: "knowledge", name: "二次不等式" }  
+        { id: "Q8", type: "question", name: "第8题", accuracy: 0.37 },  
+        { id: "K1", type: "knowledge", name: "不等式基础", accuracy: 0.37 },  
+        { id: "K2", type: "knowledge", name: "平方根的性质", accuracy: 0.36 },  
+        { id: "K3", type: "knowledge", name: "二次不等式", accuracy: 0.42 },  
+        { id: "K4", type: "knowledge", name: "整数的性质", accuracy: 0.45 },  
+        { id: "K5", type: "knowledge", name: "数轴表示法", accuracy: 0.58 },  
+        { id: "K6", type: "knowledge", name: "估算与取整", accuracy: 0.62 },  
+        { id: "K7", type: "knowledge", name: "区间计数", accuracy: 0.38 },  
+        { id: "K8", type: "knowledge", name: "数集", accuracy: 0.75 },  
+        { id: "K9", type: "knowledge", name: "函数与不等式", accuracy: 0.65, related: true },  
+        { id: "K10", type: "knowledge", name: "代数基本定理", accuracy: 0.55, related: true }  
     ],  
     links: [  
         { source: "Q8", target: "K1" },  
         { source: "Q8", target: "K2" },  
-        { source: "K1", target: "K3" }  
+        { source: "K1", target: "K3" },  
+        { source: "Q8", target: "K4" },  
+        { source: "K4", target: "K7" },  
+        { source: "K1", target: "K5" },  
+        { source: "K5", target: "K6" },  
+        { source: "K2", target: "K5" },  
+        { source: "K3", target: "K8" },  
+        { source: "K7", target: "K9" },  
+        { source: "K6", target: "K10" }  
     ]  
 };  
+
+// 获取节点颜色函数  
+function getNodeColor(d) {  
+    if (d.type === "question") {  
+        return "#fca5a5"; // 题目节点颜色  
+    }  
+    
+    if (d.related) {  
+        return "#9ca3af"; // 相关知识点为灰色  
+    }  
+    
+    const acc = d.accuracy;  
+    if (acc < 0.4) return "#ef4444"; // 红色，低于40%  
+    if (acc < 0.6) return "#f97316"; // 橙色，40%-60%  
+    if (acc < 0.8) return "#eab308"; // 黄色，60%-80%  
+    return "#22c55e"; // 绿色，大于80%  
+}  
 
 // 绘制力导向图  
 const width = document.getElementById("left-panel").clientWidth;  
@@ -129,10 +236,12 @@ const svgGraph = d3.select("#graph-svg")
     .attr("width", width)  
     .attr("height", height);  
 
+// 增强力导向图配置，防止重叠  
 const simulation = d3.forceSimulation(graphData.nodes)  
-    .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(120))  
-    .force("charge", d3.forceManyBody().strength(-400))  
+    .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(150))  
+    .force("charge", d3.forceManyBody().strength(-600))  
     .force("center", d3.forceCenter(width / 2, height / 2))  
+    .force("collision", d3.forceCollide().radius(60)) // 增加碰撞检测  
     .on("tick", ticked);  
 
 const link = svgGraph.selectAll("line.link")  
@@ -145,21 +254,35 @@ const node = svgGraph.selectAll("g.node")
     .data(graphData.nodes)  
     .enter()  
     .append("g")  
-    .attr("class", "node");  
+    .attr("class", "node")  
+    .call(d3.drag() // 添加拖拽功能  
+        .on("start", dragstarted)  
+        .on("drag", dragged)  
+        .on("end", dragended));  
 
 const tooltipGraph = d3.select("#graph-tooltip");  
 
 node.append("circle")  
     .attr("r", d => d.type === "question" ? 18 : 14)  
-    .attr("fill", d => (d.type === "question" ? "#fca5a5" : "#93c5fd"))  
+    .attr("fill", d => getNodeColor(d))  
     .on("mouseover", (event, d) => {  
-        let htmlStr = d.type === "question"  
-            ? `题号：<strong>${d.name}</strong>`  
-            : `知识点：<strong>${d.name}</strong>` +  
-              `<br/><strong>基础题：</strong>${knowledgeQuestions[d.name]?.basic}` +  
-              `<br/><strong>中等题：</strong>${knowledgeQuestions[d.name]?.medium}` +  
-              `<br/><strong>较难题：</strong>${knowledgeQuestions[d.name]?.advanced}`;  
-
+        let htmlStr = "";  
+        if (d.type === "question") {  
+            htmlStr = `题号：<strong>${d.name}</strong>`;  
+        } else {  
+            htmlStr = `知识点：<strong>${d.name}</strong>`;  
+            const qSet = knowledgeQuestions[d.name];  
+            if (qSet) {  
+                htmlStr += `  
+                    <br/><strong>基础题：</strong>${qSet.basic}  
+                    <br/><strong>中等题：</strong>${qSet.medium}  
+                    <br/><strong>较难题：</strong>${qSet.advanced}  
+                    <br/><strong>正确率：</strong>${(qSet.accuracy * 100).toFixed(1)}%  
+                `;  
+            } else {  
+                htmlStr += "<br/>暂无示例题";  
+            }  
+        }  
         tooltipGraph  
             .style("opacity", 1)  
             .html(htmlStr)  
@@ -176,7 +299,31 @@ node.append("text")
     .attr("fill", "#333")  
     .attr("font-weight", d => (d.type === "question" ? "bold" : "normal"));  
 
+// 拖拽功能实现  
+function dragstarted(event, d) {  
+    if (!event.active) simulation.alphaTarget(0.3).restart();  
+    d.fx = d.x;  
+    d.fy = d.y;  
+}  
+
+function dragged(event, d) {  
+    d.fx = event.x;  
+    d.fy = event.y;  
+}  
+
+function dragended(event, d) {  
+    if (!event.active) simulation.alphaTarget(0);  
+    d.fx = null;  
+    d.fy = null;  
+}  
+
 function ticked() {  
+    // 确保节点不会超出可视区域  
+    graphData.nodes.forEach(function(d) {  
+        d.x = Math.max(40, Math.min(width - 40, d.x));  
+        d.y = Math.max(40, Math.min(height - 40, d.y));  
+    });  
+    
     link  
         .attr("x1", d => d.source.x)  
         .attr("y1", d => d.source.y)  
@@ -187,11 +334,13 @@ function ticked() {
 }  
 
 // 历史正确率折线图  
-const simulatedData = [0.36, 0.38, 0.4, 0.42, 0.44];  
-const trendData = simulatedData.map((accuracy, index) => ({  
-    time: `测验${index + 1}`,  
-    accuracy  
-}));  
+const trendData = [  
+    { time: "测验1", accuracy: 0.31 },  
+    { time: "测验2", accuracy: 0.34 },  
+    { time: "测验3", accuracy: 0.33 },  
+    { time: "测验4", accuracy: 0.35 },  
+    { time: "测验5", accuracy: 0.36 }  
+];  
 
 const chartWidth = document.getElementById("line-chart").clientWidth;  
 const chartHeight = document.getElementById("line-chart").clientHeight;  
@@ -210,6 +359,8 @@ const yScale = d3.scaleLinear()
     .range([innerHeight, 0]);  
 
 const svgLine = d3.select("#line-chart")  
+    .attr("width", chartWidth)  
+    .attr("height", chartHeight)  
     .append("g")  
     .attr("transform", `translate(${margin.left},${margin.top})`);  
 
@@ -217,31 +368,48 @@ const xAxis = d3.axisBottom(xScale);
 const yAxis = d3.axisLeft(yScale).tickFormat(d3.format(".0%"));  
 
 svgLine.append("g")  
+    .attr("class", "line-chart-axis")  
     .attr("transform", `translate(0, ${innerHeight})`)  
     .call(xAxis);  
 
-svgLine.append("g").call(yAxis);  
+svgLine.append("g")  
+    .attr("class", "line-chart-axis")  
+    .call(yAxis);  
 
 const lineGenerator = d3.line()  
     .x(d => xScale(d.time))  
-    .y(d => yScale(d.accuracy));  
+    .y(d => yScale(d.accuracy))  
+    .curve(d3.curveMonotoneX);  
 
 svgLine.append("path")  
     .datum(trendData)  
+    .attr("class", "line")  
     .attr("fill", "none")  
     .attr("stroke", "#f97316")  
     .attr("stroke-width", 2)  
     .attr("d", lineGenerator);  
 
+const tooltipLine = d3.select("#line-tooltip");  
+
 svgLine.selectAll(".dot")  
     .data(trendData)  
     .enter()  
     .append("circle")  
+    .attr("class", "dot")  
     .attr("r", 4)  
     .attr("cx", d => xScale(d.time))  
     .attr("cy", d => yScale(d.accuracy))  
-    .attr("fill", "#ff5722");  
-
+    .attr("fill", "#ff5722")  
+    .on("mouseover", (event, d) => {  
+        tooltipLine  
+            .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(1)}%</strong>`)  
+            .style("opacity", 1)  
+            .style("left", (event.pageX + 10) + "px")  
+            .style("top", (event.pageY - 10) + "px");  
+    })  
+    .on("mouseout", () => {  
+        tooltipLine.style("opacity", 0);  
+    });  
 </script>  
 </body>  
 </html>  
