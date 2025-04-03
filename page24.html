@@ -39,7 +39,8 @@
         }  
         .tooltip {  
             position: absolute;  
-            min-width: 150px;  
+            min-width: 200px;  
+            max-width: 300px;  
             padding: 8px;  
             font-size: 12px;  
             background: rgba(255, 255, 255, 0.9);  
@@ -48,17 +49,11 @@
             pointer-events: none;  
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);  
             opacity: 0;  
-            transition: opacity 0.2s;  
-            z-index: 999;  
+            transition: opacity 0.3s;  
         }  
         .line {  
             fill: none;  
             stroke-width: 2px;  
-        }  
-        .line-chart-axis path,  
-        .line-chart-axis line {  
-            fill: none;  
-            stroke: #ccc;  
         }  
         .dot {  
             fill: #ff5722;  
@@ -69,9 +64,15 @@
         .dot:hover {  
             opacity: 0.8;  
         }  
+        .line-chart-axis path,  
+        .line-chart-axis line {  
+            fill: none;  
+            stroke: #ccc;  
+        }  
     </style>  
 </head>  
 <body class="h-screen w-screen overflow-hidden bg-gray-100">  
+
 <!-- 顶部：返回按钮 -->  
 <div class="p-4 bg-white shadow">  
     <button class="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 transition-colors"  
@@ -115,22 +116,50 @@ const knowledgeQuestions = {
     "平行线与角度的性质": {  
         basic: "平行线及其与角度的基本关系",  
         medium: "平行线中角和的应用",  
-        advanced: "复杂几何图形中平行与角的联系"  
+        advanced: "复杂几何图形中平行与角的联系",  
+        accuracy: 0.76  
     },  
     "几何证明方法": {  
         basic: "学习基础的几何证明方法",  
         medium: "多种条件组合下的证明",  
-        advanced: "复杂几何组合关系的证明技巧"  
+        advanced: "复杂几何组合关系的证明技巧",  
+        accuracy: 0.49  
     },  
     "四边形的性质": {  
         basic: "理解四边形对角线与角关系",  
         medium: "运用四边形性质解决几何问题",  
-        advanced: "复杂条件下的四边形关系推理"  
+        advanced: "复杂条件下的四边形关系推理",  
+        accuracy: 0.65  
     },  
-    "次级知识点（平行线）": {  
-        basic: "次级-基础对位角",  
-        medium: "次级平行条件的数推",  
-        advanced: "平行线复杂面角应用"  
+    "角度计算": {  
+        basic: "基础的角度计算公式",  
+        medium: "角度计算的多种方法",  
+        advanced: "复杂角度关系的精确计算",  
+        accuracy: 0.58  
+    },  
+    "三角形性质": {  
+        basic: "三角形的基本性质",  
+        medium: "三角形的面积计算",  
+        advanced: "三角形的特殊性质",  
+        accuracy: 0.72  
+    },  
+    "圆的性质": {  
+        basic: "圆的基础性质",  
+        medium: "圆与切线的关系",  
+        advanced: "圆的复杂性质应用",  
+        accuracy: 0.81  
+    },  
+    "空间几何": {  
+        basic: "空间几何的基础概念，包括点、线、面的三维关系",  
+        medium: "空间几何的简单应用，如三维坐标系的理解和立体几何的基本公式",  
+        advanced: "空间几何的高级应用，包括复杂多面体的体积计算和表面积计算",  
+        accuracy: 0.54  
+    },  
+    "平面几何": {  
+        basic: "平面几何的基础知识，包括点、线、面的基本概念",  
+        medium: "平面几何的中级应用，如三角形、四边形的性质和面积计算",  
+        advanced: "平面几何的高级技巧，包括平面几何的定理应用和复杂图形的分割",  
+        accuracy: 0.43  
     }  
 };  
 
@@ -141,24 +170,34 @@ const graphData = {
         { id: "K1", type: "knowledge", name: "平行线与角度的性质" },  
         { id: "K2", type: "knowledge", name: "几何证明方法" },  
         { id: "K3", type: "knowledge", name: "四边形的性质" },  
-        { id: "K4", type: "sub-knowledge", name: "次级知识点（平行线）" }  
+        { id: "K4", type: "knowledge", name: "角度计算" },  
+        { id: "K5", type: "knowledge", name: "三角形性质" },  
+        { id: "K6", type: "knowledge", name: "圆的性质" },  
+        { id: "K7", type: "knowledge", name: "空间几何" },  
+        { id: "K8", type: "knowledge", name: "平面几何" }  
     ],  
     links: [  
         { source: "Q24", target: "K1" },  
         { source: "Q24", target: "K2" },  
         { source: "Q24", target: "K3" },  
-        { source: "K1", target: "K4" }  
+        { source: "K1", target: "K4" },  
+        { source: "K2", target: "K5" },  
+        { source: "K3", target: "K6" },  
+        { source: "K4", target: "K7" },  
+        { source: "K5", target: "K8" }  
     ]  
 };  
 
-// 绘制力导向图  
+// 力导向图实现  
 const width = document.getElementById("left-panel").clientWidth;  
 const height = document.getElementById("left-panel").clientHeight;  
 
-const svgGraph = d3.select("#graph-svg").attr("width", width).attr("height", height);  
+const svgGraph = d3.select("#graph-svg")  
+    .attr("width", width)  
+    .attr("height", height);  
 
 const simulation = d3.forceSimulation(graphData.nodes)  
-    .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(120))  
+    .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(80))  
     .force("charge", d3.forceManyBody().strength(-300))  
     .force("center", d3.forceCenter(width / 2, height / 2))  
     .on("tick", ticked);  
@@ -179,7 +218,14 @@ const tooltipGraph = d3.select("#graph-tooltip");
 
 node.append("circle")  
     .attr("r", d => (d.type === "question" ? 18 : 14))  
-    .attr("fill", d => (d.type === "question" ? "#fca5a5" : "#93c5fd"))  
+    .attr("fill", d => {  
+        if (d.type === "question") return "#fca5a5";  
+        const accuracy = knowledgeQuestions[d.name]?.accuracy || 0;  
+        if (accuracy < 0.4) return "#f87171";  
+        if (accuracy < 0.6) return "#f59e0b";  
+        if (accuracy < 0.8) return "#facc15";  
+        return "#4ade80";  
+    })  
     .on("mouseover", (event, d) => {  
         let html = `<strong>${d.name}</strong>`;  
         if (knowledgeQuestions[d.name]) {  
@@ -187,11 +233,12 @@ node.append("circle")
             html += `  
                 <br/><strong>基础题：</strong>${qSet.basic}  
                 <br/><strong>中等题：</strong>${qSet.medium}  
-                <br/><strong>较难题：</strong>${qSet.advanced}`;  
+                <br/><strong>较难题：</strong>${qSet.advanced}  
+                <br/><strong>正确率：</strong>${(qSet.accuracy * 100).toFixed(1)}%`;  
         }  
         tooltipGraph  
-            .style("opacity", 1)  
             .html(html)  
+            .style("opacity", 1)  
             .style("left", `${event.pageX + 10}px`)  
             .style("top", `${event.pageY - 10}px`);  
     })  
