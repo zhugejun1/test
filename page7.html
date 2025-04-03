@@ -1,5 +1,5 @@
 
-    <!DOCTYPE html>  
+<!DOCTYPE html>  
 <html lang="zh">  
 <head>  
     <meta charset="UTF-8" />  
@@ -29,6 +29,10 @@
         .line-chart-axis path, .line-chart-axis line { fill: none; stroke: #ccc; }  
         .dot { fill: #ff5722; stroke: #fff; stroke-width: 1px; cursor: pointer; }  
         .dot:hover { opacity: 0.8; }  
+        .color-legend { position: absolute; bottom: 20px; left: 20px; background: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 4px; border: 1px solid #ddd; }  
+        .legend-item { display: flex; align-items: center; margin-bottom: 4px; }  
+        .legend-color { width: 16px; height: 16px; margin-right: 8px; border-radius: 50%; }  
+        .number-line { padding: 15px; margin-top: 10px; background: white; border-radius: 8px; }  
     </style>  
 </head>  
 <body class="h-screen w-screen overflow-hidden bg-gray-100">  
@@ -47,6 +51,31 @@
     <div id="left-panel" class="w-1/2 h-full bg-white relative">  
         <svg id="graph-svg" class="w-full h-full"></svg>  
         <div id="graph-tooltip" class="tooltip"></div>  
+        
+        <!-- 颜色对应正确率说明 -->  
+        <div class="color-legend">  
+            <h3 class="text-sm font-bold mb-2">正确率说明:</h3>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #ef4444;"></div>  
+                <span class="text-xs">低于40%</span>  
+            </div>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #f97316;"></div>  
+                <span class="text-xs">40%-60%</span>  
+            </div>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #eab308;"></div>  
+                <span class="text-xs">60%-80%</span>  
+            </div>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #22c55e;"></div>  
+                <span class="text-xs">大于80%</span>  
+            </div>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #9ca3af;"></div>  
+                <span class="text-xs">相关知识点</span>  
+            </div>  
+        </div>  
     </div>  
 
     <!-- 右侧：题目信息和历史趋势图 -->  
@@ -59,6 +88,30 @@
                 实数a，b，c在数轴上对应的点的位置如图所示，则  
                 \(\sqrt{c^2 - (\sqrt{a})^2} + (\sqrt[3]{a + b})^3\)的值为（ ）  
             </p>  
+            
+            <!-- 数轴图示 -->  
+            <div class="number-line mb-4">  
+                <svg width="100%" height="60">  
+                    <!-- 数轴 -->  
+                    <line x1="40" y1="30" x2="460" y2="30" stroke="black" stroke-width="2"></line>  
+                    <!-- 原点 -->  
+                    <line x1="250" y1="25" x2="250" y2="35" stroke="black" stroke-width="2"></line>  
+                    <text x="250" y="50" text-anchor="middle">0</text>  
+                    
+                    <!-- 点a -->  
+                    <circle cx="100" cy="30" r="5" fill="#4287f5"></circle>  
+                    <text x="100" y="20" text-anchor="middle">a</text>  
+                    
+                    <!-- 点b -->  
+                    <circle cx="300" cy="30" r="5" fill="#42f56f"></circle>  
+                    <text x="300" y="20" text-anchor="middle">b</text>  
+                    
+                    <!-- 点c -->  
+                    <circle cx="380" cy="30" r="5" fill="#f54242"></circle>  
+                    <text x="380" y="20" text-anchor="middle">c</text>  
+                </svg>  
+            </div>  
+            
             <div class="mb-4">  
                 <input type="checkbox" id="option1" />  
                 <label for="option1">A. \(b - c\)</label>  
@@ -94,34 +147,113 @@ const knowledgeQuestions = {
     "平方根的性质": {  
         basic: "理解平方根的定义与性质",  
         medium: "掌握平方根的计算与应用",  
-        advanced: "应用平方根和立方根解决问题"  
+        advanced: "应用平方根和立方根解决问题",  
+        accuracy: 0.35  
     },  
     "立方根的性质": {  
         basic: "了解立方根的定义及其计算",  
         medium: "掌握立方根在方程中的应用",  
-        advanced: "讨论包含立方根的代数式"  
+        advanced: "讨论包含立方根的代数式",  
+        accuracy: 0.38  
     },  
     "数轴模型扩展": {  
         basic: "理解数轴基本模型",  
         medium: "解决数轴与代数结合问题",  
-        advanced: "拓展数轴模型到更复杂的组合问题"  
+        advanced: "拓展数轴模型到更复杂的组合问题",  
+        accuracy: 0.42  
+    },  
+    "代数式求值": {  
+        basic: "代数式的基本求值方法",  
+        medium: "复杂代数式求值技巧",  
+        advanced: "求代数式的值域与应用",  
+        accuracy: 0.58  
+    },  
+    "根式运算规则": {  
+        basic: "根式的定义与性质",  
+        medium: "根式的四则运算",  
+        advanced: "根式的变形与化简",  
+        accuracy: 0.45  
+    },  
+    "代数式的化简": {  
+        basic: "合并同类项与化简",  
+        medium: "复杂代数式的化简技巧",  
+        advanced: "应用因式分解化简代数式",  
+        accuracy: 0.62  
+    },  
+    "幂的运算": {  
+        basic: "幂的定义与基本性质",  
+        medium: "幂的运算法则",  
+        advanced: "幂与根式的转换",  
+        accuracy: 0.75  
+    },  
+    "数学建模思想": {  
+        basic: "数学模型的基本概念",  
+        medium: "用数学语言表达实际问题",  
+        advanced: "构建和分析数学模型",  
+        accuracy: 0.53  
+    },  
+    "函数与图像": {  
+        basic: "函数的概念与表示",  
+        medium: "函数图像与性质",  
+        advanced: "函数图像与代数关系",  
+        accuracy: 0.68,  
+        related: true  
+    },  
+    "实数性质": {  
+        basic: "实数的定义与分类",  
+        medium: "实数的性质与运算",  
+        advanced: "实数在数轴上的表示",  
+        accuracy: 0.72,  
+        related: true  
     }  
 };  
 
 // 力导向图数据  
 const graphData = {  
     nodes: [  
-        { id: "Q7", type: "question", name: "第7题" },  
-        { id: "K1", type: "knowledge", name: "平方根的性质" },  
-        { id: "K2", type: "knowledge", name: "立方根的性质" },  
-        { id: "K3", type: "knowledge", name: "数轴模型扩展" }  
+        { id: "Q7", type: "question", name: "第7题", accuracy: 0.35 },  
+        { id: "K1", type: "knowledge", name: "平方根的性质", accuracy: 0.35 },  
+        { id: "K2", type: "knowledge", name: "立方根的性质", accuracy: 0.38 },  
+        { id: "K3", type: "knowledge", name: "数轴模型扩展", accuracy: 0.42 },  
+        { id: "K4", type: "knowledge", name: "代数式求值", accuracy: 0.58 },  
+        { id: "K5", type: "knowledge", name: "根式运算规则", accuracy: 0.45 },  
+        { id: "K6", type: "knowledge", name: "代数式的化简", accuracy: 0.62 },  
+        { id: "K7", type: "knowledge", name: "幂的运算", accuracy: 0.75 },  
+        { id: "K8", type: "knowledge", name: "数学建模思想", accuracy: 0.53 },  
+        { id: "K9", type: "knowledge", name: "函数与图像", accuracy: 0.68, related: true },  
+        { id: "K10", type: "knowledge", name: "实数性质", accuracy: 0.72, related: true }  
     ],  
     links: [  
         { source: "Q7", target: "K1" },  
         { source: "Q7", target: "K2" },  
-        { source: "K2", target: "K3" }  
+        { source: "K2", target: "K3" },  
+        { source: "K1", target: "K5" },  
+        { source: "K2", target: "K5" },  
+        { source: "Q7", target: "K4" },  
+        { source: "K4", target: "K6" },  
+        { source: "K5", target: "K7" },  
+        { source: "K3", target: "K8" },  
+        { source: "K7", target: "K9" },  
+        { source: "K3", target: "K10" }  
     ]  
 };  
+
+// 获取颜色函数  
+function getNodeColor(d) {  
+    if (d.type === "question") {  
+        return "#fca5a5"; // 题目节点颜色  
+    }  
+    
+    if (d.related) {  
+        return "#9ca3af"; // 相关知识点为灰色  
+    }  
+    
+    const acc = d.accuracy;  
+    if (acc < 0.4) return "#ef4444"; // 红色，低于40%  
+    if (acc < 0.6) return "#f97316"; // 橙色，40%-60%  
+    if (acc < 0.8) return "#eab308"; // 黄色，60%-80%  
+    return "#22c55e"; // 绿色，大于80%  
+}  
 
 // 力导向图绘制  
 const width = document.getElementById("left-panel").clientWidth;  
@@ -131,10 +263,12 @@ const svgGraph = d3.select("#graph-svg")
     .attr("width", width)  
     .attr("height", height);  
 
+// 增加排斥力和距离以防止节点重叠  
 const simulation = d3.forceSimulation(graphData.nodes)  
-    .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(110))  
-    .force("charge", d3.forceManyBody().strength(-300))  
+    .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(150))  
+    .force("charge", d3.forceManyBody().strength(-500))  
     .force("center", d3.forceCenter(width / 2, height / 2))  
+    .force("collision", d3.forceCollide().radius(60)) // 添加碰撞检测以防止重叠  
     .on("tick", ticked);  
 
 const link = svgGraph.selectAll("line.link")  
@@ -147,13 +281,17 @@ const node = svgGraph.selectAll("g.node")
     .data(graphData.nodes)  
     .enter()  
     .append("g")  
-    .attr("class", "node");  
+    .attr("class", "node")  
+    .call(d3.drag()  
+        .on("start", dragstarted)  
+        .on("drag", dragged)  
+        .on("end", dragended));  
 
 const tooltipGraph = d3.select("#graph-tooltip");  
 
 node.append("circle")  
     .attr("r", d => d.type === "question" ? 18 : 14)  
-    .attr("fill", d => (d.type === "question" ? "#fca5a5" : "#93c5fd"))  
+    .attr("fill", d => getNodeColor(d))  
     .on("mouseover", (event, d) => {  
         let htmlStr = "";  
         if (d.type === "question") {  
@@ -166,6 +304,7 @@ node.append("circle")
                     <br/><strong>基础题：</strong>${qSet.basic}  
                     <br/><strong>中等题：</strong>${qSet.medium}  
                     <br/><strong>较难题：</strong>${qSet.advanced}  
+                    <br/><strong>正确率：</strong>${(qSet.accuracy * 100).toFixed(1)}%  
                 `;  
             } else {  
                 htmlStr += "<br/>暂无示例题";  
@@ -187,7 +326,31 @@ node.append("text")
     .attr("fill", "#333")  
     .attr("font-weight", d => (d.type === "question" ? "bold" : "normal"));  
 
+// 拖拽功能  
+function dragstarted(event, d) {  
+    if (!event.active) simulation.alphaTarget(0.3).restart();  
+    d.fx = d.x;  
+    d.fy = d.y;  
+}  
+
+function dragged(event, d) {  
+    d.fx = event.x;  
+    d.fy = event.y;  
+}  
+
+function dragended(event, d) {  
+    if (!event.active) simulation.alphaTarget(0);  
+    d.fx = null;  
+    d.fy = null;  
+}  
+
 function ticked() {  
+    // 确保节点不会跑出可视区域  
+    graphData.nodes.forEach(function(d) {  
+        d.x = Math.max(30, Math.min(width - 30, d.x));  
+        d.y = Math.max(30, Math.min(height - 30, d.y));  
+    });  
+    
     link  
         .attr("x1", d => d.source.x)  
         .attr("y1", d => d.source.y)  
@@ -199,11 +362,11 @@ function ticked() {
 
 // 历史正确率折线图  
 const trendData = [  
-    { time: "测验1", accuracy: 0.30 },  
-    { time: "测验2", accuracy: 0.32 },  
-    { time: "测验3", accuracy: 0.34 },  
-    { time: "测验4", accuracy: 0.35 },  
-    { time: "测验5", accuracy: 0.37 }  
+    { time: "测验1", accuracy: 0.29 },  
+    { time: "测验2", accuracy: 0.33 },  
+    { time: "测验3", accuracy: 0.31 },  
+    { time: "测验4", accuracy: 0.34 },  
+    { time: "测验5", accuracy: 0.35 }  
 ];  
 
 const lineChartWidth = document.getElementById("line-chart").clientWidth;  
@@ -242,7 +405,8 @@ svgLine.append("g")
 
 const lineGenerator = d3.line()  
     .x(d => xScale(d.time))  
-    .y(d => yScale(d.accuracy));  
+    .y(d => yScale(d.accuracy))  
+    .curve(d3.curveMonotoneX);  
 
 svgLine.append("path")  
     .datum(trendData)  
