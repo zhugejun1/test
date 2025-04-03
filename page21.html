@@ -10,18 +10,18 @@
         body { margin: 0; font-family: Arial, sans-serif; background-color: #f6f9fc; }  
         .node circle:hover { fill: #333; }  
         line.link { stroke: #ccc; stroke-width: 1.5px; }  
-        .tooltip {   
-            position: absolute;   
-            min-width: 200px;   
+        .tooltip {  
+            position: absolute;  
+            min-width: 200px;  
             max-width: 300px;  
-            padding: 10px;   
-            background: rgba(255, 255, 255, 0.9);   
-            border: 1px solid #ccc;   
-            border-radius: 4px;   
-            pointer-events: none;   
-            box-shadow: 0 4px 6px rgba(0, 0, 0, .1);   
-            z-index: 999;   
-            opacity: 0;   
+            padding: 10px;  
+            background: rgba(255, 255, 255, 0.9);  
+            border: 1px solid #ccc;  
+            border-radius: 4px;  
+            pointer-events: none;  
+            box-shadow: 0 4px 6px rgba(0, 0, 0, .1);  
+            z-index: 999;  
+            opacity: 0;  
             transition: opacity 0.3s;  
             font-size: 13px;  
             line-height: 1.4;  
@@ -49,6 +49,12 @@
             <h1 class="text-xl font-bold mb-2">题号：第21题</h1>  
             <p>如图，\( AD \perp BC \) 于点 \( D \)，\( EF \perp BC \) 于点 \( F \)，且 \( DG \parallel AC \)。<br>求证：\(\angle ADG = \angle FEC\)。</p>  
             <img src="path_to_your_image.jpg" alt="Triangle ABC" class="mt-4 w-full h-auto" />  
+        </div>  
+
+        <!-- 历史正确率趋势图 -->  
+        <div class="flex-1 bg-white p-4 rounded shadow relative">  
+            <h2 class="text-lg font-bold mb-2">历史正确率趋势</h2>  
+            <svg id="line-chart" class="w-full h-full"></svg>  
         </div>  
     </div>  
 </div>  
@@ -139,7 +145,7 @@ const getColorByAccuracy = accuracy => {
     return "#4ade80"; // 绿色  
 };  
 
-// 动态设置 SVG 尺寸  
+// 设置动态SVG尺寸  
 const leftPanel = document.getElementById("left-panel");  
 const width = leftPanel.clientWidth;  
 const height = leftPanel.clientHeight;  
@@ -150,7 +156,6 @@ const svgGraph = d3.select("#graph-svg")
 
 const tooltipGraph = d3.select("#graph-tooltip");  
 
-// 力导向布局  
 const simulation = d3.forceSimulation(graphData.nodes)  
     .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(130))  
     .force("charge", d3.forceManyBody().strength(-300))  
@@ -170,9 +175,9 @@ const node = svgGraph.selectAll(".node")
 
 node.append("circle")  
     .attr("r", d => (d.type === "question" ? 18 : 14))  
-    .attr("fill", d => d.type === "question" ? "#fca5a5" : getColorByAccuracy(knowledgeQuestions[d.name]?.accuracy || 0))  
+    .attr("fill", d => (d.type === "question" ? "#fca5a5" : getColorByAccuracy(knowledgeQuestions[d.name]?.accuracy || 0)))  
     .on("mouseover", (event, d) => {  
-        let content = `节点名称: ${d.name}`;   
+        let content = `节点名称: ${d.name}`;  
         if (knowledgeQuestions[d.name]) {  
             const data = knowledgeQuestions[d.name];  
             content += `  
@@ -189,21 +194,75 @@ node.append("circle")
     })  
     .on("mouseout", () => tooltipGraph.classed("visible", false));  
 
-// 节点文字  
 node.append("text")  
     .attr("x", 20)  
     .attr("y", 4)  
     .text(d => d.name);  
 
 function ticked() {  
-    link  
-        .attr("x1", d => d.source.x)  
+    link.attr("x1", d => d.source.x)  
         .attr("y1", d => d.source.y)  
         .attr("x2", d => d.target.x)  
         .attr("y2", d => d.target.y);  
 
     node.attr("transform", d => `translate(${d.x}, ${d.y})`);  
 }  
+
+// 历史正确率趋势图数据  
+const trendData = [  
+    { time: "测验1", accuracy: 0.35 },  
+    { time: "测验2", accuracy: 0.45 },  
+    { time: "测验3", accuracy: 0.55 },  
+    { time: "测验4", accuracy: 0.60 },  
+    { time: "测验5", accuracy: 0.65 }  
+];  
+
+const lineChartWidth = document.getElementById("line-chart").clientWidth;  
+const lineChartHeight = document.getElementById("line-chart").clientHeight;  
+
+const margin = { top: 20, right: 20, bottom: 30, left: 40 };  
+const innerWidth = lineChartWidth - margin.left - margin.right;  
+const innerHeight = lineChartHeight - margin.top - margin.bottom;  
+
+const xScale = d3.scalePoint()  
+    .domain(trendData.map(d => d.time))  
+    .range([0, innerWidth])  
+    .padding(0.5);  
+
+const yScale = d3.scaleLinear()  
+    .domain([0, 1])  
+    .range([innerHeight, 0]);  
+
+const svgLine = d3.select("#line-chart")  
+    .attr("width", lineChartWidth)  
+    .attr("height", lineChartHeight)  
+    .append("g")  
+    .attr("transform", `translate(${margin.left},${margin.top})`);  
+
+svgLine.append("g")  
+    .attr("transform", `translate(0, ${innerHeight})`)  
+    .call(d3.axisBottom(xScale));  
+
+svgLine.append("g")  
+    .call(d3.axisLeft(yScale).tickFormat(d3.format(".0%")));  
+
+svgLine.append("path")  
+    .datum(trendData)  
+    .attr("d", d3.line()  
+        .x(d => xScale(d.time))  
+        .y(d => yScale(d.accuracy))  
+    )  
+    .attr("fill", "none")  
+    .attr("stroke", "#f97316");  
+
+svgLine.selectAll(".dot")  
+    .data(trendData)  
+    .enter()  
+    .append("circle")  
+    .attr("cx", d => xScale(d.time))  
+    .attr("cy", d => yScale(d.accuracy))  
+    .attr("r", 4)  
+    .attr("fill", "#ff5722");  
 </script>  
 </body>  
 </html>  
