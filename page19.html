@@ -11,7 +11,19 @@
         .node circle:hover { fill: #333; }  
         .node text { pointer-events: none; font-size: 10px; fill: #333; }  
         line.link { stroke: #ccc; stroke-width: 1.5px; }  
-        .tooltip { position: absolute; min-width: 120px; padding: 8px; font-size: 12px; background: rgba(255, 255, 255, 0.9); border: 1px solid #ccc; border-radius: 4px; pointer-events: none; box-shadow: 0 2px 5px rgba(0,0,0,0.15); opacity: 0; z-index: 999; }  
+        .tooltip {  
+            position: absolute;  
+            min-width: 120px;  
+            padding: 8px;  
+            font-size: 12px;  
+            background: rgba(255, 255, 255, 0.9);  
+            border: 1px solid #ccc;  
+            border-radius: 4px;  
+            pointer-events: none;  
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);  
+            opacity: 0;  
+            z-index: 999;  
+        }  
     </style>  
 </head>  
 <body class="h-screen w-screen overflow-hidden bg-gray-100">  
@@ -46,13 +58,12 @@
         <div class="flex-1 bg-white p-4 rounded shadow relative">  
             <h2 class="text-lg font-bold mb-2">历史正确率趋势</h2>  
             <svg id="line-chart" class="w-full h-full"></svg>  
-            <div id="line-tooltip" class="tooltip"></div>  
         </div>  
     </div>  
 </div>  
 
 <script>  
-// 知识图谱节点和链接数据  
+// 知识点数据  
 const knowledgeQuestions = {  
     "平行线的性质": { accuracy: 0.42, basic: "平行线定义与基本性质", medium: "平行线的内角定理", advanced: "两平行线间的复杂计算" },  
     "几何证明基础": { accuracy: 0.38, basic: "几何公理、定义", medium: "简单几何推导", advanced: "多步几何证明" },  
@@ -88,7 +99,7 @@ const graphData = {
     ]  
 };  
 
-// 设置颜色函数  
+// 节点颜色函数  
 function getColor(accuracy) {  
     if (accuracy < 0.4) return "#f87171"; // 红色  
     if (accuracy < 0.6) return "#fbbf24"; // 橙色  
@@ -96,7 +107,7 @@ function getColor(accuracy) {
     return "#4ade80"; // 绿色  
 }  
 
-// 动态设置 SVG 尺寸  
+// 动态设置SVG尺寸  
 const leftPanel = document.getElementById("left-panel");  
 const width = leftPanel.clientWidth;  
 const height = leftPanel.clientHeight;  
@@ -105,25 +116,24 @@ const svgGraph = d3.select("#graph-svg")
     .attr("width", width)  
     .attr("height", height);  
 
+const tooltipGraph = d3.select("#graph-tooltip");  
+
 const simulation = d3.forceSimulation(graphData.nodes)  
     .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(130))  
     .force("charge", d3.forceManyBody().strength(-400))  
     .force("center", d3.forceCenter(width / 2, height / 2))  
     .on("tick", ticked);  
 
-const link = svgGraph.selectAll("line.link")  
+const link = svgGraph.selectAll(".link")  
     .data(graphData.links)  
     .enter()  
     .append("line")  
     .attr("class", "link");  
 
-const node = svgGraph.selectAll("g.node")  
+const node = svgGraph.selectAll(".node")  
     .data(graphData.nodes)  
     .enter()  
-    .append("g")  
-    .attr("class", "node");  
-
-const tooltipGraph = d3.select("#graph-tooltip");  
+    .append("g");  
 
 node.append("circle")  
     .attr("r", d => (d.type === "question" ? 18 : 14))  
@@ -158,6 +168,64 @@ function ticked() {
     link.attr("x1", d => d.source.x).attr("y1", d => d.source.y).attr("x2", d => d.target.x).attr("y2", d => d.target.y);  
     node.attr("transform", d => `translate(${d.x},${d.y})`);  
 }  
+
+// ================== 历史正确率折线图 ==================  
+const trendData = [  
+    { time: "测验1", accuracy: 0.32 },  
+    { time: "测验2", accuracy: 0.35 },  
+    { time: "测验3", accuracy: 0.38 },  
+    { time: "测验4", accuracy: 0.42 },  
+    { time: "测验5", accuracy: 0.50 }  
+];  
+
+// 设置SVG尺寸  
+const lineChartWidth = document.getElementById("line-chart").clientWidth;  
+const lineChartHeight = document.getElementById("line-chart").clientHeight;  
+
+const margin = { top: 20, right: 20, bottom: 30, left: 40 };  
+const innerWidth = lineChartWidth - margin.left - margin.right;  
+const innerHeight = lineChartHeight - margin.top - margin.bottom;  
+
+const xScale = d3.scalePoint()  
+    .domain(trendData.map(d => d.time))  
+    .range([0, innerWidth])  
+    .padding(0.5);  
+
+const yScale = d3.scaleLinear()  
+    .domain([0, 0.6]) // 修改范围适配数据  
+    .range([innerHeight, 0]);  
+
+const svgLine = d3.select("#line-chart")  
+    .attr("width", lineChartWidth)  
+    .attr("height", lineChartHeight)  
+    .append("g")  
+    .attr("transform", `translate(${margin.left},${margin.top})`);  
+
+svgLine.append("g")  
+    .attr("transform", `translate(0, ${innerHeight})`)  
+    .call(d3.axisBottom(xScale));  
+
+svgLine.append("g")  
+    .call(d3.axisLeft(yScale).tickFormat(d3.format(".0%")));  
+
+svgLine.append("path")  
+    .datum(trendData)  
+    .attr("d", d3.line()  
+        .x(d => xScale(d.time))  
+        .y(d => yScale(d.accuracy))  
+    )  
+    .attr("fill", "none")  
+    .attr("stroke", "#f97316");  
+
+svgLine.selectAll(".dot")  
+    .data(trendData)  
+    .enter()  
+    .append("circle")  
+    .attr("cx", d => xScale(d.time))  
+    .attr("cy", d => yScale(d.accuracy))  
+    .attr("r", 4)  
+    .attr("fill", "#ff5722");  
+
 </script>  
 </body>  
 </html>  
