@@ -98,6 +98,26 @@ const knowledgeQuestions = {
         basic: "了解解方程的基本方法",  
         medium: "掌握各种解方程的策略",  
         advanced: "在不同场景下应用多种解法"  
+    },  
+    "因式分解": {  
+        basic: "理解因式分解的概念与步骤",  
+        medium: "掌握因式分解与一元二次方程的关系",  
+        advanced: "应用因式分解解决复杂的多项式问题"  
+    },  
+    "二次函数图像": {  
+        basic: "了解二次函数的基础图像特征",  
+        medium: "掌握二次函数图像的性质与变化",  
+        advanced: "在不同条件下分析二次函数的图像"  
+    },  
+    "应用题": {  
+        basic: "理解应用题的基本解题思路",  
+        medium: "掌握应用题中的模型建立",  
+        advanced: "解决实际问题中的复杂应用题"  
+    },  
+    "代数式的运算": {  
+        basic: "理解代数式的基本运算规则",  
+        medium: "掌握代数式中的合并与简化",  
+        advanced: "在多步运算中灵活运用代数式"  
     }  
 };  
 
@@ -106,10 +126,14 @@ const graphData = {
     nodes: [  
         { id: "Q17_1", type: "question", name: "第17（1）题" },  
         { id: "Q17_2", type: "question", name: "第17（2）题" },  
-        { id: "K1", type: "knowledge", name: "平方根" },  
-        { id: "K2", type: "knowledge", name: "一元二次方程" },  
-        { id: "K3", type: "knowledge", name: "配方法" },  
-        { id: "K4", type: "knowledge", name: "解方程的方法" },  
+        { id: "K1", type: "knowledge", name: "平方根", accuracy: 0.35 },  
+        { id: "K2", type: "knowledge", name: "一元二次方程", accuracy: 0.55 },  
+        { id: "K3", type: "knowledge", name: "配方法", accuracy: 0.65 },  
+        { id: "K4", type: "knowledge", name: "解方程的方法", accuracy: 0.45 },  
+        { id: "K5", type: "knowledge", name: "因式分解", accuracy: 0.25 },  
+        { id: "K6", type: "knowledge", name: "二次函数图像", accuracy: 0.75 },  
+        { id: "K7", type: "knowledge", name: "应用题", accuracy: 0.85 },  
+        { id: "K8", type: "knowledge", name: "代数式的运算", accuracy: 0.90 },  
         { id: "E1", type: "example", name: "例题 1: 求平方根" },  
         { id: "E2", type: "example", name: "例题 2: 解一元二次方程" }  
     ],  
@@ -119,7 +143,11 @@ const graphData = {
         { source: "K1", target: "E1" },  // 平方根示例  
         { source: "K2", target: "E2" },  // 一元二次方程示例  
         { source: "K2", target: "K4" },  // 一元二次方程与解方程的方法  
-        { source: "K1", target: "K3" }   // 平方根与配方法  
+        { source: "K1", target: "K3" },  // 平方根与配方法  
+        { source: "K2", target: "K5" },  // 一元二次方程与因式分解  
+        { source: "K5", target: "K6" },  // 因式分解与二次函数图像  
+        { source: "K6", target: "K7" },  // 二次函数图像与应用题  
+        { source: "K3", target: "K8" }   // 配方法与代数式的运算  
     ]  
 };  
 
@@ -155,14 +183,18 @@ node.append("circle")
     .attr("r", d => d.type === "question" ? 18 : 14)  
     .attr("fill", d => {  
         if (d.type === "question") return "#fca5a5"; // 浅红  
-        return "#93c5fd"; // 浅蓝  
+        const accuracy = d.accuracy || 0; // 使用知识点的正确率  
+        if (accuracy < 0.4) return "red"; // 40%以下  
+        if (accuracy < 0.6) return "orange"; // 40%至60%  
+        if (accuracy < 0.8) return "yellow"; // 60%至80%  
+        return "green"; // 80%及以上  
     })  
     .on("mouseover", (event, d) => {  
         let htmlStr = "";  
         if (d.type === "question") {  
             htmlStr = `题号：<strong>${d.name}</strong>`;  
         } else {  
-            htmlStr = `知识点：<strong>${d.name}</strong>`;  
+            htmlStr = `知识点：<strong>${d.name}</strong><br/>正确率：<strong>${(d.accuracy * 100).toFixed(1)}%</strong>`;  
             const qSet = knowledgeQuestions[d.name];  
             if (qSet) {  
                 htmlStr += `  
@@ -199,6 +231,33 @@ function ticked() {
 
     node.attr("transform", d => `translate(${d.x}, ${d.y})`);  
 }  
+
+// 添加颜色说明 (左下角)  
+const legend = svgGraph.append("g")  
+    .attr("transform", `translate(10, ${height - 100})`);  
+
+const colorLegend = [  
+    { color: "red", label: "正确率 < 40%" },  
+    { color: "orange", label: "40% ≤ 正确率 < 60%" },  
+    { color: "yellow", label: "60% ≤ 正确率 < 80%" },  
+    { color: "green", label: "80% ≤ 正确率 ≤ 100%" }  
+];  
+
+colorLegend.forEach((d, i) => {  
+    legend.append("rect")  
+        .attr("x", 0)  
+        .attr("y", i * 20)  
+        .attr("width", 15)  
+        .attr("height", 15)  
+        .attr("fill", d.color);  
+
+    legend.append("text")  
+        .attr("x", 20)  
+        .attr("y", i * 20 + 12)  
+        .text(d.label)  
+        .attr("font-size", "12px")  
+        .attr("fill", "#333");  
+});  
 
 // ================ 历史正确率折线图 ================  
 // 第17 (1)题历史正确率数据  
