@@ -1,4 +1,4 @@
-   <!DOCTYPE html>  
+<!DOCTYPE html>  
 <html lang="zh">  
 <head>  
     <meta charset="UTF-8" />  
@@ -20,15 +20,18 @@
     <style>  
         body { margin: 0; font-family: Arial, sans-serif; background-color: #f6f9fc; }  
         .node circle { cursor: pointer; }  
-        .node circle:hover { fill: #333; }  
-        .node text { pointer-events: none; font-size: 10px; fill: #333; }  
+        .node circle:hover { fill: #555; }  
+        .node text { pointer-events: none; font-size: 12px; fill: #333; }  
         line.link { stroke: #ccc; stroke-width: 1.5px; }  
-        .tooltip { position: absolute; min-width: 120px; padding: 8px; font-size: 12px; background: rgba(255, 255, 255, 0.9); border: 1px solid #ccc; border-radius: 4px; pointer-events: none; box-shadow: 0 2px 5px rgba(0,0,0,0.15); opacity: 0; transition: opacity 0.2s; z-index: 999; }  
+        .tooltip { position: absolute; min-width: 150px; padding: 8px; font-size: 12px; background: rgba(255, 255, 255, 0.9); border: 1px solid #ddd; border-radius: 4px; pointer-events: none; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15); opacity: 0; transition: opacity 0.2s; z-index: 999; }  
         .line { fill: none; stroke-width: 2px; }  
         .line-chart-axis path, .line-chart-axis line { fill: none; stroke: #ccc; }  
         .dot { fill: #ff5722; stroke: #fff; stroke-width: 1px; cursor: pointer; }  
         .dot:hover { opacity: 0.8; }  
-    </style>   
+        .color-legend { position: absolute; bottom: 20px; left: 20px; background: rgba(255, 255, 255, 0.95); padding: 10px; border-radius: 4px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }  
+        .legend-item { display: flex; align-items: center; margin-bottom: 5px; }  
+        .legend-color { width: 16px; height: 16px; margin-right: 8px; border-radius: 50%; }  
+    </style>  
 </head>  
 <body class="h-screen w-screen overflow-hidden bg-gray-100">  
 
@@ -46,9 +49,34 @@
     <div id="left-panel" class="w-1/2 h-full bg-white relative">  
         <svg id="graph-svg" class="w-full h-full"></svg>  
         <div id="graph-tooltip" class="tooltip"></div>  
+        
+        <!-- 颜色对应正确率说明 -->  
+        <div class="color-legend">  
+            <h3 class="text-sm font-bold mb-2">正确率说明:</h3>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #ef4444;"></div>  
+                <span class="text-xs">低于40%</span>  
+            </div>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #f97316;"></div>  
+                <span class="text-xs">40%-60%</span>  
+            </div>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #eab308;"></div>  
+                <span class="text-xs">60%-80%</span>  
+            </div>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #22c55e;"></div>  
+                <span class="text-xs">大于80%</span>  
+            </div>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #9ca3af;"></div>  
+                <span class="text-xs">相关知识点</span>  
+            </div>  
+        </div>  
     </div>  
 
-    <!-- 右侧：题目信息 -->  
+    <!-- 右侧：题目信息和历史趋势图 -->  
     <div id="right-panel" class="w-1/2 h-full flex flex-col p-4 space-y-4">  
 
         <!-- 题干描述区域 -->  
@@ -63,7 +91,7 @@
             <p class="mb-2">  
                 \(x^2\) ：256, 259.21, 262.44, 265.69, 268.96, 272.25, 275.56, 278.89, 282.24, 285.61, 289  
             </p>  
-            <p class="mb-2">  
+            <p class="mb-4">  
                 根据表格中的数据可知 \(\sqrt{280}\) 在哪个两个数之间（ ）  
             </p>  
             <div class="mb-4">  
@@ -82,8 +110,8 @@
                 <input type="checkbox" id="option4" />  
                 <label for="option4">D. 在16.8和16.9之间</label>  
             </div>  
-            <p>当前掌握率：<span class="text-green-600 font-medium">100%</span></p>  
-            <p>历史正确率：<span class="text-yellow-600 font-medium">100%</span></p>  
+            <p>当前掌握率：<span class="text-green-600 font-medium">82.56%</span></p>  
+            <p>历史正确率：<span class="text-yellow-600 font-medium">85%</span></p>  
         </div>  
 
         <!-- 历史正确率折线图 -->  
@@ -96,46 +124,118 @@
 </div>  
 
 <script>  
-// 知识点与次级知识点  
+// 知识点与示例题数据  
 const knowledgeQuestions = {  
     "平方数的性质": {  
-        basic: "平方数的定义",  
-        medium: "平方数的应用",  
-        advanced: "与平方和平方根结合"  
+        basic: "平方数的定义与基本特性",  
+        medium: "平方数的计算与应用",  
+        advanced: "平方数与数列的关系",  
+        accuracy: 0.86  
     },  
     "平方根的应用": {  
-        basic: "平方根的定义",  
-        medium: "平方根的不等式",  
-        advanced: "平方根的复杂应用"  
-    },  
-    "指数函数": {  
-        basic: "指数函数的图形理解",  
-        medium: "指数函数的增长模型",  
-        advanced: "指数模型的应用"  
+        basic: "平方根的定义与求解",  
+        medium: "平方根的近似值计算",  
+        advanced: "平方根在实际问题中的应用",  
+        accuracy: 0.84  
     },  
     "数据表分析": {  
-        basic: "利用表格进行数据查找",  
-        medium: "分析数据的变化趋势",  
-        advanced: "结合数据进行推理"  
+        basic: "数据表的基本读取方法",  
+        medium: "数据表中的插值与估算",  
+        advanced: "通过数据表进行预测与推断",  
+        accuracy: 0.78  
+    },  
+    "函数单调性": {  
+        basic: "函数单调性的概念",  
+        medium: "判断函数单调区间的方法",  
+        advanced: "利用单调性解决数学问题",  
+        accuracy: 0.72  
+    },  
+    "数据比较与排序": {  
+        basic: "数据比较的基本方法",  
+        medium: "排序算法与技巧",  
+        advanced: "数据区间与范围分析",  
+        accuracy: 0.88  
+    },  
+    "二次函数": {  
+        basic: "二次函数的基本性质",  
+        medium: "二次函数图像特征",  
+        advanced: "二次函数的应用问题",  
+        accuracy: 0.65  
+    },  
+    "近似值计算": {  
+        basic: "近似值的概念与表示",  
+        medium: "有效数字与精确度",  
+        advanced: "复杂计算中的近似方法",  
+        accuracy: 0.75  
+    },  
+    "估算技巧": {  
+        basic: "估算的基本方法",  
+        medium: "合理估计数值大小",  
+        advanced: "估算在解题中的应用",  
+        accuracy: 0.92  
+    },  
+    "数值分析": {  
+        basic: "数值分析的基本方法",  
+        medium: "数值计算与误差分析",  
+        advanced: "数值模型的建立与应用",  
+        accuracy: 0.55,  
+        related: true  
+    },  
+    "区间与不等式": {  
+        basic: "区间的表示方法",  
+        medium: "区间与不等式的关系",  
+        advanced: "区间在函数中的应用",  
+        accuracy: 0.48,  
+        related: true  
     }  
 };  
 
-// 力导向图数据  
+// 设置力导向图数据  
 const graphData = {  
     nodes: [  
-        { id: "Q9", type: "question", name: "第9题" },  
-        { id: "K1", type: "knowledge", name: "平方数的性质" },  
-        { id: "K2", type: "knowledge", name: "平方根的应用" },  
-        { id: "K3", type: "knowledge", name: "指数函数" },  
-        { id: "K4", type: "knowledge", name: "数据表分析" }  
+        { id: "Q9", type: "question", name: "第9题", accuracy: 0.85 },  
+        { id: "K1", type: "knowledge", name: "平方数的性质", accuracy: 0.86 },  
+        { id: "K2", type: "knowledge", name: "平方根的应用", accuracy: 0.84 },  
+        { id: "K3", type: "knowledge", name: "数据表分析", accuracy: 0.78 },  
+        { id: "K4", type: "knowledge", name: "函数单调性", accuracy: 0.72 },  
+        { id: "K5", type: "knowledge", name: "数据比较与排序", accuracy: 0.88 },  
+        { id: "K6", type: "knowledge", name: "二次函数", accuracy: 0.65 },  
+        { id: "K7", type: "knowledge", name: "近似值计算", accuracy: 0.75 },  
+        { id: "K8", type: "knowledge", name: "估算技巧", accuracy: 0.92 },  
+        { id: "K9", type: "knowledge", name: "数值分析", accuracy: 0.55, related: true },  
+        { id: "K10", type: "knowledge", name: "区间与不等式", accuracy: 0.48, related: true }  
     ],  
     links: [  
         { source: "Q9", target: "K1" },  
         { source: "Q9", target: "K2" },  
-        { source: "K1", target: "K3" },  
-        { source: "K2", target: "K4" }  
+        { source: "Q9", target: "K3" },  
+        { source: "K1", target: "K6" },  
+        { source: "K2", target: "K7" },  
+        { source: "K3", target: "K5" },  
+        { source: "K3", target: "K4" },  
+        { source: "K5", target: "K8" },  
+        { source: "K7", target: "K9" },  
+        { source: "K6", target: "K10" },  
+        { source: "K8", target: "K9" }  
     ]  
 };  
+
+// 获取节点颜色函数  
+function getNodeColor(d) {  
+    if (d.type === "question") {  
+        return "#fca5a5"; // 题目节点颜色  
+    }  
+    
+    if (d.related) {  
+        return "#9ca3af"; // 相关知识点为灰色  
+    }  
+    
+    const acc = d.accuracy;  
+    if (acc < 0.4) return "#ef4444"; // 红色，低于40%  
+    if (acc < 0.6) return "#f97316"; // 橙色，40%-60%  
+    if (acc < 0.8) return "#eab308"; // 黄色，60%-80%  
+    return "#22c55e"; // 绿色，大于80%  
+}  
 
 // 绘制力导向图  
 const width = document.getElementById("left-panel").clientWidth;  
@@ -145,10 +245,12 @@ const svgGraph = d3.select("#graph-svg")
     .attr("width", width)  
     .attr("height", height);  
 
+// 增强力导向图配置，防止重叠  
 const simulation = d3.forceSimulation(graphData.nodes)  
-    .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(120))  
-    .force("charge", d3.forceManyBody().strength(-400))  
+    .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(150))  
+    .force("charge", d3.forceManyBody().strength(-600))  
     .force("center", d3.forceCenter(width / 2, height / 2))  
+    .force("collision", d3.forceCollide().radius(60)) // 增加碰撞检测  
     .on("tick", ticked);  
 
 const link = svgGraph.selectAll("line.link")  
@@ -161,21 +263,35 @@ const node = svgGraph.selectAll("g.node")
     .data(graphData.nodes)  
     .enter()  
     .append("g")  
-    .attr("class", "node");  
+    .attr("class", "node")  
+    .call(d3.drag() // 添加拖拽功能  
+        .on("start", dragstarted)  
+        .on("drag", dragged)  
+        .on("end", dragended));  
 
 const tooltipGraph = d3.select("#graph-tooltip");  
 
 node.append("circle")  
     .attr("r", d => d.type === "question" ? 18 : 14)  
-    .attr("fill", d => (d.type === "question" ? "#fca5a5" : "#93c5fd"))  
+    .attr("fill", d => getNodeColor(d))  
     .on("mouseover", (event, d) => {  
-        let htmlStr = d.type === "question"  
-            ? `题号：<strong>${d.name}</strong>`  
-            : `知识点：<strong>${d.name}</strong>` +  
-              `<br/><strong>基础题：</strong>${knowledgeQuestions[d.name]?.basic}` +  
-              `<br/><strong>中等题：</strong>${knowledgeQuestions[d.name]?.medium}` +  
-              `<br/><strong>较难题：</strong>${knowledgeQuestions[d.name]?.advanced}`;  
-
+        let htmlStr = "";  
+        if (d.type === "question") {  
+            htmlStr = `题号：<strong>${d.name}</strong>`;  
+        } else {  
+            htmlStr = `知识点：<strong>${d.name}</strong>`;  
+            const qSet = knowledgeQuestions[d.name];  
+            if (qSet) {  
+                htmlStr += `  
+                    <br/><strong>基础题：</strong>${qSet.basic}  
+                    <br/><strong>中等题：</strong>${qSet.medium}  
+                    <br/><strong>较难题：</strong>${qSet.advanced}  
+                    <br/><strong>正确率：</strong>${(qSet.accuracy * 100).toFixed(1)}%  
+                `;  
+            } else {  
+                htmlStr += "<br/>暂无示例题";  
+            }  
+        }  
         tooltipGraph  
             .style("opacity", 1)  
             .html(htmlStr)  
@@ -192,7 +308,31 @@ node.append("text")
     .attr("fill", "#333")  
     .attr("font-weight", d => (d.type === "question" ? "bold" : "normal"));  
 
+// 拖拽功能实现  
+function dragstarted(event, d) {  
+    if (!event.active) simulation.alphaTarget(0.3).restart();  
+    d.fx = d.x;  
+    d.fy = d.y;  
+}  
+
+function dragged(event, d) {  
+    d.fx = event.x;  
+    d.fy = event.y;  
+}  
+
+function dragended(event, d) {  
+    if (!event.active) simulation.alphaTarget(0);  
+    d.fx = null;  
+    d.fy = null;  
+}  
+
 function ticked() {  
+    // 确保节点不会超出可视区域  
+    graphData.nodes.forEach(function(d) {  
+        d.x = Math.max(40, Math.min(width - 40, d.x));  
+        d.y = Math.max(40, Math.min(height - 40, d.y));  
+    });  
+    
     link  
         .attr("x1", d => d.source.x)  
         .attr("y1", d => d.source.y)  
@@ -204,19 +344,19 @@ function ticked() {
 
 // 历史正确率折线图  
 const trendData = [  
-    { time: "测验1", accuracy: 0.94 },  
-    { time: "测验2", accuracy: 0.96 },  
-    { time: "测验3", accuracy: 0.98 },  
-    { time: "测验4", accuracy: 1.00 },  
-    { time: "测验5", accuracy: 1.00 }  
+    { time: "测验1", accuracy: 0.76 },  
+    { time: "测验2", accuracy: 0.79 },  
+    { time: "测验3", accuracy: 0.82 },  
+    { time: "测验4", accuracy: 0.84 },  
+    { time: "测验5", accuracy: 0.85 }  
 ];  
 
-const lineChartWidth = document.getElementById("line-chart").clientWidth;  
-const lineChartHeight = document.getElementById("line-chart").clientHeight;  
+const chartWidth = document.getElementById("line-chart").clientWidth;  
+const chartHeight = document.getElementById("line-chart").clientHeight;  
 
 const margin = { top: 20, right: 20, bottom: 30, left: 40 };  
-const innerWidth = lineChartWidth - margin.left - margin.right;  
-const innerHeight = lineChartHeight - margin.top - margin.bottom;  
+const innerWidth = chartWidth - margin.left - margin.right;  
+const innerHeight = chartHeight - margin.top - margin.bottom;  
 
 const xScale = d3.scalePoint()  
     .domain(trendData.map(d => d.time))  
@@ -224,10 +364,12 @@ const xScale = d3.scalePoint()
     .padding(0.5);  
 
 const yScale = d3.scaleLinear()  
-    .domain([0.9, 1.0])  
+    .domain([0.7, 0.9])  // 调整比例，使波动更明显  
     .range([innerHeight, 0]);  
 
 const svgLine = d3.select("#line-chart")  
+    .attr("width", chartWidth)  
+    .attr("height", chartHeight)  
     .append("g")  
     .attr("transform", `translate(${margin.left},${margin.top})`);  
 
@@ -235,30 +377,48 @@ const xAxis = d3.axisBottom(xScale);
 const yAxis = d3.axisLeft(yScale).tickFormat(d3.format(".0%"));  
 
 svgLine.append("g")  
+    .attr("class", "line-chart-axis")  
     .attr("transform", `translate(0, ${innerHeight})`)  
     .call(xAxis);  
 
-svgLine.append("g").call(yAxis);  
+svgLine.append("g")  
+    .attr("class", "line-chart-axis")  
+    .call(yAxis);  
 
 const lineGenerator = d3.line()  
     .x(d => xScale(d.time))  
-    .y(d => yScale(d.accuracy));  
+    .y(d => yScale(d.accuracy))  
+    .curve(d3.curveMonotoneX);  
 
 svgLine.append("path")  
     .datum(trendData)  
+    .attr("class", "line")  
     .attr("fill", "none")  
     .attr("stroke", "#f97316")  
     .attr("stroke-width", 2)  
     .attr("d", lineGenerator);  
 
+const tooltipLine = d3.select("#line-tooltip");  
+
 svgLine.selectAll(".dot")  
     .data(trendData)  
     .enter()  
     .append("circle")  
+    .attr("class", "dot")  
     .attr("r", 4)  
     .attr("cx", d => xScale(d.time))  
     .attr("cy", d => yScale(d.accuracy))  
-    .attr("fill", "#ff5722");  
+    .attr("fill", "#ff5722")  
+    .on("mouseover", (event, d) => {  
+        tooltipLine  
+            .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(1)}%</strong>`)  
+            .style("opacity", 1)  
+            .style("left", (event.pageX + 10) + "px")  
+            .style("top", (event.pageY - 10) + "px");  
+    })  
+    .on("mouseout", () => {  
+        tooltipLine.style("opacity", 0);  
+    });  
 </script>  
 </body>  
-</html>  
+</html> 
