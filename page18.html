@@ -26,6 +26,7 @@
         .line-chart-axis path, .line-chart-axis line { fill: none; stroke: #ccc; }  
         .dot { fill: #ff5722; stroke: #fff; stroke-width: 1px; cursor: pointer; }  
         .dot:hover { opacity: 0.8; }  
+        .legend { font-size: 12px; }  
     </style>  
 </head>  
 <body class="h-screen w-screen overflow-hidden bg-gray-100">  
@@ -82,22 +83,50 @@ const knowledgeQuestions = {
     "立方根": {  
         basic: "理解立方根的概念与计算",  
         medium: "掌握立方根与立方方程的关系",  
-        advanced: "应用立方根解决复杂的代数问题"  
+        advanced: "应用立方根解决复杂的代数问题",  
+        accuracy: 0.35 // 35%  
+    },  
+    "立方根的性质": {  
+        basic: "了解立方根的基本性质",  
+        medium: "掌握立方根与正负数的关系",  
+        advanced: "使用立方根解决几何问题",  
+        accuracy: 0.40 // 40%  
+    },  
+    "立方根的应用": {  
+        basic: "理解立方根在实际问题中的应用",  
+        medium: "计算真实世界中的立方根",  
+        advanced: "应用立方根与体积相关的问题",  
+        accuracy: 0.55 // 55%  
     },  
     "一元三次方程": {  
         basic: "了解一元三次方程的标准形式",  
         medium: "掌握一元三次方程的解法",  
-        advanced: "在各种条件下应用一元三次方程解题"  
+        advanced: "在各种条件下应用一元三次方程解题",  
+        accuracy: 0.60 // 60%  
+    },  
+    "一元三次方程的因式分解": {  
+        basic: "理解一元三次方程的因式分解",  
+        medium: "掌握常见一元三次方程的因式分解技巧",  
+        advanced: "使用因式分解求解高阶方程",  
+        accuracy: 0.70 // 70%  
     },  
     "因式分解": {  
         basic: "理解因式分解的基础知识",  
         medium: "掌握常见三次多项式的因式分解",  
-        advanced: "应用因式分解解决较复杂的代数问题"  
+        advanced: "应用因式分解解决较复杂的代数问题",  
+        accuracy: 0.80 // 80%  
+    },  
+    "因式分解的应用": {  
+        basic: "了解因式分解在代数中的重要性",  
+        medium: "通过因式分解简化代数表达式",  
+        advanced: "在解决方程时灵活应用因式分解",  
+        accuracy: 0.75 // 75%  
     },  
     "图像法": {  
         basic: "了解图像法的基本思路",  
         medium: "掌握如何通过图像解方程",  
-        advanced: "使用图像法解决更高级的代数问题"  
+        advanced: "使用图像法解决更高级的代数问题",  
+        accuracy: 0.65 // 65%  
     }  
 };  
 
@@ -107,19 +136,27 @@ const graphData = {
         { id: "Q18_1", type: "question", name: "第18（1）题" },  
         { id: "Q18_2", type: "question", name: "第18（2）题" },  
         { id: "K1", type: "knowledge", name: "立方根" },  
-        { id: "K2", type: "knowledge", name: "一元三次方程" },  
-        { id: "K3", type: "knowledge", name: "因式分解" },  
-        { id: "K4", type: "knowledge", name: "图像法" },  
+        { id: "K2", type: "knowledge", name: "立方根的性质" },  
+        { id: "K3", type: "knowledge", name: "立方根的应用" },  
+        { id: "K4", type: "knowledge", name: "一元三次方程" },  
+        { id: "K5", type: "knowledge", name: "一元三次方程的因式分解" },  
+        { id: "K6", type: "knowledge", name: "因式分解" },  
+        { id: "K7", type: "knowledge", name: "因式分解的应用" },  
+        { id: "K8", type: "knowledge", name: "图像法" },  
         { id: "E1", type: "example", name: "例题 1: 求立方根" },  
         { id: "E2", type: "example", name: "例题 2: 解一元三次方程" }  
     ],  
     links: [  
         { source: "Q18_1", target: "K1" },  
-        { source: "Q18_2", target: "K2" },  
-        { source: "K1", target: "E1" }, // 立方根示例  
-        { source: "K2", target: "E2" }, // 一元三次方程示例  
-        { source: "K2", target: "K4" }, // 一元三次方程与图像法  
-        { source: "K1", target: "K3" }  // 立方根与因式分解  
+        { source: "K1", target: "K2" },  
+        { source: "K1", target: "K3" }, // 立方根的应用  
+        { source: "Q18_2", target: "K4" },  
+        { source: "K4", target: "K5" },  
+        { source: "K5", target: "K6" },  
+        { source: "K6", target: "K7" }, // 因式分解的应用  
+        { source: "K4", target: "K8" }, // 一元三次方程与图像法  
+        { source: "K2", target: "E1" }, // 立方根示例  
+        { source: "K4", target: "E2" } // 一元三次方程示例  
     ]  
 };  
 
@@ -155,6 +192,14 @@ node.append("circle")
     .attr("r", d => d.type === "question" ? 18 : 14)  
     .attr("fill", d => {  
         if (d.type === "question") return "#fca5a5"; // 浅红  
+        // 根据知识点的正确率设置颜色              
+        if (d.type === "knowledge") {  
+            const accuracy = knowledgeQuestions[d.name].accuracy;  
+            if (accuracy < 0.4) return "red";  
+            else if (accuracy < 0.6) return "orange";  
+            else if (accuracy < 0.8) return "yellow";  
+            return "green";  
+        }  
         return "#93c5fd"; // 浅蓝  
     })  
     .on("mouseover", (event, d) => {  
@@ -169,6 +214,7 @@ node.append("circle")
                     <br/><strong>基础题：</strong>${qSet.basic}  
                     <br/><strong>中等题：</strong>${qSet.medium}  
                     <br/><strong>较难题：</strong>${qSet.advanced}  
+                    <br/><strong>历史正确率：</strong>${(qSet.accuracy * 100).toFixed(1)}%  
                 `;  
             } else {  
                 htmlStr += "<br/>暂无示例题";  
@@ -312,6 +358,51 @@ svgLine.selectAll(".dot2")
     .on("mouseout", () => {  
         tooltipLine.style("opacity", 0);  
     });  
+
+// ================ 颜色注释 ================  
+const colorLegend = d3.select("#graph-svg").append("g")  
+    .attr("class", "legend")  
+    .attr("transform", `translate(10, ${height - 100})`); // 将注释放在左下角  
+
+colorLegend.append("rect")  
+    .attr("width", 15)  
+    .attr("height", 15)  
+    .attr("fill", "red");  
+colorLegend.append("text")  
+    .attr("x", 20)  
+    .attr("y", 12)  
+    .text("正确率 < 40%");  
+
+colorLegend.append("rect")  
+    .attr("width", 15)  
+    .attr("height", 15)  
+    .attr("y", 20)  
+    .attr("fill", "orange");  
+colorLegend.append("text")  
+    .attr("x", 20)  
+    .attr("y", 32)  
+    .text("40% ≤ 正确率 < 60%");  
+
+colorLegend.append("rect")  
+    .attr("width", 15)  
+    .attr("height", 15)  
+    .attr("y", 40)  
+    .attr("fill", "yellow");  
+colorLegend.append("text")  
+    .attr("x", 20)  
+    .attr("y", 52)  
+    .text("60% ≤ 正确率 < 80%");  
+
+colorLegend.append("rect")  
+    .attr("width", 15)  
+    .attr("height", 15)  
+    .attr("y", 60)  
+    .attr("fill", "green");  
+colorLegend.append("text")  
+    .attr("x", 20)  
+    .attr("y", 72)  
+    .text("80% ≤ 正确率 ≤ 100%");  
+
 </script>  
 
 <!-- 提示层 -->  
