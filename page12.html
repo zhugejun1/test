@@ -11,7 +11,7 @@
     <!-- MathJax 引入 -->  
     <script>  
         MathJax = {  
-            tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] },  
+            tex: { inlineMath: [["\\(", "\\)"], ["$", "$"]], displayMath: [["$$", "$$"]] },  
             svg: { fontCache: "global" }  
         };  
     </script>  
@@ -82,13 +82,15 @@
         <!-- 题干描述区域 -->  
         <div class="bg-white p-4 rounded shadow">  
             <h1 class="text-xl font-bold mb-2">题号：第12题</h1>  
-            <p class="mb-2">如图，在长8米，宽4米的长方形草地上，有一条蜿蜒的小路，</p>  
-            <p class="mb-2">小路的左边线向右平移2米就得到小路的右边线。</p>  
-            <p class="mb-2">则这块草地的绿色（图中阴影部分）面积是 _____ 平方米。</p>  
-            
-            <div class="mb-4 flex justify-center">  
-                <img src="https://aiantmlwiag90c.blob.core.windows.net/images/20240624-230624_c6d01c66bca346cd.png" alt="长方形草地和小路示意图" class="max-w-full h-auto rounded border border-gray-300 mt-2 mb-4" style="max-height: 200px;">  
-            </div>  
+            <p class="mb-4">  
+                如图，在块长8米，宽4米的长方形草地上，有一条蜿蜒的小路，  
+            </p>  
+            <p class="mb-4">  
+                小路的左边线向右平移2米就得到的右边线。  
+            </p>  
+            <p class="mb-4">  
+                则这块草地的绿色（图中阴影部分）面积是 _____ 平方米。  
+            </p>  
 
             <div class="mb-4">  
                 <label for="answer1" class="block mb-2">绿色面积：</label>  
@@ -111,110 +113,99 @@
 <script>  
 // 知识点与示例题数据  
 const knowledgeQuestions = {  
-    "面积计算": {  
+    "面积计算": {   
         basic: "理解基本的长方形面积计算",  
         medium: "扣除部分区域面积问题",  
         advanced: "复合图形的综合面积计算",  
-        accuracy: 0.55  
+        accuracy: 0.52  
     },  
-    "几何图形": {  
+    "几何图形": {   
         basic: "几何图形的基本概念",  
         medium: "几何中面积的直接计算",  
         advanced: "几何图形面积推导",  
-        accuracy: 0.62  
+        accuracy: 0.50  
     },  
-    "路径计算": {  
+    "路径计算": {   
         basic: "理解线段偏移的面积",  
         medium: "简单区域与排除中计算",  
         advanced: "路径叠加与复杂几何",  
         accuracy: 0.48  
     },  
-    "复合面积": {  
+    "复合面积": {   
         basic: "区域面积分割与计算",  
         medium: "复合平面区域求解",  
         advanced: "高阶复杂平面扣减问题",  
+        accuracy: 0.45  
+    },  
+    "二维几何基础": {   
+        basic: "理解点、线、面的基本概念",  
+        medium: "基本几何图形的性质",  
+        advanced: "空间几何的应用",  
+        accuracy: 0.50  
+    },  
+    "平行四边形面积计算": {   
+        basic: "底乘高计算面积",  
+        medium: "倾斜平行四边形的面积",  
+        advanced: "复杂形状分解为平行四边形",  
         accuracy: 0.51  
     },  
-    "平移变换": {  
-        basic: "平移概念与基本应用",  
-        medium: "平移对图形面积的影响",  
-        advanced: "平移变换与面积计算",  
-        accuracy: 0.46  
+    "三角形面积计算": {   
+        basic: "底乘高的一半计算面积",  
+        medium: "海伦公式的应用",  
+        advanced: "分解为多个三角形计算面积",  
+        accuracy: 0.49  
     },  
-    "长方形性质": {  
-        basic: "长方形的定义与特征",  
-        medium: "长方形面积与周长计算",  
-        advanced: "长方形在复合问题中的应用",  
-        accuracy: 0.78  
+    "圆的面积计算": {   
+        basic: "圆的基本面积公式",  
+        medium: "扇形和圆环面积",  
+        advanced: "圆与其他图形的复合面积",  
+        accuracy: 0.53  
     },  
-    "区域划分": {  
-        basic: "简单区域划分方法",  
-        medium: "不规则区域的划分技巧",  
-        advanced: "最优区域划分策略",  
-        accuracy: 0.44  
-    },  
-    "图形覆盖": {  
-        basic: "图形覆盖的基本概念",  
-        medium: "部分覆盖面积的计算",  
-        advanced: "复杂覆盖问题的解决方法",  
-        accuracy: 0.39  
-    },  
-    "曲线路径": {  
-        basic: "曲线的基本表示方法",  
-        medium: "曲线路径与区域面积",  
-        advanced: "复杂曲线的面积计算",  
-        accuracy: 0.35,  
-        related: true  
-    },  
-    "几何直观": {  
-        basic: "几何问题的直观分析",  
-        medium: "几何直观与代数方法结合",  
-        advanced: "复杂几何问题的直观解决",  
-        accuracy: 0.68,  
-        related: true  
+    "复合图形面积分割": {   
+        basic: "将复合图形分解为简单图形",  
+        medium: "计算各部分面积并相加",  
+        advanced: "处理复杂交错图形的面积",  
+        accuracy: 0.47  
     }  
 };  
 
-// 设置力导向图数据  
+// 力导向图数据  
 const graphData = {  
     nodes: [  
-        { id: "Q12", type: "question", name: "第12题", accuracy: 0.50 },  
-        { id: "K1", type: "knowledge", name: "面积计算", accuracy: 0.55 },  
-        { id: "K2", type: "knowledge", name: "几何图形", accuracy: 0.62 },  
+        { id: "Q12", type: "question", name: "第12题", accuracy: 0.52 },  
+        { id: "K1", type: "knowledge", name: "面积计算", accuracy: 0.52 },  
+        { id: "K2", type: "knowledge", name: "几何图形", accuracy: 0.50 },  
         { id: "K3", type: "knowledge", name: "路径计算", accuracy: 0.48 },  
-        { id: "K4", type: "knowledge", name: "复合面积", accuracy: 0.51 },  
-        { id: "K5", type: "knowledge", name: "平移变换", accuracy: 0.46 },  
-        { id: "K6", type: "knowledge", name: "长方形性质", accuracy: 0.78 },  
-        { id: "K7", type: "knowledge", name: "区域划分", accuracy: 0.44 },  
-        { id: "K8", type: "knowledge", name: "图形覆盖", accuracy: 0.39 },  
-        { id: "K9", type: "knowledge", name: "曲线路径", accuracy: 0.35, related: true },  
-        { id: "K10", type: "knowledge", name: "几何直观", accuracy: 0.68, related: true }  
+        { id: "K4", type: "knowledge", name: "复合面积", accuracy: 0.45 },  
+        { id: "K5", type: "knowledge", name: "二维几何基础", accuracy: 0.50 },  
+        { id: "K6", type: "knowledge", name: "平行四边形面积计算", accuracy: 0.51 },  
+        { id: "K7", type: "knowledge", name: "三角形面积计算", accuracy: 0.49 },  
+        { id: "K8", type: "knowledge", name: "圆的面积计算", accuracy: 0.53 }  
     ],  
     links: [  
         { source: "Q12", target: "K1" },  
         { source: "Q12", target: "K2" },  
         { source: "Q12", target: "K3" },  
-        { source: "Q12", target: "K6" },  
-        { source: "K1", target: "K4" },  
-        { source: "K2", target: "K5" },  
-        { source: "K3", target: "K7" },  
-        { source: "K4", target: "K8" },  
-        { source: "K5", target: "K9" },  
-        { source: "K6", target: "K10" },  
-        { source: "K7", target: "K8" },  
+        { source: "Q12", target: "K4" },  
+        { source: "K1", target: "K5" },  
         { source: "K1", target: "K6" },  
-        { source: "K2", target: "K7" },  
-        { source: "K3", target: "K9" }  
+        { source: "K1", target: "K7" },  
+        { source: "K1", target: "K8" },  
+        { source: "K2", target: "K3" },  
+        { source: "K3", target: "K4" },  
+        { source: "K5", target: "K6" },  
+        { source: "K6", target: "K7" },  
+        { source: "K7", target: "K8" }  
     ]  
 };  
 
 // 获取节点颜色函数  
 function getNodeColor(d) {  
-    if (d.type === "question") {  
+    if (d.type === "question") {   
         return "#fca5a5"; // 题目节点颜色  
     }  
     
-    if (d.related) {  
+    if (d.related) {   
         return "#9ca3af"; // 相关知识点为灰色  
     }  
     
@@ -222,7 +213,7 @@ function getNodeColor(d) {
     if (acc < 0.4) return "#ef4444"; // 红色，低于40%  
     if (acc < 0.6) return "#f97316"; // 橙色，40%-60%  
     if (acc < 0.8) return "#eab308"; // 黄色，60%-80%  
-    return "#22c55e"; // 绿色，大于80%  
+    return "#22c555"; // 绿色，大于80%  
 }  
 
 // 绘制力导向图  
@@ -253,4 +244,160 @@ const node = svgGraph.selectAll("g.node")
     .append("g")  
     .attr("class", "node")  
     .call(d3.drag() // 添加拖拽功能  
-        .on("start", dragstar  
+        .on("start", dragstarted)  
+        .on("drag", dragged)  
+        .on("end", dragended));  
+
+const tooltipGraph = d3.select("#graph-tooltip");  
+
+node.append("circle")  
+    .attr("r", d => d.type === "question" ? 18 : 14)  
+    .attr("fill", d => getNodeColor(d))  
+    .on("mouseover", (event, d) => {   
+        let htmlStr = "";  
+        if (d.type === "question") {   
+            htmlStr = `题号：<strong>${d.name}</strong>`;  
+        } else {   
+            htmlStr = `知识点：<strong>${d.name}</strong>`;  
+            const qSet = knowledgeQuestions[d.name];  
+            if (qSet) {   
+                htmlStr += `  
+                    <br/><strong>基础题：</strong>${qSet.basic}  
+                    <br/><strong>中等题：</strong>${qSet.medium}  
+                    <br/><strong>较难题：</strong>${qSet.advanced}  
+                    <br/><strong>正确率：</strong>${(qSet.accuracy * 100).toFixed(1)}%`;  
+            } else {   
+                htmlStr += "<br/>暂无示例题";  
+            }  
+        }  
+        tooltipGraph  
+            .style("opacity", 1)  
+            .html(htmlStr)  
+            .style("left", (event.pageX + 10) + "px")  
+            .style("top", (event.pageY - 10) + "px");  
+    })  
+    .on("mouseout", () => tooltipGraph.style("opacity", 0));  
+
+node.append("text")  
+    .text(d => d.name)  
+    .attr("x", 20)  
+    .attr("y", 4)  
+    .attr("font-size", "12px")  
+    .attr("fill", "#333")  
+    .attr("font-weight", d => (d.type === "question" ? "bold" : "normal"));  
+
+// 拖拽功能实现  
+function dragstarted(event, d) {  
+    if (!event.active) simulation.alphaTarget(0.3).restart();  
+    d.fx = d.x;  
+    d.fy = d.y;  
+}  
+
+function dragged(event, d) {  
+    d.fx = event.x;  
+    d.fy = event.y;  
+}  
+
+function dragended(event, d) {  
+    if (!event.active) simulation.alphaTarget(0);  
+    d.fx = null;  
+    d.fy = null;  
+}  
+
+function ticked() {  
+    // 确保节点不会超出可视区域  
+    graphData.nodes.forEach(function(d) {   
+        d.x = Math.max(40, Math.min(width - 40, d.x));  
+        d.y = Math.max(40, Math.min(height - 40, d.y));  
+    });  
+    
+    link  
+        .attr("x1", d => d.source.x)  
+        .attr("y1", d => d.source.y)  
+        .attr("x2", d => d.target.x)  
+        .attr("y2", d => d.target.y);  
+
+    node.attr("transform", d => `translate(${d.x}, ${d.y})`);  
+}  
+
+// 历史正确率折线图  
+const trendData = [  
+    { time: "测验1", accuracy: 0.45 },  
+    { time: "测验2", accuracy: 0.48 },  
+    { time: "测验3", accuracy: 0.50 },  
+    { time: "测验4", accuracy: 0.52 },  
+    { time: "测验5", accuracy: 0.52 }  
+];  
+
+const chartWidth = document.getElementById("line-chart").clientWidth;  
+const chartHeight = document.getElementById("line-chart").clientHeight;  
+
+const margin = { top: 20, right: 20, bottom: 30, left: 40 };  
+const innerWidth = chartWidth - margin.left - margin.right;  
+const innerHeight = chartHeight - margin.top - margin.bottom;  
+
+const xScale = d3.scalePoint()  
+    .domain(trendData.map(d => d.time))  
+    .range([0, innerWidth])  
+    .padding(0.5);  
+
+const yScale = d3.scaleLinear()  
+    .domain([0.4, 0.6])  
+    .range([innerHeight, 0]);  
+
+const svgLine = d3.select("#line-chart")  
+    .attr("width", chartWidth)  
+    .attr("height", chartHeight)  
+    .append("g")  
+    .attr("transform", `translate(${margin.left},${margin.top})`);  
+
+const xAxis = d3.axisBottom(xScale);  
+const yAxis = d3.axisLeft(yScale).tickFormat(d3.format(".0%"));  
+
+svgLine.append("g")  
+    .attr("class", "line-chart-axis")  
+    .attr("transform", `translate(0, ${innerHeight})`)  
+    .call(xAxis);  
+
+svgLine.append("g")  
+    .attr("class", "line-chart-axis")  
+    .call(yAxis);  
+
+const lineGenerator = d3.line()  
+    .x(d => xScale(d.time))  
+    .y(d => yScale(d.accuracy))  
+    .curve(d3.curveMonotoneX);  
+
+svgLine.append("path")  
+    .datum(trendData)  
+    .attr("class", "line")  
+    .attr("fill", "none")  
+    .attr("stroke", "#f97316")  
+    .attr("stroke-width", 2)  
+    .attr("d", lineGenerator);  
+
+const tooltipLine = d3.select("#line-tooltip");  
+
+svgLine.selectAll(".dot")  
+    .data(trendData)  
+    .enter()  
+    .append("circle")  
+    .attr("class", "dot")  
+    .attr("r", 4)  
+    .attr("cx", d => xScale(d.time))  
+    .attr("cy", d => yScale(d.accuracy))  
+    .attr("fill", "#ff5722")  
+    .on("mouseover", (event, d) => {  
+        tooltipLine  
+            .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(1)}%</strong>`)  
+            .style("opacity", 1)  
+            .style("left", (event.pageX + 10) + "px")  
+            .style("top", (event.pageY - 10) + "px");  
+    })  
+    .on("mouseout", () => {  
+        tooltipLine.style("opacity", 0);  
+    });  
+</script>  
+<div id="line-tooltip" class="tooltip"></div>  
+</body>  
+</html> 
