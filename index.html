@@ -165,24 +165,24 @@
                     return t => arc(interpolate(t));  
                 });  
 
-            // 添加正确率文字  
-            svg.append("text")  
-                .attr("x", svgSize / 2)  
-                .attr("y", svgSize / 2 + 5)  
-                .attr("text-anchor", "middle")  
-                .attr("fill", "#4b5563")  
-                .attr("font-size", "12px")  
-                .text(`正确率`);  
+            // 删除“正确率”文字  
+            // svg.append("text")  
+            //     .attr("x", svgSize / 2)  
+            //     .attr("y", svgSize / 2 + 5)  
+            //     .attr("text-anchor", "middle")  
+            //     .attr("fill", "#4b5563")  
+            //     .attr("font-size", "12px")  
+            //     .text("正确率");  
 
             // 添加正确率数值  
             svg.append("text")  
                 .attr("x", svgSize / 2)  
-                .attr("y", svgSize / 2 - 5)  
+                .attr("y", svgSize / 2)  
                 .attr("text-anchor", "middle")  
                 .attr("fill", "#1e293b")  
                 .attr("font-size", "16px")  
                 .attr("font-weight", "600")  
-                .text(rate.toFixed(1) + "%");  
+                .text(`${rate.toFixed(1)}%`);  
         }  
 
         // 动态生成题目卡片  
@@ -279,7 +279,7 @@
                 node  
                     .attr("cx", d => d.x)  
                     .attr("cy", d => d.y);  
-                
+
                 link  
                     .attr("x1", d => d.source.x)  
                     .attr("y1", d => d.source.y)  
