@@ -2,7 +2,7 @@
 <html lang="zh">  
 <head>  
     <meta charset="UTF-8" />  
-    <title>第9题 - 数据分析题目</title>  
+    <title>第19题 - 几何问题</title>  
     <!-- Tailwind CSS -->  
     <script src="https://cdn.tailwindcss.com"></script>  
     <!-- D3.js v6 -->  
@@ -20,15 +20,16 @@
     <style>  
         body { margin: 0; font-family: Arial, sans-serif; background-color: #f6f9fc; }  
         .node circle { cursor: pointer; }  
-        .node circle:hover { fill: #555; }  
-        .node text { pointer-events: none; font-size: 12px; fill: #333; }  
+        .node circle:hover { fill: #333; }  
+        .node text { pointer-events: none; font-size: 10px; fill: #333; }  
         line.link { stroke: #ccc; stroke-width: 1.5px; }  
-        .tooltip { position: absolute; min-width: 150px; padding: 8px; font-size: 12px; background: rgba(255, 255, 255, 0.9); border: 1px solid #ddd; border-radius: 4px; pointer-events: none; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15); opacity: 0; transition: opacity 0.2s; z-index: 999; }  
+        .tooltip { position: absolute; min-width: 300px; padding: 8px; font-size: 12px; background: rgba(255, 255, 255, 0.9); border: 1px solid #ccc; border-radius: 4px; pointer-events: none; box-shadow: 0 2px 5px rgba(0,0,0,0.15); opacity: 0; transition: opacity 0.2s; z-index: 999; }  
         .line { fill: none; stroke-width: 2px; }  
+        .line-chart-axis path, .line-chart-axis line { fill: none; stroke: #ccc; }  
         .dot { fill: #ff5722; stroke: #fff; stroke-width: 1px; cursor: pointer; }  
         .dot:hover { opacity: 0.8; }  
-        .color-legend { position: absolute; bottom: 20px; left: 20px; background: rgba(255, 255, 255, 0.95); padding: 10px; border-radius: 4px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }  
-        .legend-item { display: flex; align-items: center; margin-bottom: 5px; }  
+        .color-legend { position: absolute; bottom: 20px; left: 20px; background: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 4px; border: 1px solid #ddd; }  
+        .legend-item { display: flex; align-items: center; margin-bottom: 4px; }  
         .legend-color { width: 16px; height: 16px; margin-right: 8px; border-radius: 50%; }  
     </style>  
 </head>  
@@ -49,7 +50,7 @@
         <svg id="graph-svg" class="w-full h-full"></svg>  
         <div id="graph-tooltip" class="tooltip"></div>  
         
-        <!-- 颜色对应正确率说明 -->  
+        <!-- 颜色说明 -->  
         <div class="color-legend">  
             <h3 class="text-sm font-bold mb-2">正确率说明：</h3>  
             <div class="legend-item">  
@@ -75,42 +76,31 @@
         </div>  
     </div>  
 
-    <!-- 右侧：题目信息和历史趋势图 -->  
+    <!-- 右侧：题目信息 -->  
     <div id="right-panel" class="w-1/2 h-full flex flex-col p-4 space-y-4">  
 
-        <!-- 题干描述区域 -->  
+        <!-- 题目信息 -->  
         <div class="bg-white p-4 rounded shadow">  
-            <h1 class="text-xl font-bold mb-2">题号：第9题</h1>  
-            <p class="mb-2">  
-                观察表格中的数据：  
-            </p>  
-            <p class="mb-2">  
-                \(x\) ：16, 16.1, 16.2, 16.3, 16.4, 16.5, 16.6, 16.7, 16.8, 16.9, 17  
-            </p>  
-            <p class="mb-2">  
-                \(x^2\) ：256, 259.21, 262.44, 265.69, 268.96, 272.25, 275.56, 278.89, 282.24, 285.61, 289  
-            </p>  
+            <h1 class="text-xl font-bold mb-2">题号：第19题</h1>  
             <p class="mb-4">  
-                根据表格中的数据可知 \(\sqrt{280}\) 在哪个两个数之间（ ）  
+                如图，点 \(G, D, F\) 共线，且 \( \angle 1 + \angle 2 = 180^\circ \)，\( \angle B = \angle 3 \)，求证： \( \angle AED = \angle 4 \)。  
             </p>  
+
             <div class="mb-4">  
-                <input type="checkbox" id="option1" />  
-                <label for="option1">A. 在16.4和16.5之间</label>  
+                <p>要证明：</p>  
+                <p>\( \angle L2 = \angle L BDF \)（_），</p>  
+                <p>\( EF \parallel AB \)（_），</p>  
+                <p>\( \angle L3 = \angle ADE \)（_），</p>  
+                <p>\( \angle L3 = \angle B = \angle ADE \)（_），</p>  
+                <p>\( DE \parallel BC \)（_），</p>  
+                <p>\( \angle AED = \angle ACB \)（_），</p>  
+                <p>\( \angle ACB = \angle 4 \)（_），</p>  
+                <p>\( \angle B = \angle 4 \)（_），</p>  
+                <p>\( \angle AED = \angle 4 \)（_）。</p>  
             </div>  
-            <div class="mb-4">  
-                <input type="checkbox" id="option2" />  
-                <label for="option2">B. 在16.6和16.7之间</label>  
-            </div>  
-            <div class="mb-4">  
-                <input type="checkbox" id="option3" />  
-                <label for="option3">C. 在16.7和16.8之间</label>  
-            </div>  
-            <div class="mb-4">  
-                <input type="checkbox" id="option4" />  
-                <label for="option4">D. 在16.8和16.9之间</label>  
-            </div>  
-            <p>当前掌握率：<span class="text-green-600 font-medium">82.56%</span></p>  
-            <p>历史正确率：<span class="text-yellow-600 font-medium">85%</span></p>  
+
+            <p>当前掌握率：<span class="text-green-600 font-medium">63.2%</span></p>  
+            <p>历史正确率：<span class="text-yellow-600 font-medium">68%</span></p>  
         </div>  
 
         <!-- 历史正确率折线图 -->  
@@ -125,101 +115,84 @@
 <script>  
 // 知识点与示例题数据  
 const knowledgeQuestions = {  
-    "平方数的性质": {  
-        basic: "平方数的定义与基本特性",  
-        medium: "平方数的计算与应用",  
-        advanced: "平方数与数列的关系",  
-        accuracy: 0.86  
+    "平行线的性质": {  
+        basic: "平行线穿插所形成的角度关系",  
+        medium: "平行线的应用和计算问题",  
+        advanced: "在多边形中应用平行线性质",  
+        accuracy: 0.8,  
+        subNodes: [  
+            { id: "S1", name: "同位角", accuracy: 0.8,  
+                basic: "同位角的基本概念",  
+                medium: "同位角的应用题",  
+                advanced: "同位角在复杂图形中的应用" },  
+            { id: "S2", name: "内错角", accuracy: 0.75,  
+                basic: "内错角的基本概念",  
+                medium: "内错角的应用题",  
+                advanced: "内错角在复杂图形中的应用" }  
+        ]  
     },  
-    "平方根的应用": {  
-        basic: "平方根的定义与求解",  
-        medium: "平方根的近似值计算",  
-        advanced: "平方根在实际问题中的应用",  
-        accuracy: 0.84  
+    "角度和的性质": {  
+        basic: "款法角和的定义",  
+        medium: "计算角和的问题",  
+        advanced: "在几何证明中的应用",  
+        accuracy: 0.75,  
+        subNodes: [  
+            { id: "S3", name: "多边形内角和", accuracy: 0.82,  
+                basic: "多边形内角和的计算",  
+                medium: "四边形内角和的应用",  
+                advanced: "多边形内角和的复杂应用" }  
+        ]  
     },  
-    "数据表分析": {  
-        basic: "数据表的基本读取方法",  
-        medium: "数据表中的插值与估算",  
-        advanced: "通过数据表进行预测与推断",  
-        accuracy: 0.78  
-    },  
-    "函数单调性": {  
-        basic: "函数单调性的概念",  
-        medium: "判断函数单调区间的方法",  
-        advanced: "利用单调性解决数学问题",  
-        accuracy: 0.72  
-    },  
-    "数据比较与排序": {  
-        basic: "数据比较的基本方法",  
-        medium: "排序算法与技巧",  
-        advanced: "数据区间与范围分析",  
-        accuracy: 0.88  
-    },  
-    "二次函数": {  
-        basic: "二次函数的基本性质",  
-        medium: "二次函数图像特征",  
-        advanced: "二次函数的应用问题",  
-        accuracy: 0.65  
-    },  
-    "近似值计算": {  
-        basic: "近似值的概念与表示",  
-        medium: "有效数字与精确度",  
-        advanced: "复杂计算中的近似方法",  
-        accuracy: 0.75  
-    },  
-    "估算技巧": {  
-        basic: "估算的基本方法",  
-        medium: "合理估计数值大小",  
-        advanced: "估算在解题中的应用",  
-        accuracy: 0.92  
-    },  
-    "数值分析": {  
-        basic: "数值分析的基本方法",  
-        medium: "数值计算与误差分析",  
-        advanced: "数值模型的建立与应用",  
-        accuracy: 0.55,  
-        related: true  
-    },  
-    "区间与不等式": {  
-        basic: "区间的表示方法",  
-        medium: "区间与不等式的关系",  
-        advanced: "区间在函数中的应用",  
-        accuracy: 0.48,  
-        related: true  
+    "几何证明方法": {  
+        basic: "基础几何证明技巧",  
+        medium: "应用几何方法进行推理",  
+        advanced: "复杂几何问题的完整证明",  
+        accuracy: 0.78,  
+        subNodes: [  
+            { id: "S4", name: "三角形全等证明", accuracy: 0.85,  
+                basic: "三角形全等的基本定理",  
+                medium: "三角形全等的中等难度证明",  
+                advanced: "三角形全等的复杂证明" }  
+        ]  
     }  
 };  
 
-// 设置力导向图数据  
+// 力导向图数据  
 const graphData = {  
     nodes: [  
-        { id: "Q9", type: "question", name: "第9题", accuracy: 0.85 },  
-        { id: "K1", type: "knowledge", name: "平方数的性质", accuracy: 0.86 },  
-        { id: "K2", type: "knowledge", name: "平方根的应用", accuracy: 0.84 },  
-        { id: "K3", type: "knowledge", name: "数据表分析", accuracy: 0.78 },  
-        { id: "K4", type: "knowledge", name: "函数单调性", accuracy: 0.72 },  
-        { id: "K5", type: "knowledge", name: "数据比较与排序", accuracy: 0.88 },  
-        { id: "K6", type: "knowledge", name: "二次函数", accuracy: 0.65 },  
-        { id: "K7", type: "knowledge", name: "近似值计算", accuracy: 0.75 },  
-        { id: "K8", type: "knowledge", name: "估算技巧", accuracy: 0.92 },  
-        { id: "K9", type: "knowledge", name: "数值分析", accuracy: 0.55, related: true },  
-        { id: "K10", type: "knowledge", name: "区间与不等式", accuracy: 0.48, related: true }  
+        { id: "Q19", type: "question", name: "第19题", accuracy: 0.68 },  
+        { id: "K1", type: "knowledge", name: "平行线的性质", accuracy: 0.8 },  
+        { id: "K2", type: "knowledge", name: "角度和的性质", accuracy: 0.75 },  
+        { id: "K3", type: "knowledge", name: "几何证明方法", accuracy: 0.78 },  
+        { id: "S1", type: "sub-knowledge", name: "同位角", accuracy: 0.8,  
+            basic: "同位角的基本概念",  
+            medium: "同位角的应用题",  
+            advanced: "同位角在复杂图形中的应用" },  
+        { id: "S2", type: "sub-knowledge", name: "内错角", accuracy: 0.75,  
+            basic: "内错角的基本概念",  
+            medium: "内错角的应用题",  
+            advanced: "内错角在复杂图形中的应用" },  
+        { id: "S3", type: "sub-knowledge", name: "多边形内角和", accuracy: 0.82,  
+            basic: "多边形内角和的计算",  
+            medium: "四边形内角和的应用",  
+            advanced: "多边形内角和的复杂应用" },  
+        { id: "S4", type: "sub-knowledge", name: "三角形全等证明", accuracy: 0.85,  
+            basic: "三角形全等的基本定理",  
+            medium: "三角形全等的中等难度证明",  
+            advanced: "三角形全等的复杂证明" }  
     ],  
     links: [  
-        { source: "Q9", target: "K1" },  
-        { source: "Q9", target: "K2" },  
-        { source: "Q9", target: "K3" },  
-        { source: "K1", target: "K6" },  
-        { source: "K2", target: "K7" },  
-        { source: "K3", target: "K5" },  
-        { source: "K3", target: "K4" },  
-        { source: "K5", target: "K8" },  
-        { source: "K7", target: "K9" },  
-        { source: "K6", target: "K10" },  
-        { source: "K8", target: "K9" }  
+        { source: "Q19", target: "K1" },  
+        { source: "Q19", target: "K2" },  
+        { source: "Q19", target: "K3" },  
+        { source: "K1", target: "S1" },  
+        { source: "K1", target: "S2" },  
+        { source: "K2", target: "S3" },  
+        { source: "K3", target: "S4" }  
     ]  
 };  
 
-// 获取节点颜色函数  
+// 获取颜色函数  
 function getNodeColor(d) {  
     if (d.type === "question") {  
         return "#fca5a5"; // 题目节点颜色  
@@ -236,7 +209,7 @@ function getNodeColor(d) {
     return "#22c55e"; // 绿色，大于80%  
 }  
 
-// 绘制力导向图  
+// 力导向图绘制  
 const width = document.getElementById("left-panel").clientWidth;  
 const height = document.getElementById("left-panel").clientHeight;  
 
@@ -244,12 +217,12 @@ const svgGraph = d3.select("#graph-svg")
     .attr("width", width)  
     .attr("height", height);  
 
-// 增强力导向图配置，防止重叠  
+// 增加排斥力和距离以防止节点重叠  
 const simulation = d3.forceSimulation(graphData.nodes)  
     .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(150))  
-    .force("charge", d3.forceManyBody().strength(-600))  
+    .force("charge", d3.forceManyBody().strength(-500))  
     .force("center", d3.forceCenter(width / 2, height / 2))  
-    .force("collision", d3.forceCollide().radius(60)) // 增加碰撞检测  
+    .force("collision", d3.forceCollide().radius(60)) // 添加碰撞检测以防止重叠  
     .on("tick", ticked);  
 
 const link = svgGraph.selectAll("line.link")  
@@ -263,7 +236,7 @@ const node = svgGraph.selectAll("g.node")
     .enter()  
     .append("g")  
     .attr("class", "node")  
-    .call(d3.drag() // 添加拖拽功能  
+    .call(d3.drag()  
         .on("start", dragstarted)  
         .on("drag", dragged)  
         .on("end", dragended));  
@@ -278,11 +251,18 @@ node.append("circle")
         if (d.type === "question") {  
             htmlStr = `题号：<strong>${d.name}</strong>`;  
         } else {  
-            htmlStr = `知识点：<strong>${d.name}</strong>`;  
             const qSet = knowledgeQuestions[d.name];  
-            if (qSet) {  
+            const subNode = graphData.nodes.find(n => n.id === d.id);  
+            if (subNode) {  
                 htmlStr += `  
-                    <br/><strong>基础题：</strong>${qSet.basic}  
+                    <br/><strong>基本题：</strong>${subNode.basic}  
+                    <br/><strong>中等题：</strong>${subNode.medium}  
+                    <br/><strong>较难题：</strong>${subNode.advanced}  
+                    <br/><strong>正确率：</strong>${(subNode.accuracy * 100).toFixed(1)}%  
+                `;  
+            } else if (qSet) {  
+                htmlStr += `  
+                    <br/><strong>基本题：</strong>${qSet.basic}  
                     <br/><strong>中等题：</strong>${qSet.medium}  
                     <br/><strong>较难题：</strong>${qSet.advanced}  
                     <br/><strong>正确率：</strong>${(qSet.accuracy * 100).toFixed(1)}%  
@@ -307,7 +287,7 @@ node.append("text")
     .attr("fill", "#333")  
     .attr("font-weight", d => (d.type === "question" ? "bold" : "normal"));  
 
-// 拖拽功能实现  
+// 拖拽功能  
 function dragstarted(event, d) {  
     if (!event.active) simulation.alphaTarget(0.3).restart();  
     d.fx = d.x;  
@@ -326,10 +306,10 @@ function dragended(event, d) {
 }  
 
 function ticked() {  
-    // 确保节点不会超出可视区域  
+    // 确保节点不会跑出可视区域  
     graphData.nodes.forEach(function(d) {  
-        d.x = Math.max(40, Math.min(width - 40, d.x));  
-        d.y = Math.max(40, Math.min(height - 40, d.y));  
+        d.x = Math.max(30, Math.min(width - 30, d.x));  
+        d.y = Math.max(30, Math.min(height - 30, d.y));  
     });  
     
     link  
@@ -343,19 +323,18 @@ function ticked() {
 
 // 历史正确率折线图  
 const trendData = [  
-    { time: "测验1", accuracy: 0.76 },  
-    { time: "测验2", accuracy: 0.79 },  
-    { time: "测验3", accuracy: 0.82 },  
-    { time: "测验4", accuracy: 0.84 },  
-    { time: "测验5", accuracy: 0.85 }  
+    { time: "测验1", accuracy: 0.6 },  
+    { time: "测验2", accuracy: 0.7 },  
+    { time: "测验3", accuracy: 0.75 },  
+    { time: "测验4", accuracy: 0.8 }  
 ];  
 
-const chartWidth = document.getElementById("line-chart").clientWidth;  
-const chartHeight = document.getElementById("line-chart").clientHeight;  
+const lineChartWidth = document.getElementById("line-chart").clientWidth;  
+const lineChartHeight = document.getElementById("line-chart").clientHeight;  
 
 const margin = { top: 20, right: 20, bottom: 30, left: 40 };  
-const innerWidth = chartWidth - margin.left - margin.right;  
-const innerHeight = chartHeight - margin.top - margin.bottom;  
+const innerWidth = lineChartWidth - margin.left - margin.right;  
+const innerHeight = lineChartHeight - margin.top - margin.bottom;  
 
 const xScale = d3.scalePoint()  
     .domain(trendData.map(d => d.time))  
@@ -363,12 +342,12 @@ const xScale = d3.scalePoint()
     .padding(0.5);  
 
 const yScale = d3.scaleLinear()  
-    .domain([0.7, 0.9])  // 调整比例，使波动更明显  
+    .domain([0, 1])  
     .range([innerHeight, 0]);  
 
 const svgLine = d3.select("#line-chart")  
-    .attr("width", chartWidth)  
-    .attr("height", chartHeight)  
+    .attr("width", lineChartWidth)  
+    .attr("height", lineChartHeight)  
     .append("g")  
     .attr("transform", `translate(${margin.left},${margin.top})`);  
 
@@ -377,7 +356,7 @@ const yAxis = d3.axisLeft(yScale).tickFormat(d3.format(".0%"));
 
 svgLine.append("g")  
     .attr("class", "line-chart-axis")  
-    .attr("transform", `translate(0, ${innerHeight})`)  
+    .attr("transform", `translate(0,${innerHeight})`)  
     .call(xAxis);  
 
 svgLine.append("g")  
@@ -392,10 +371,8 @@ const lineGenerator = d3.line()
 svgLine.append("path")  
     .datum(trendData)  
     .attr("class", "line")  
-    .attr("fill", "none")  
-    .attr("stroke", "#f97316")  
-    .attr("stroke-width", 2)  
-    .attr("d", lineGenerator);  
+    .attr("d", lineGenerator)  
+    .attr("stroke", "#f97316");  
 
 const tooltipLine = d3.select("#line-tooltip");  
 
@@ -407,7 +384,6 @@ svgLine.selectAll(".dot")
     .attr("r", 4)  
     .attr("cx", d => xScale(d.time))  
     .attr("cy", d => yScale(d.accuracy))  
-    .attr("fill", "#ff5722")  
     .on("mouseover", (event, d) => {  
         tooltipLine  
             .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(1)}%</strong>`)  
@@ -419,5 +395,8 @@ svgLine.selectAll(".dot")
         tooltipLine.style("opacity", 0);  
     });  
 </script>  
+
+<!-- 提示层 -->  
+<div id="line-tooltip" class="tooltip"></div>  
 </body>  
 </html>  
