@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>  
 <html lang="zh">  
 <head>  
@@ -168,11 +169,29 @@ const svgGraph = d3.select("#graph-svg")
     .attr("width", width)  
     .attr("height", height);  
 
+// 添加拖拽功能  
 const simulation = d3.forceSimulation(graphData.nodes)  
     .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(110))  
     .force("charge", d3.forceManyBody().strength(-300))  
     .force("center", d3.forceCenter(width / 2, height / 2))  
     .on("tick", ticked);  
+
+// 添加拖拽事件处理器  
+const drag = d3.drag()  
+    .on("start", (event, d) => {  
+        simulation.alphaTarget(0.3).restart();  
+        d.fx = event.x;  
+        d.fy = event.y;  
+    })  
+    .on("drag", (event, d) => {  
+        d.fx = event.x;  
+        d.fy = event.y;  
+    })  
+    .on("end", (event, d) => {  
+        simulation.alphaTarget(0);  
+        d.fx = null;  
+        d.fy = null;  
+    });  
 
 const link = svgGraph.selectAll("line.link")  
     .data(graphData.links)  
@@ -184,7 +203,8 @@ const node = svgGraph.selectAll("g.node")
     .data(graphData.nodes)  
     .enter()  
     .append("g")  
-    .attr("class", "node");  
+    .attr("class", "node")  
+    .call(drag);  
 
 const tooltipGraph = d3.select("#graph-tooltip");  
 
@@ -192,7 +212,6 @@ node.append("circle")
     .attr("r", d => d.type === "question" ? 18 : 14)  
     .attr("fill", d => {  
         if (d.type === "question") return "#fca5a5"; // 浅红  
-        // 根据知识点的正确率设置颜色              
         if (d.type === "knowledge") {  
             const accuracy = knowledgeQuestions[d.name].accuracy;  
             if (accuracy < 0.4) return "red";  
@@ -245,6 +264,35 @@ function ticked() {
 
     node.attr("transform", d => `translate(${d.x}, ${d.y})`);  
 }  
+
+// ================ 颜色注释 ================  
+const colorLegend = d3.select("#graph-svg").append("g")  
+    .attr("class", "legend")  
+    .attr("transform", `translate(10, ${height - 100})`);  
+
+const colors = [  
+    { color: "red", text: "低于40%" },  
+    { color: "orange", text: "40%-60%" },  
+    { color: "yellow", text: "60%-80%" },  
+    { color: "green", text: "高于80%" },  
+    { color: "gray", text: "相关知识点" }  
+];  
+
+colors.forEach((item, index) => {  
+    const g = colorLegend.append("g")  
+        .attr("transform", `translate(0, ${index * 20})`);  
+
+    g.append("circle")  
+        .attr("cx", 0)  
+        .attr("cy", 0)  
+        .attr("r", 8)  
+        .attr("fill", item.color);  
+
+    g.append("text")  
+        .attr("x", 15)  
+        .attr("y", 0)  
+        .text(item.text);  
+});  
 
 // ================ 历史正确率折线图 ================  
 const trendData1 = [  
@@ -358,50 +406,6 @@ svgLine.selectAll(".dot2")
     .on("mouseout", () => {  
         tooltipLine.style("opacity", 0);  
     });  
-
-// ================ 颜色注释 ================  
-const colorLegend = d3.select("#graph-svg").append("g")  
-    .attr("class", "legend")  
-    .attr("transform", `translate(10, ${height - 100})`); // 将注释放在左下角  
-
-colorLegend.append("rect")  
-    .attr("width", 15)  
-    .attr("height", 15)  
-    .attr("fill", "red");  
-colorLegend.append("text")  
-    .attr("x", 20)  
-    .attr("y", 12)  
-    .text("正确率 < 40%");  
-
-colorLegend.append("rect")  
-    .attr("width", 15)  
-    .attr("height", 15)  
-    .attr("y", 20)  
-    .attr("fill", "orange");  
-colorLegend.append("text")  
-    .attr("x", 20)  
-    .attr("y", 32)  
-    .text("40% ≤ 正确率 < 60%");  
-
-colorLegend.append("rect")  
-    .attr("width", 15)  
-    .attr("height", 15)  
-    .attr("y", 40)  
-    .attr("fill", "yellow");  
-colorLegend.append("text")  
-    .attr("x", 20)  
-    .attr("y", 52)  
-    .text("60% ≤ 正确率 < 80%");  
-
-colorLegend.append("rect")  
-    .attr("width", 15)  
-    .attr("height", 15)  
-    .attr("y", 60)  
-    .attr("fill", "green");  
-colorLegend.append("text")  
-    .attr("x", 20)  
-    .attr("y", 72)  
-    .text("80% ≤ 正确率 ≤ 100%");  
 
 </script>  
 
