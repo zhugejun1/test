@@ -15,6 +15,7 @@
         };  
     </script>  
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.min.js"></script>  
+
     <style>  
         body {  
             margin: 0;  
@@ -25,7 +26,7 @@
             cursor: pointer;  
         }  
         .node circle:hover {  
-            fill: #555;  
+            fill: #333;  
         }  
         .node text {  
             pointer-events: none;  
@@ -89,9 +90,19 @@
             margin-right: 8px;  
             border-radius: 50%;  
         }  
+        /* 调整布局比例 */  
+        .flex-container {  
+            height: 100vh;  
+        }  
+        #left-panel {  
+            width: 40%;  
+        }  
+        #right-panel {  
+            width: 60%;  
+        }  
     </style>  
 </head>  
-<body class="h-screen w-screen overflow-hidden bg-gray-100">  
+<body>  
 
 <!-- 顶部：返回按钮 -->  
 <div class="p-4 bg-white shadow">  
@@ -101,13 +112,13 @@
 </div>  
 
 <!-- 主体：左侧力导向图 + 右侧题目信息 -->  
-<div class="flex h-[calc(100vh-64px)]">  
+<div class="flex-container flex h-[calc(100vh-64px)]">  
 
     <!-- 左侧：力导向图 -->  
     <div id="left-panel" class="w-1/2 h-full bg-white relative">  
         <svg id="graph-svg" class="w-full h-full"></svg>  
         <div id="graph-tooltip" class="tooltip"></div>  
-        
+
         <!-- 颜色对应正确率说明 -->  
         <div class="color-legend">  
             <h3 class="text-sm font-bold mb-2">正确率说明：</h3>  
@@ -127,14 +138,10 @@
                 <div class="legend-color" style="background-color: #22c55e;"></div>  
                 <span class="text-xs">大于80%</span>  
             </div>  
-            <div class="legend-item">  
-                <div class="legend-color" style="background-color: #9ca3af;"></div>  
-                <span class="text-xs">相关知识点</span>  
-            </div>  
         </div>  
     </div>  
 
-    <!-- 右侧：题目信息和历史趋势图 -->  
+    <!-- 右侧：题目信息和历史正确率折线图 -->  
     <div id="right-panel" class="w-1/2 h-full flex flex-col p-4 space-y-4">  
 
         <!-- 题目描述 -->  
@@ -143,22 +150,18 @@
             <p class="mb-4">数学活动课上，琳琳同学将一张长方形纸条 ABCD 沿 BE 折叠，点 A 落在点 F 处。</p>  
 
             <div class="mb-4">  
-                <p class="font-medium">（1）如图1，她通过测量发现：∠DEF + ∠CBF = ∠A，请你证明她的结论。</p>  
+                <p class="font-medium">(1) 如图1，她通过测量发现：∠DEF + ∠CBF = ∠A，请你证明她的结论。</p>  
                 <p class="text-sm text-gray-600">(3分)</p>  
             </div>  
 
             <div class="mb-4">  
-                <p class="font-medium">（2）如图2，点 M 在 AD 上，点 N 在 BC 上，连接 MN，MN//EF，将四边形 MDCN 沿 MN 所在直线折叠得到 MHGN，MH 交 BC 于 R，点 D 的对应点落在点 H 处，点 C 的对应点落在点 G 处。她通过测量发现：∠CNG = 4∠ABE，请你证明她的结论。</p>  
+                <p class="font-medium">(2) 如图2，点 M 在 AD 上，点 N 在 BC 上，连接 MN，MN//EF，将四边形 MDCN 沿 MN 所在直线折叠得到 MHGN，MH 交 BC 于 R，点 D 的对应点落在点 H 处，点 C 的对应点落在点 G 处。她通过测量发现：∠CNG = 4∠ABE，请你证明她的结论。</p>  
                 <p class="text-sm text-gray-600">(4分)</p>  
             </div>  
 
             <div class="mb-4">  
-                <p class="font-medium">（3）如图3，在（2）的条件下，将四边形 MHGN 沿 RN 向上折盖得到四边形 RPQN，点 H 的对应点恰好落到 AD 上的点 P 处，点 G 落到点 Q 处。猜想 ∠ABF、∠MNQ 与 ∠MRN 的数量关系，并证明你的结论。</p>  
+                <p class="font-medium">(3) 如图3，在（2）的条件下，将四边形 MHGN 沿 RN 向上折盖得到四边形 RPQN，点 H 的对应点恰好落到 AD 上的点 P 处，点 G 落到点 Q 处。猜想 ∠ABF、∠MNQ 与 ∠MRN 的数量关系，并证明你的结论。</p>  
                 <p class="text-sm text-gray-600">(5分)</p>  
-            </div>  
-
-            <div class="text-center">  
-                <img src="path_to_your_image.jpg" alt="几何示例" class="w-full h-auto" />  
             </div>  
 
             <p>当前掌握率：<span class="text-green-600 font-medium">0%</span></p>  
@@ -175,7 +178,7 @@
 </div>  
 
 <script>  
-// 知识点与示例题数据  
+// ================ 知识点与示例题数据 ================  
 const knowledgeQuestions = {  
     "平行线与角度的性质": {  
         basic: "平行线及其与角度的基本关系",  
@@ -224,13 +227,31 @@ const knowledgeQuestions = {
         medium: "平面几何的中级应用，如三角形、四边形的性质和面积计算",  
         advanced: "平面几何的高级技巧，包括平面几何的定理应用和复杂图形的分割",  
         accuracy: 0.43  
+    },  
+    "几何构造与测量": {  
+        basic: "基础测量工具的使用",  
+        medium: "复杂测量工具的应用",  
+        advanced: "高级测量工具技巧",  
+        accuracy: 0.64  
+    },  
+    "几何变换": {  
+        basic: "基础几何变换的应用",  
+        medium: "几何变换在多边形和空间中的应用",  
+        advanced: "高级几何变换的综合运用",  
+        accuracy: 0.66  
+    },  
+    "几何误差控制": {  
+        basic: "基础测量误差处理",  
+        medium: "测量精度控制方法",  
+        advanced: "高级测量误差分析",  
+        accuracy: 0.69  
     }  
 };  
 
-// 力导向图数据  
+// ================ 力导向图数据 ================  
 const graphData = {  
     nodes: [  
-        { id: "Q24", type: "question", name: "第24题" },  
+        { id: "Q24", type: "question", name: "第24题", accuracy: 0.10 },  
         { id: "K1", type: "knowledge", name: "平行线与角度的性质" },  
         { id: "K2", type: "knowledge", name: "几何证明方法" },  
         { id: "K3", type: "knowledge", name: "四边形的性质" },  
@@ -238,21 +259,36 @@ const graphData = {
         { id: "K5", type: "knowledge", name: "三角形性质" },  
         { id: "K6", type: "knowledge", name: "圆的性质" },  
         { id: "K7", type: "knowledge", name: "空间几何" },  
-        { id: "K8", type: "knowledge", name: "平面几何" }  
+        { id: "K8", type: "knowledge", name: "平面几何" },  
+        { id: "K9", type: "knowledge", name: "几何构造与测量" },  
+        { id: "K10", type: "knowledge", name: "几何变换" },  
+        { id: "K11", type: "knowledge", name: "几何误差控制" }  
     ],  
     links: [  
         { source: "Q24", target: "K1" },  
         { source: "Q24", target: "K2" },  
         { source: "Q24", target: "K3" },  
-        { source: "K1", target: "K4" },  
-        { source: "K2", target: "K5" },  
-        { source: "K3", target: "K6" },  
-        { source: "K4", target: "K7" },  
-        { source: "K5", target: "K8" }  
+        { source: "Q24", target: "K4" },  
+        { source: "Q24", target: "K5" },  
+        { source: "Q24", target: "K6" },  
+        { source: "Q24", target: "K7" },  
+        { source: "Q24", target: "K8" },  
+        { source: "Q24", target: "K9" },  
+        { source: "Q24", target: "K10" },  
+        { source: "Q24", target: "K11" },  
+        { source: "K1", target: "K9" },  
+        { source: "K1", target: "K10" },  
+        { source: "K2", target: "K11" },  
+        { source: "K3", target: "K9" },  
+        { source: "K4", target: "K10" },  
+        { source: "K5", target: "K11" },  
+        { source: "K6", target: "K9" },  
+        { source: "K7", target: "K10" },  
+        { source: "K8", target: "K11" }  
     ]  
 };  
 
-// 力导向图实现  
+// ================ 力导向图实现 ================  
 const width = document.getElementById("left-panel").clientWidth;  
 const height = document.getElementById("left-panel").clientHeight;  
 
@@ -261,11 +297,13 @@ const svgGraph = d3.select("#graph-svg")
     .attr("height", height);  
 
 const simulation = d3.forceSimulation(graphData.nodes)  
-    .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(80))  
-    .force("charge", d3.forceManyBody().strength(-300))  
+    .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(150))  
+    .force("charge", d3.forceManyBody().strength(-600))  
     .force("center", d3.forceCenter(width / 2, height / 2))  
+    .force("collision", d3.forceCollide().radius(60))  
     .on("tick", ticked);  
 
+// 先绘制边，再绘制节点，确保文字在边上方  
 const link = svgGraph.selectAll("line.link")  
     .data(graphData.links)  
     .enter()  
@@ -284,38 +322,45 @@ const node = svgGraph.selectAll("g.node")
 
 const tooltipGraph = d3.select("#graph-tooltip");  
 
+// 为节点添加圆和文字  
 node.append("circle")  
-    .attr("r", d => (d.type === "question" ? 18 : 14))  
+    .attr("r", d => d.type === "question" ? 18 : 14)  
     .attr("fill", d => {  
         if (d.type === "question") return "#fca5a5";  
-        const accuracy = knowledgeQuestions[d.name]?.accuracy || 0;  
-        if (accuracy < 0.4) return "#f87171";  
-        if (accuracy < 0.6) return "#f59e0b";  
-        if (accuracy < 0.8) return "#facc15";  
-        return "#4ade80";  
+        return getNodeColor(d);  
     })  
     .on("mouseover", (event, d) => {  
-        let html = `<strong>${d.name}</strong>`;  
-        if (knowledgeQuestions[d.name]) {  
+        let htmlStr = "";  
+        if (d.type === "question") {  
+            htmlStr = `题号：<strong>${d.name}</strong>`;  
+        } else {  
+            htmlStr = `知识点：<strong>${d.name}</strong>`;  
             const qSet = knowledgeQuestions[d.name];  
-            html += `  
-                <br/><strong>基础题：</strong>${qSet.basic}  
-                <br/><strong>中等题：</strong>${qSet.medium}  
-                <br/><strong>较难题：</strong>${qSet.advanced}  
-                <br/><strong>正确率：</strong>${(qSet.accuracy * 100).toFixed(1)}%`;  
+            if (qSet) {  
+                htmlStr += `  
+                    <br/><strong>基础题：</strong>${qSet.basic}  
+                    <br/><strong>中等题：</strong>${qSet.medium}  
+                    <br/><strong>较难题：</strong>${qSet.advanced}  
+                    <br/><strong>正确率：</strong>${(qSet.accuracy * 100).toFixed(1)}%`;  
+            } else {  
+                htmlStr += "<br/>暂无详细信息";  
+            }  
         }  
         tooltipGraph  
-            .html(html)  
             .style("opacity", 1)  
-            .style("left", `${event.pageX + 10}px`)  
-            .style("top", `${event.pageY - 10}px`);  
+            .html(htmlStr)  
+            .style("left", (event.pageX + 10) + "px")  
+            .style("top", (event.pageY - 10) + "px");  
     })  
     .on("mouseout", () => tooltipGraph.style("opacity", 0));  
 
 node.append("text")  
     .text(d => d.name)  
     .attr("x", 20)  
-    .attr("y", 5);  
+    .attr("y", 4)  
+    .attr("font-size", "12px")  
+    .attr("fill", "#333")  
+    .attr("font-weight", d => d.type === "question" ? "bold" : "normal");  
 
 function dragstarted(event, d) {  
     if (!event.active) simulation.alphaTarget(0.3).restart();  
@@ -335,7 +380,13 @@ function dragended(event, d) {
 }  
 
 function ticked() {  
-    link.attr("x1", d => d.source.x)  
+    graphData.nodes.forEach(function (d) {  
+        d.x = Math.max(40, Math.min(width - 40, d.x));  
+        d.y = Math.max(40, Math.min(height - 40, d.y));  
+    });  
+
+    link  
+        .attr("x1", d => d.source.x)  
         .attr("y1", d => d.source.y)  
         .attr("x2", d => d.target.x)  
         .attr("y2", d => d.target.y);  
@@ -343,21 +394,29 @@ function ticked() {
     node.attr("transform", d => `translate(${d.x}, ${d.y})`);  
 }  
 
-// 历史正确率趋势  
+function getNodeColor(d) {  
+    const acc = d.accuracy;  
+    if (acc < 0.4) return "#ef4444";  
+    if (acc < 0.6) return "#f97316";  
+    if (acc < 0.8) return "#eab308";  
+    return "#22c555";  
+}  
+
+// ================ 历史正确率折线图 ================  
 const trendData = [  
     { time: "测验1", accuracy: 0.0 },  
     { time: "测验2", accuracy: 0.03 },  
     { time: "测验3", accuracy: 0.05 },  
     { time: "测验4", accuracy: 0.07 },  
-    { time: "测验5", accuracy: 0.1 }  
+    { time: "当前", accuracy: 0.1 }  
 ];  
 
-const lineChartWidth = document.getElementById("line-chart").clientWidth;  
-const lineChartHeight = document.getElementById("line-chart").clientHeight;  
+const chartWidth = document.getElementById("line-chart").clientWidth;  
+const chartHeight = document.getElementById("line-chart").clientHeight;  
 
 const margin = { top: 20, right: 20, bottom: 30, left: 40 };  
-const innerWidth = lineChartWidth - margin.left - margin.right;  
-const innerHeight = lineChartHeight - margin.top - margin.bottom;  
+const innerWidth = chartWidth - margin.left - margin.right;  
+const innerHeight = chartHeight - margin.top - margin.bottom;  
 
 const xScale = d3.scalePoint()  
     .domain(trendData.map(d => d.time))  
@@ -369,8 +428,8 @@ const yScale = d3.scaleLinear()
     .range([innerHeight, 0]);  
 
 const svgLine = d3.select("#line-chart")  
-    .attr("width", lineChartWidth)  
-    .attr("height", lineChartHeight)  
+    .attr("width", chartWidth)  
+    .attr("height", chartHeight)  
     .append("g")  
     .attr("transform", `translate(${margin.left},${margin.top})`);  
 
@@ -399,6 +458,8 @@ svgLine.append("path")
     .attr("stroke-width", 2)  
     .attr("d", lineGenerator);  
 
+const tooltipLine = d3.select("#line-tooltip");  
+
 svgLine.selectAll(".dot")  
     .data(trendData)  
     .enter()  
@@ -409,14 +470,15 @@ svgLine.selectAll(".dot")
     .attr("cy", d => yScale(d.accuracy))  
     .attr("fill", "#ff5722")  
     .on("mouseover", (event, d) => {  
-        tooltipGraph  
-            .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(2)}%</strong>`)  
+        tooltipLine  
+            .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(1)}%</strong>`)  
             .style("opacity", 1)  
-            .style("left", `${event.pageX + 10}px`)  
-            .style("top", `${event.pageY - 10}px`);  
+            .style("left", (event.pageX + 10) + "px")  
+            .style("top", (event.pageY - 10) + "px");  
     })  
-    .on("mouseout", () => tooltipGraph.style("opacity", 0));  
+    .on("mouseout", () => {  
+        tooltipLine.style("opacity", 0);  
+    });  
 </script>  
-<div id="line-tooltip" class="tooltip"></div>  
 </body>  
 </html>  
