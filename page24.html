@@ -1,5 +1,6 @@
+
 <!DOCTYPE html>  
-<html lang="zh">  
+<html lang="zh-CN">  
 <head>  
     <meta charset="UTF-8" />  
     <title>第24题 - 几何问题</title>  
@@ -7,8 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>  
     <!-- D3.js v6 -->  
     <script src="https://d3js.org/d3.v6.min.js"></script>  
-
-    <!-- MathJax -->  
+    <!-- MathJax 配置 -->  
     <script>  
         MathJax = {  
             tex: { inlineMath: [["\\(", "\\)"], ["$", "$"]], displayMath: [["$$", "$$"]] },  
@@ -25,10 +25,9 @@
         }  
         .node circle {  
             cursor: pointer;  
-            transition: fill 0.3s;  
         }  
         .node circle:hover {  
-            fill: #555;  
+            fill: #333;  
         }  
         .node text {  
             pointer-events: none;  
@@ -45,7 +44,7 @@
             padding: 8px;  
             font-size: 12px;  
             background: rgba(255, 255, 255, 0.9);  
-            border: 1px solid #ccc;  
+            border: 1px solid #ddd;  
             border-radius: 4px;  
             pointer-events: none;  
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);  
@@ -77,8 +76,8 @@
             left: 20px;  
             background: rgba(255, 255, 255, 0.95);  
             padding: 10px;  
-            border-radius: 4px;  
             border: 1px solid #ddd;  
+            border-radius: 4px;  
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);  
         }  
         .legend-item {  
@@ -92,16 +91,15 @@
             margin-right: 8px;  
             border-radius: 50%;  
         }  
-        /* 调整布局比例 */  
+        /* 布局比例 */  
         .flex-container {  
-            display: flex;  
             height: 100vh;  
         }  
         #left-panel {  
-            width: 50%;  
+            width: 40%;  
         }  
         #right-panel {  
-            width: 50%;  
+            width: 60%;  
         }  
     </style>  
 </head>  
@@ -109,21 +107,20 @@
 
 <!-- 顶部：返回按钮 -->  
 <div class="p-4 bg-white shadow">  
-    <button class="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 transition-colors"  
-        onclick="location.href='index.html'">  
+    <button class="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 transition-colors" onclick="location.href='index.html'">  
         返回题目列表  
     </button>  
 </div>  
 
 <!-- 主体：左侧力导向图 + 右侧题目信息 -->  
-<div class="flex-container flex h-[calc(100vh-64px)]">  
+<div class="flex-container flex h-[calc(100vh-64px)']">  
 
     <!-- 左侧：力导向图 -->  
-    <div id="left-panel" class="bg-white relative">  
+    <div id="left-panel" class="w-1/2 h-full bg-white relative">  
         <svg id="graph-svg" class="w-full h-full"></svg>  
         <div id="graph-tooltip" class="tooltip"></div>  
-        
-        <!-- 颜色对应正确率说明 -->  
+
+        <!-- 颜色说明 -->  
         <div class="color-legend">  
             <h3 class="text-sm font-bold mb-2">正确率说明：</h3>  
             <div class="legend-item">  
@@ -139,27 +136,27 @@
                 <span class="text-xs">60%-80%</span>  
             </div>  
             <div class="legend-item">  
-                <div class="legend-color" style="background-color: #22c55e;"></div>  
-                <span class="text-xs">大于80%</span>  
+                <div class="legend-color" style="background-color: #22c555;"></div>  
+                <span class="text-xs">高于80%</span>  
             </div>  
         </div>  
     </div>  
 
     <!-- 右侧：题目信息和历史正确率折线图 -->  
-    <div id="right-panel" class="flex flex-col p-4 space-y-4">  
+    <div id="right-panel" class="w-1/2 h-full flex flex-col p-4 space-y-4">  
 
         <!-- 题目描述 -->  
         <div class="bg-white p-4 rounded shadow">  
-            <h1 class="text-xl font-bold mb-2">第24题（本题12分）</h1>  
+            <h1 class="text-xl font-bold mb-2">第24题（12分）</h1>  
             <p class="mb-4">数学活动课上，琳琳同学将一张长方形纸条 ABCD 沿 BE 折叠，点 A 落在点 F 处。</p>  
 
             <div class="mb-4">  
-                <p class="font-medium">(1) 如图1，她通过测量发现：∠DEF + ∠CBF = ∠A，请你证明她的结论。</p>  
+                <p class="font-medium">(1) 如图1，她通过测量发现：∠DEF + ∠CBF = ∠A，请证明她的结论。</p>  
                 <p class="text-sm text-gray-600">(3分)</p>  
             </div>  
 
             <div class="mb-4">  
-                <p class="font-medium">(2) 如图2，点 M 在 AD 上，点 N 在 BC 上，连接 MN，MN//EF，将四边形 MDCN 沿 MN 所在直线折叠得到 MHGN，MH 交 BC 于 R，点 D 的对应点落在点 H 处，点 C 的对应点落在点 G 处。她通过测量发现：∠CNG = 4∠ABE，请你证明她的结论。</p>  
+                <p class="font-medium">(2) 如图2，点 M 在 AD 上，点 N 在 BC 上，连接 MN，MN//EF，将四边形 MDCN 沿 MN 折叠得到 MHGN，MH 交 BC 于 R，点 D 的对应点落在点 H 处，点 C 的对应点落在点 G 处。她通过测量发现：∠CNG = 4∠ABE，请证明她的结论。</p>  
                 <p class="text-sm text-gray-600">(4分)</p>  
             </div>  
 
@@ -182,91 +179,91 @@
 </div>  
 
 <script>  
-// ================ 知识点与示例题数据 ================  
+// =================== 知识点与示例题数据 ===================  
 const knowledgeQuestions = {  
     "平行线与角度的性质": {  
         basic: "平行线及其与角度的基本关系",  
         medium: "平行线中角和的应用",  
         advanced: "复杂几何图形中平行与角的联系",  
-        accuracy: 0.38  
+        accuracy: 0.76  
     },  
     "几何证明方法": {  
-        basic: "学习基础的几何证明方法",  
+        basic: "基础几何证明方法",  
         medium: "多种条件组合下的证明",  
         advanced: "复杂几何组合关系的证明技巧",  
-        accuracy: 0.39  
+        accuracy: 0.49  
     },  
     "四边形的性质": {  
-        basic: "理解四边形对角线与角关系",  
+        basic: "理解四边形的基本性质",  
         medium: "运用四边形性质解决几何问题",  
         advanced: "复杂条件下的四边形关系推理",  
-        accuracy: 0.37  
+        accuracy: 0.65  
     },  
     "角度计算": {  
         basic: "基础的角度计算公式",  
         medium: "角度计算的多种方法",  
         advanced: "复杂角度关系的精确计算",  
-        accuracy: 0.36  
+        accuracy: 0.58  
     },  
     "三角形性质": {  
         basic: "三角形的基本性质",  
         medium: "三角形的面积计算",  
         advanced: "三角形的特殊性质",  
-        accuracy: 0.35  
+        accuracy: 0.72  
     },  
     "圆的性质": {  
         basic: "圆的基础性质",  
         medium: "圆与切线的关系",  
         advanced: "圆的复杂性质应用",  
-        accuracy: 0.34  
+        accuracy: 0.81  
     },  
     "空间几何": {  
         basic: "空间几何的基础概念，包括点、线、面的三维关系",  
         medium: "空间几何的简单应用，如三维坐标系的理解和立体几何的基本公式",  
         advanced: "空间几何的高级应用，包括复杂多面体的体积计算和表面积计算",  
-        accuracy: 0.33  
+        accuracy: 0.54  
     },  
     "平面几何": {  
         basic: "平面几何的基础知识，包括点、线、面的基本概念",  
-        medium: "平面几何的中级应用，如三角形、四边形的性质和面积计算",  
+        medium: "平面几何的中等应用，如三角形、四边形的性质和面积计算",  
         advanced: "平面几何的高级技巧，包括平面几何的定理应用和复杂图形的分割",  
-        accuracy: 0.32  
+        accuracy: 0.43  
     },  
     "几何构造与测量": {  
         basic: "基础测量工具的使用",  
         medium: "复杂测量工具的应用",  
         advanced: "高级测量工具技巧",  
-        accuracy: 0.31  
+        accuracy: 0.64  
     },  
     "几何变换": {  
         basic: "基础几何变换的应用",  
         medium: "几何变换在多边形和空间中的应用",  
         advanced: "高级几何变换的综合运用",  
-        accuracy: 0.30  
+        accuracy: 0.66  
     },  
     "几何误差控制": {  
         basic: "基础测量误差处理",  
         medium: "测量精度控制方法",  
         advanced: "高级测量误差分析",  
-        accuracy: 0.29  
+        accuracy: 0.69  
     }  
 };  
 
-// ================ 力导向图数据 ================  
+// =================== 力导向图数据 ===================  
 const graphData = {  
     nodes: [  
         { id: "Q24", type: "question", name: "第24题", accuracy: 0.10 },  
-        { id: "K1", type: "knowledge", name: "平行线与角度的性质", accuracy: 0.38 },  
-        { id: "K2", type: "knowledge", name: "几何证明方法", accuracy: 0.39 },  
-        { id: "K3", type: "knowledge", name: "四边形的性质", accuracy: 0.37 },  
-        { id: "K4", type: "knowledge", name: "角度计算", accuracy: 0.36 },  
-        { id: "K5", type: "knowledge", name: "三角形性质", accuracy: 0.35 },  
-        { id: "K6", type: "knowledge", name: "圆的性质", accuracy: 0.34 },  
-        { id: "K7", type: "knowledge", name: "空间几何", accuracy: 0.33 },  
-        { id: "K8", type: "knowledge", name: "平面几何", accuracy: 0.32 },  
-        { id: "K9", type: "knowledge", name: "几何构造与测量", accuracy: 0.31 },  
-        { id: "K10", type: "knowledge", name: "几何变换", accuracy: 0.30 },  
-        { id: "K11", type: "knowledge", name: "几何误差控制", accuracy: 0.29 }  
+        { id: "K1", type: "knowledge", name: "平行线与角度的性质", accuracy: 0.76 },  
+        { id: "K2", type: "knowledge", name: "几何证明方法", accuracy: 0.49 },  
+        { id: "K3", type: "knowledge", name: "四边形的性质", accuracy: 0.65 },  
+        { id: "K4", type: "knowledge", name: "角度计算", accuracy: 0.58 },  
+        { id: "K5", type: "knowledge", name: "三角形性质", accuracy: 0.72 },  
+        { id: "K6", type: "knowledge", name: "圆的性质", accuracy: 0.81 },  
+        { id: "K7", type: "knowledge", name: "空间几何", accuracy: 0.54 },  
+        { id: "K8", type: "knowledge", name: "平面几何", accuracy: 0.43 },  
+        { id: "K9", type: "knowledge", name: "几何构造与测量", accuracy: 0.64 },  
+        { id: "K10", type: "knowledge", name: "几何变换", accuracy: 0.66 },  
+        { id: "K11", type: "knowledge", name: "几何误差控制", accuracy: 0.69 }  
     ],  
     links: [  
         { source: "Q24", target: "K1" },  
@@ -292,7 +289,7 @@ const graphData = {
     ]  
 };  
 
-// ================ 力导向图实现 ================  
+// =================== 力导向图实现 ===================  
 const width = document.getElementById("left-panel").clientWidth;  
 const height = document.getElementById("left-panel").clientHeight;  
 
@@ -307,6 +304,7 @@ const simulation = d3.forceSimulation(graphData.nodes)
     .force("collision", d3.forceCollide().radius(60))  
     .on("tick", ticked);  
 
+// 先绘制边，再绘制节点，确保文字在边上方  
 const link = svgGraph.selectAll("line.link")  
     .data(graphData.links)  
     .enter()  
@@ -325,11 +323,16 @@ const node = svgGraph.selectAll("g.node")
 
 const tooltipGraph = d3.select("#graph-tooltip");  
 
+// 为节点添加圆和文字  
 node.append("circle")  
     .attr("r", d => d.type === "question" ? 18 : 14)  
     .attr("fill", d => {  
         if (d.type === "question") return "#fca5a5";  
-        return getNodeColor(d);  
+        const accuracy = d.accuracy;  
+        if (accuracy < 0.4) return "#ef4444"; // 红色 (低于40%)  
+        if (accuracy < 0.6) return "#f97316"; // 橙色 (40%-60%)  
+        if (accuracy < 0.8) return "#eab308"; // 黄色 (60%-80%)  
+        return "#22c555"; // 绿色 (高于80%)  
     })  
     .on("mouseover", (event, d) => {  
         let htmlStr = "";  
@@ -396,20 +399,12 @@ function ticked() {
     node.attr("transform", d => `translate(${d.x}, ${d.y})`);  
 }  
 
-function getNodeColor(d) {  
-    const acc = d.accuracy;  
-    if (acc < 0.4) return "#ef4444";  
-    if (acc < 0.6) return "#f97316";  
-    if (acc < 0.8) return "#eab308";  
-    return "#22c555";  
-}  
-
-// ================ 历史正确率折线图 ================  
+// =================== 历史正确率折线图 ===================  
 const trendData = [  
-    { time: "测验1", accuracy: 0.0 },  
-    { time: "测验2", accuracy: 0.03 },  
-    { time: "测验3", accuracy: 0.05 },  
-    { time: "测验4", accuracy: 0.07 },  
+    { time: "测试1", accuracy: 0.0 },  
+    { time: "测试2", accuracy: 0.03 },  
+    { time: "测试3", accuracy: 0.05 },  
+    { time: "测试4", accuracy: 0.07 },  
     { time: "当前", accuracy: 0.1 }  
 ];  
 
@@ -483,4 +478,5 @@ svgLine.selectAll(".dot")
     });  
 </script>  
 </body>  
-</html>  
+</html>
+
