@@ -3,49 +3,96 @@
 <head>  
     <meta charset="UTF-8">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <title>七下数学3月月考</title>  
+    <title>七年级数学3月月考</title>  
     <!-- 引入 Tailwind CSS 和 D3.js -->  
     <script src="https://cdn.tailwindcss.com"></script>  
     <script src="https://d3js.org/d3.v7.min.js"></script>  
     <style>  
+        /* 动画定义 */  
         @keyframes cardEntrance {  
-            from { opacity: 0; transform: translateY(20px); }  
-            to { opacity: 1; transform: translateY(0); }  
+            from {  
+                opacity: 0;  
+                transform: translateY(20px);  
+            }  
+            to {  
+                opacity: 1;  
+                transform: translateY(0);  
+            }  
         }  
+
+        @keyframes fadeIn {  
+            from {  
+                opacity: 0;  
+            }  
+            to {  
+                opacity: 1;  
+            }  
+        }  
+
+        @keyframes progress {  
+            from {  
+                width: 0;  
+            }  
+            to {  
+                width: 100%;  
+            }  
+        }  
+
         .question-card {  
             animation: cardEntrance 0.6s ease-out both;  
         }  
+
         .rate-chart-title {  
             animation: fadeIn 0.8s ease-out both;  
         }  
-        @keyframes fadeIn {  
-            from { opacity: 0; }  
-            to { opacity: 1; }  
+
+        .progress-bar {  
+            height: 4px;  
+            background: #e5e7eb;  
+            border-radius: 2px;  
+            overflow: hidden;  
+        }  
+
+        .progress-fill {  
+            height: 100%;  
+            background: #4ade80;  
+            animation: progress 1s ease-out both;  
+        }  
+
+        /* 教学主题背景 */  
+        .chalkboard-bg {  
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);  
+        }  
+
+        .whiteboard-bg {  
+            background: linear-gradient(135deg, #f1f5f9 0%, #c3cfe2 100%);  
         }  
     </style>  
 </head>  
-<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen flex flex-col items-center p-8">  
-
+<body class="chalkboard-bg min-h-screen flex flex-col items-center p-8">  
     <!-- 动态标题 -->  
     <h1 class="text-4xl font-bold text-gray-800 mb-10 animate-pulse">  
         <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">  
-            七下数学3月月考  
+            七年级数学3月月考  
         </span>  
     </h1>  
 
     <!-- 题目容器 -->  
-    <div id="questions" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full max-w-6xl"></div>  
+    <div id="questions" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full max-w-6xl mb-8"></div>  
 
     <!-- 使用说明 -->  
-    <div id="instructions" class="mt-10 text-center w-full max-w-2xl">  
+    <div id="instructions" class="mt-10 text-center w-full max-w-2xl whiteboard-bg p-6 rounded-lg shadow-lg">  
         <p class="text-lg font-semibold text-gray-800 mb-2">使用说明：</p>  
-        <ul class="list-disc list-inside text-gray-700 text-left">  
-            <li>每个题目代表一个数学题的正确率，单击右上角的题目卡片以查看详细信息。</li>  
-            <li>环形图表示该题目的正确率，颜色越深表示正确率越高。</li>  
-            <li>在力导向图中，您可以悬停在节点上以查看相关信息。</li>  
-            <li>您可以随着堆栈式课程的添加和课程内容的变化，查看不同的题目正确率。</li>  
+        <ul class="list-disc list-inside text-gray-700 text-left leading-relaxed">  
+            <li>单击右上角的题目卡片以查看详细信息和知识点关系图。</li>  
+            <li>环形图表示该题目的正确率，颜色越接近绿色表示正确率越高，反之则越低。</li>  
+            <li>悬停在题目卡片上可以查看详细信息。</li>  
+            <li>点击卡片可以查看该题目的详细解析和相关示例题。</li>  
         </ul>  
     </div>  
+
+    <!-- 力导向图容器 -->  
+    <div id="graph-container" class="hidden w-full max-w-4xl mx-auto whiteboard-bg p-6 rounded-lg shadow-lg"></div>  
 
     <script>  
         // 生成固定题目数据  
@@ -103,8 +150,7 @@
                     .innerRadius(svgSize / 2 - arcWidth)  
                     .outerRadius(svgSize / 2)  
                     .startAngle(-Math.PI / 2)  
-                    .endAngle(Math.PI * 2)  
-                )  
+                    .endAngle(Math.PI * 2))  
                 .attr("fill", "#e5e7eb")  
                 .attr("transform", `translate(${svgSize / 2},${svgSize / 2})`);  
 
@@ -127,6 +173,16 @@
                 .attr("fill", "#4b5563")  
                 .attr("font-size", "12px")  
                 .text(`正确率`);  
+
+            // 添加正确率数值  
+            svg.append("text")  
+                .attr("x", svgSize / 2)  
+                .attr("y", svgSize / 2 - 5)  
+                .attr("text-anchor", "middle")  
+                .attr("fill", "#1e293b")  
+                .attr("font-size", "16px")  
+                .attr("font-weight", "600")  
+                .text(rate.toFixed(1) + "%");  
         }  
 
         // 动态生成题目卡片  
@@ -134,35 +190,104 @@
         questions.forEach(({ id, rate }, i) => {  
             // 创建卡片容器作为链接  
             const link = document.createElement("a");  
+            link.className = "question-card transition-all duration-300 hover:scale-105 hover:shadow-xl";  
+            link.href = `page${id}.html`;  
 
-            // 将带括号的题号转为链接友好的形式，括号替换为横杠  
-            const sanitizedId = id.toString().replace(/\(/g, '-').replace(/\)/g, '');  
-            link.href = `page${sanitizedId}.html`; // 点击跳转到对应题目的页面  
+            // 创建卡片内容  
+            const card = document.createElement("div");  
+            card.className = "flex flex-col items-center p-4 bg-white shadow-lg rounded-lg";  
 
-            link.style.animationDelay = `${i * 0.1}s`;  
-            link.className = "question-card flex flex-col items-center p-4 bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow";  
-
-            // 添加题目说明  
+            // 添加题目编号  
             const title = document.createElement("div");  
             title.textContent = `第${id}题`;  
             title.className = "text-sm font-medium text-gray-700 mb-2";  
-            link.appendChild(title);  
+            card.appendChild(title);  
+
+            // 添加进度条  
+            const progressBar = document.createElement("div");  
+            progressBar.className = "progress-bar w-full mb-2";  
+            const progressFill = document.createElement("div");  
+            progressFill.className = "progress-fill";  
+            progressBar.appendChild(progressFill);  
+            card.appendChild(progressBar);  
 
             // 添加环形图  
             const chartContainer = document.createElement("div");  
             chartContainer.className = "mb-3";  
             createRateChart(chartContainer, rate);  
-            link.appendChild(chartContainer);  
+            card.appendChild(chartContainer);  
 
             // 添加正确率说明  
             const rateText = document.createElement("div");  
-            rateText.textContent = `第${id}题的正确率为 ${rate.toFixed(2)}%`;  
-            rateText.className = "rate-chart-title text-xs text-gray-500 leading-snug text-center";  
-            link.appendChild(rateText);  
+            rateText.textContent = `正确率：${rate.toFixed(1)}%`;  
+            rateText.className = "text-xs text-gray-500 leading-snug text-center";  
+            card.appendChild(rateText);  
 
-            // 添加到容器  
+            link.appendChild(card);  
+            link.style.animationDelay = `${i * 0.1}s`;  
             container.appendChild(link);  
         });  
+
+        // 初始化力导向图  
+        const width = 800;  
+        const height = 600;  
+
+        const svg = d3.select("#graph-container")  
+            .append("svg")  
+            .attr("width", width)  
+            .attr("height", height);  
+
+        const simulation = d3.forceSimulation()  
+            .force("link", d3.forceLink().id(d => d.id).distance(100))  
+            .force("charge", d3.forceManyBody().strength(-400))  
+            .force("center", d3.forceCenter(width / 2, height / 2));  
+
+        const graphData = {  
+            nodes: [  
+                { id: 1, group: 1 },  
+                { id: 2, group: 2 },  
+                // 添加更多节点和链接关系  
+            ],  
+            links: [  
+                { source: 1, target: 2 },  
+                // 添加更多链接关系  
+            ]  
+        };  
+
+        // 添加节点  
+        const node = svg.append("g")  
+            .selectAll("circle")  
+            .data(graphData.nodes)  
+            .enter()  
+            .append("circle")  
+            .attr("r", 5)  
+            .attr("fill", "#4ade80")  
+            .attr("transform", "translate(0,0)");  
+
+        // 添加链接  
+        const link = svg.append("g")  
+            .selectAll("line")  
+            .data(graphData.links)  
+            .enter()  
+            .append("line")  
+            .attr("stroke", "#1e293b")  
+            .attr("stroke-width", 2);  
+
+        simulation  
+            .nodes(graphData.nodes)  
+            .on("tick", () => {  
+                node  
+                    .attr("cx", d => d.x)  
+                    .attr("cy", d => d.y);  
+                
+                link  
+                    .attr("x1", d => d.source.x)  
+                    .attr("y1", d => d.source.y)  
+                    .attr("x2", d => d.target.x)  
+                    .attr("y2", d => d.target.y);  
+            });  
+
+        simulation.nodes(graphData.nodes);  
     </script>  
 </body>  
 </html>  
