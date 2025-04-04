@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>  
 <html lang="zh">  
 <head>  
     <meta charset="UTF-8" />  
-    <title>第12题 - 计算面积题目</title>  
+    <title>第5题 - 几何公理与线角关系</title>  
     <!-- Tailwind CSS -->  
     <script src="https://cdn.tailwindcss.com"></script>  
     <!-- D3.js v6 -->  
@@ -76,25 +77,42 @@
         </div>  
     </div>  
 
-    <!-- 右侧：题目信息和历史趋势图 -->  
+    <!-- 右侧：题目信息和历史正确率折线图 -->  
     <div id="right-panel" class="w-1/2 h-full flex flex-col p-4 space-y-4">  
 
         <!-- 题干描述区域 -->  
         <div class="bg-white p-4 rounded shadow">  
-            <h1 class="text-xl font-bold mb-2">题号：第12题</h1>  
+            <h1 class="text-xl font-bold mb-2">题号：第5题 - 几何公理与线角关系</h1>  
             <div class="mb-4">  
-                <p class="mb-2">如图，在块长8米，宽4米的长方形草地上，有一条蜿蜒的小路，</p>  
-                <p class="mb-2">小路的左边线向右平移2米就得到的右边线。</p>  
-                <p class="mb-4">则这块草地的绿色（图中阴影部分）面积是 _____ 平方米。</p>  
+                <p class="mb-2">下列命题中，是真命题的是（ ）</p>  
             </div>  
             
-            <div class="mb-4">  
-                <label for="answer1" class="block mb-2">绿色面积：</label>  
-                <input type="text" id="answer1" class="border p-2 rounded w-full" />  
+            <div class="space-y-4">  
+                <div class="flex items-center">  
+                    <input type="checkbox" id="option1" class="mr-2" />  
+                    <label for="option1">A. 两条直线被第三条直线所截，内错角相等</label>  
+                </div>  
+                <div class="flex items-center">  
+                    <input type="checkbox" id="option2" class="mr-2" />  
+                    <label for="option2">B. 直线外一点与直线上所有点的连线段中，垂线段最短</label>  
+                </div>  
+                <div class="flex items-center">  
+                    <input type="checkbox" id="option3" class="mr-2" />  
+                    <label for="option3">C. 过一点有且只有一条直线与已知直线垂直</label>  
+                </div>  
+                <div class="flex items-center">  
+                    <input type="checkbox" id="option4" class="mr-2" />  
+                    <label for="option4">D. 垂直于同一直线的两直线互相平行</label>  
+                </div>  
             </div>  
             
-            <p>当前掌握率：<span class="text-orange-600 font-medium">52.63%</span></p>  
-            <p>历史正确率：<span class="text-orange-600 font-medium">50%</span></p>  
+            <div class="mt-4">  
+                <label for="answer" class="block mb-2">您的答案：</label>  
+                <input type="text" id="answer" class="border p-2 rounded w-full" />  
+            </div>  
+            
+            <p class="mt-4">当前掌握率：<span class="text-orange-600 font-medium">37.84%</span></p>  
+            <p>历史正确率：<span class="text-orange-600 font-medium">40%</span></p>  
         </div>  
 
         <!-- 历史正确率折线图 -->  
@@ -107,119 +125,99 @@
 </div>  
 
 <script>  
-// 知识点与示例题数据  
+// ================ 知识点与示例题数据 ================  
 const knowledgeQuestions = {  
-    "面积计算": {  
-        basic: "理解基本的长方形面积计算",  
-        medium: "扣除部分区域面积问题",  
-        advanced: "复合图形的综合面积计算",  
-        accuracy: 0.55  
+    "几何公理": {  
+        basic: "几何公理的基本概念",  
+        medium: "几何公理在图形中的应用",  
+        advanced: "几何公理的高级推理",  
+        accuracy: 0.35  
     },  
-    "几何图形": {  
-        basic: "几何图形的基本概念",  
-        medium: "几何中面积的直接计算",  
-        advanced: "几何图形面积推导",  
-        accuracy: 0.48  
+    "线与角的关系": {  
+        basic: "线与角的基本关系",  
+        medium: "线与角在几何推理中的应用",  
+        advanced: "线与角的高级关系",  
+        accuracy: 0.40  
     },  
-    "路径计算": {  
-        basic: "理解线段偏移的面积",  
-        medium: "简单区域与排除中计算",  
-        advanced: "路径叠加与复杂几何",  
-        accuracy: 0.42  
+    "平行与垂直": {  
+        basic: "平行与垂直的基本概念",  
+        medium: "平行与垂直在图形中的应用",  
+        advanced: "平行与垂直的高级应用",  
+        accuracy: 0.38  
     },  
-    "复合面积": {  
-        basic: "区域面积分割与计算",  
-        medium: "复合平面区域求解",  
-        advanced: "高阶复杂平面扣减问题",  
-        accuracy: 0.63  
-    },  
-    "长方形面积": {  
-        basic: "长方形面积的基本计算",  
-        medium: "长方形组合与分割",  
-        advanced: "复杂情境中的长方形面积",  
-        accuracy: 0.78  
-    },  
-    "平面几何": {  
-        basic: "平面图形的基本性质",  
-        medium: "平面几何的计算方法",  
-        advanced: "平面几何的进阶应用",  
-        accuracy: 0.72  
-    },  
-    "面积差计算": {  
-        basic: "理解两个区域的面积差",  
-        medium: "复杂形状的面积差计算",  
-        advanced: "利用面积差解决实际问题",  
+    "内错角与平行线": {  
+        basic: "内错角的基本概念",  
+        medium: "内错角在平行线判断中的应用",  
+        advanced: "内错角的高级应用",  
         accuracy: 0.39  
     },  
-    "平行移动": {  
-        basic: "图形平行移动的基本概念",  
-        medium: "平行移动的面积不变性",  
-        advanced: "平行移动在面积计算中的应用",  
-        accuracy: 0.52  
+    "垂线的性质": {  
+        basic: "垂线的基本概念",  
+        medium: "垂线在几何中的应用",  
+        advanced: "垂线的高级性质",  
+        accuracy: 0.36  
     },  
-    "曲线面积": {  
-        basic: "曲线围成的区域面积概念",  
-        medium: "常见曲线的面积计算",  
-        advanced: "复杂曲线的面积求解",  
-        accuracy: 0.37,  
+    "角的平分线性质": {  
+        basic: "角平分线的基本概念",  
+        medium: "角平分线在三角形中的应用",  
+        advanced: "角平分线的高级性质",  
+        accuracy: 0.37  
+    },  
+    "平行线的公理": {  
+        basic: "平行线公理的基本概念",  
+        medium: "平行线公理在几何中的应用",  
+        advanced: "平行线公理的高级应用",  
+        accuracy: 0.34  
+    },  
+    "例题 1": {  
+        basic: "简单垂线性质的应用",  
+        medium: "复杂垂线问题的解决",  
+        advanced: "高级垂线性质的应用",  
+        accuracy: 0.41,  
         related: true  
     },  
-    "积分与面积": {  
-        basic: "利用积分计算面积的基本方法",  
-        medium: "定积分在面积计算中的应用",  
-        advanced: "复杂区域的积分求解",  
-        accuracy: 0.58,  
+    "例题 2": {  
+        basic: "简单角度关系的应用",  
+        medium: "复杂角度问题的解决",  
+        advanced: "高级角度关系的应用",  
+        accuracy: 0.42,  
         related: true  
     }  
 };  
 
-// 设置力导向图数据  
+// ================ 力导向图数据 ================  
 const graphData = {  
     nodes: [  
-        { id: "Q12", type: "question", name: "第12题", accuracy: 0.53 },  
-        { id: "K1", type: "knowledge", name: "面积计算", accuracy: 0.55 },  
-        { id: "K2", type: "knowledge", name: "几何图形", accuracy: 0.48 },  
-        { id: "K3", type: "knowledge", name: "路径计算", accuracy: 0.42 },  
-        { id: "K4", type: "knowledge", name: "复合面积", accuracy: 0.63 },  
-        { id: "K5", type: "knowledge", name: "长方形面积", accuracy: 0.78 },  
-        { id: "K6", type: "knowledge", name: "平面几何", accuracy: 0.72 },  
-        { id: "K7", type: "knowledge", name: "面积差计算", accuracy: 0.39 },  
-        { id: "K8", type: "knowledge", name: "平行移动", accuracy: 0.52 },  
-        { id: "K9", type: "knowledge", name: "曲线面积", accuracy: 0.37, related: true },  
-        { id: "K10", type: "knowledge", name: "积分与面积", accuracy: 0.58, related: true }  
+        { id: "Q5", type: "question", name: "第5题", accuracy: 0.3784 },  
+        { id: "K1", type: "knowledge", name: "几何公理", accuracy: 0.35 },  
+        { id: "K2", type: "knowledge", name: "线与角的关系", accuracy: 0.40 },  
+        { id: "K3", type: "knowledge", name: "平行与垂直", accuracy: 0.38 },  
+        { id: "K4", type: "knowledge", name: "内错角与平行线", accuracy: 0.39 },  
+        { id: "K5", type: "knowledge", name: "垂线的性质", accuracy: 0.36 },  
+        { id: "K6", type: "knowledge", name: "角的平分线性质", accuracy: 0.37 },  
+        { id: "K7", type: "knowledge", name: "平行线的公理", accuracy: 0.34 },  
+        { id: "E1", type: "example", name: "例题 1", accuracy: 0.41, related: true },  
+        { id: "E2", type: "example", name: "例题 2", accuracy: 0.42, related: true }  
     ],  
     links: [  
-        { source: "Q12", target: "K1" },  
-        { source: "Q12", target: "K2" },  
-        { source: "K1", target: "K3" },  
-        { source: "K2", target: "K4" },  
-        { source: "K1", target: "K5" },  
-        { source: "K2", target: "K6" },  
-        { source: "Q12", target: "K7" },  
-        { source: "K3", target: "K8" },  
-        { source: "K4", target: "K9" },  
-        { source: "K7", target: "K10" }  
+        { source: "Q5", target: "K1" },  
+        { source: "Q5", target: "K2" },  
+        { source: "Q5", target: "K3" },  
+        { source: "Q5", target: "K4" },  
+        { source: "Q5", target: "K5" },  
+        { source: "Q5", target: "K6" },  
+        { source: "Q5", target: "K7" },  
+        { source: "K1", target: "E1" },  
+        { source: "K2", target: "E2" },  
+        { source: "K3", target: "E1" },  
+        { source: "K4", target: "E1" },  
+        { source: "K5", target: "E2" },  
+        { source: "K6", target: "E2" },  
+        { source: "K7", target: "E2" }  
     ]  
 };  
 
-// 获取节点颜色函数  
-function getNodeColor(d) {  
-    if (d.type === "question") {  
-        return "#fca5a5"; // 题目节点颜色  
-    }  
-    
-    if (d.related) {  
-        return "#9ca3af"; // 相关知识点为灰色  
-    }  
-    
-    const acc = d.accuracy;  
-    if (acc < 0.4) return "#ef4444"; // 红色，低于40%  
-    if (acc < 0.6) return "#f97316"; // 橙色，40%-60%  
-    if (acc < 0.8) return "#eab308"; // 黄色，60%-80%  
-    return "#22c55e"; // 绿色，大于80%  
-}  
-
-// 绘制力导向图  
+// ================ 力导向图实现 ================  
 const width = document.getElementById("left-panel").clientWidth;  
 const height = document.getElementById("left-panel").clientHeight;  
 
@@ -227,12 +225,11 @@ const svgGraph = d3.select("#graph-svg")
     .attr("width", width)  
     .attr("height", height);  
 
-// 增强力导向图配置，防止重叠  
 const simulation = d3.forceSimulation(graphData.nodes)  
     .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(150))  
     .force("charge", d3.forceManyBody().strength(-600))  
     .force("center", d3.forceCenter(width / 2, height / 2))  
-    .force("collision", d3.forceCollide().radius(60)) // 增加碰撞检测  
+    .force("collision", d3.forceCollide().radius(60))  
     .on("tick", ticked);  
 
 const link = svgGraph.selectAll("line.link")  
@@ -246,7 +243,7 @@ const node = svgGraph.selectAll("g.node")
     .enter()  
     .append("g")  
     .attr("class", "node")  
-    .call(d3.drag() // 添加拖拽功能  
+    .call(d3.drag()  
         .on("start", dragstarted)  
         .on("drag", dragged)  
         .on("end", dragended));  
@@ -255,7 +252,10 @@ const tooltipGraph = d3.select("#graph-tooltip");
 
 node.append("circle")  
     .attr("r", d => d.type === "question" ? 18 : 14)  
-    .attr("fill", d => getNodeColor(d))  
+    .attr("fill", d => {  
+        if (d.type === "question") return "#fca5a5";  
+        return d.type === "example" ? "#9ca3af" : getNodeColor(d);  
+    })  
     .on("mouseover", (event, d) => {  
         let htmlStr = "";  
         if (d.type === "question") {  
@@ -290,7 +290,6 @@ node.append("text")
     .attr("fill", "#333")  
     .attr("font-weight", d => (d.type === "question" ? "bold" : "normal"));  
 
-// 拖拽功能实现  
 function dragstarted(event, d) {  
     if (!event.active) simulation.alphaTarget(0.3).restart();  
     d.fx = d.x;  
@@ -309,7 +308,6 @@ function dragended(event, d) {
 }  
 
 function ticked() {  
-    // 确保节点不会超出可视区域  
     graphData.nodes.forEach(function(d) {  
         d.x = Math.max(40, Math.min(width - 40, d.x));  
         d.y = Math.max(40, Math.min(height - 40, d.y));  
@@ -324,13 +322,20 @@ function ticked() {
     node.attr("transform", d => `translate(${d.x}, ${d.y})`);  
 }  
 
-// 历史正确率折线图  
+function getNodeColor(d) {  
+    const acc = d.accuracy;  
+    if (acc < 0.4) return "#ef4444";  
+    if (acc < 0.6) return "#f97316";  
+    if (acc < 0.8) return "#eab308";  
+    return "#22c55e";  
+}  
+
+// ================ 历史正确率折线图 ================  
 const trendData = [  
-    { time: "测验1", accuracy: 0.45 },  
-    { time: "测验2", accuracy: 0.48 },  
-    { time: "测验3", accuracy: 0.50 },  
-    { time: "测验4", accuracy: 0.54 },  
-    { time: "测验5", accuracy: 0.5263 }  
+    { time: "测验1", accuracy: 0.30 },  
+    { time: "测验2", accuracy: 0.35 },  
+    { time: "测验3", accuracy: 0.40 },  
+    { time: "当前", accuracy: 0.3784 }  
 ];  
 
 const chartWidth = document.getElementById("line-chart").clientWidth;  
@@ -346,7 +351,7 @@ const xScale = d3.scalePoint()
     .padding(0.5);  
 
 const yScale = d3.scaleLinear()  
-    .domain([0.4, 0.6])  
+    .domain([0.25, 0.5])  
     .range([innerHeight, 0]);  
 
 const svgLine = d3.select("#line-chart")  
@@ -404,3 +409,4 @@ svgLine.selectAll(".dot")
 </script>  
 </body>  
 </html>  
+
