@@ -3,55 +3,165 @@
 <head>  
     <meta charset="UTF-8" />  
     <title>第20题 - 数学题目</title>  
+    <!-- Tailwind CSS -->  
     <script src="https://cdn.tailwindcss.com"></script>  
+    <!-- D3.js v6 -->  
     <script src="https://d3js.org/d3.v6.min.js"></script>  
-    <script type="text/javascript" id="MathJax-script" async  
-        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>  
-
+    <!-- MathJax 配置 -->  
+    <script>  
+        MathJax = {  
+            tex: { inlineMath: [["\\(", "\\)"], ["$", "$"]], displayMath: [["$$", "$$"]] },  
+            svg: { fontCache: "global" }  
+        };  
+    </script>  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.min.js"></script>  
     <style>  
-        body { font-family: Arial, sans-serif; background: #f6f9fc; margin: 0; }  
-        .node circle:hover { fill: #333; }  
-        line.link { stroke: #ccc; stroke-width: 1.5px; }  
+        body {  
+            margin: 0;  
+            font-family: Arial, sans-serif;  
+            background-color: #f6f9fc;  
+        }  
+        .node circle {  
+            cursor: pointer;  
+            transition: fill 0.3s;  
+        }  
+        .node circle:hover {  
+            fill: #555;  
+        }  
+        .node text {  
+            pointer-events: none;  
+            font-size: 12px;  
+            fill: #333;  
+        }  
+        line.link {  
+            stroke: #ccc;  
+            stroke-width: 1.5px;  
+        }  
         .tooltip {  
             position: absolute;  
             min-width: 150px;  
             padding: 10px;  
-            background: #fff;  
+            font-size: 13px;  
+            line-height: 1.4;  
+            background: rgba(255, 255, 255, 0.9);  
             border: 1px solid #ccc;  
             border-radius: 4px;  
-            box-shadow: 0 4px 6px rgba(0, 0, 0, .1);  
-            font-size: 12px;  
             pointer-events: none;  
+            box-shadow: 0 4px 6px rgba(0, 0, 0, .1);  
+            z-index: 999;  
             opacity: 0;  
             transition: opacity 0.3s;  
         }  
-        .tooltip.visible { opacity: 1; }  
+        .tooltip.visible {  
+            opacity: 1;  
+        }  
+        .tooltip strong {  
+            font-size: 14px;  
+            color: #1f2937;  
+        }  
+        .line {  
+            fill: none;  
+            stroke-width: 2px;  
+        }  
+        .dot {  
+            fill: #ff5722;  
+            stroke: #fff;  
+            stroke-width: 1px;  
+            cursor: pointer;  
+        }  
+        .dot:hover {  
+            opacity: 0.8;  
+        }  
+        .line-chart-axis path,  
+        .line-chart-axis line {  
+            fill: none;  
+            stroke: #ccc;  
+        }  
+        .color-legend {  
+            position: absolute;  
+            bottom: 20px;  
+            left: 20px;  
+            background: rgba(255, 255, 255, 0.95);  
+            padding: 10px;  
+            border-radius: 4px;  
+            border: 1px solid #ddd;  
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);  
+        }  
+        .legend-item {  
+            display: flex;  
+            align-items: center;  
+            margin-bottom: 5px;  
+        }  
+        .legend-color {  
+            width: 16px;  
+            height: 16px;  
+            margin-right: 8px;  
+            border-radius: 50%;  
+        }  
     </style>  
 </head>  
-<body class="h-screen w-screen bg-gray-100 overflow-hidden">  
+<body class="h-screen w-screen overflow-hidden bg-gray-100">  
 
-<!-- 返回按钮 -->  
+<!-- 顶部：返回按钮 -->  
 <div class="p-4 bg-white shadow">  
-    <button class="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200" onclick="location.href='index.html'">返回题目列表</button>  
+    <button class="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 transition-colors"  
+        onclick="location.href='index.html'">  
+        返回题目列表  
+    </button>  
 </div>  
 
-<!-- 页面布局 -->  
+<!-- 主体：左侧力导向图 + 右侧题目信息 -->  
 <div class="flex h-[calc(100vh-64px)]">  
+
+    <!-- 左侧：力导向图 -->  
     <div id="left-panel" class="w-1/2 h-full bg-white relative">  
         <svg id="graph-svg" class="w-full h-full"></svg>  
         <div id="graph-tooltip" class="tooltip"></div>  
+        
+        <!-- 颜色对应正确率说明 -->  
+        <div class="color-legend">  
+            <h3 class="text-sm font-bold mb-2">正确率说明：</h3>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #ef4444;"></div>  
+                <span class="text-xs">低于40%</span>  
+            </div>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #f97316;"></div>  
+                <span class="text-xs">40%-60%</span>  
+            </div>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #eab308;"></div>  
+                <span class="text-xs">60%-80%</span>  
+            </div>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #22c55e;"></div>  
+                <span class="text-xs">大于80%</span>  
+            </div>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #9ca3af;"></div>  
+                <span class="text-xs">相关知识点</span>  
+            </div>  
+        </div>  
     </div>  
 
-    <div class="w-1/2 h-full flex flex-col p-4 space-y-4">  
+    <!-- 右侧：题目信息和历史趋势图 -->  
+    <div id="right-panel" class="w-1/2 h-full flex flex-col p-4 space-y-4">  
+
+        <!-- 题目内容 -->  
         <div class="bg-white p-4 rounded shadow">  
             <h1 class="text-xl font-bold mb-2">题号：第20题</h1>  
-            <p>\( \sqrt{a - 17} + 2\sqrt{34 - 2a} = b + 8 \)</p>  
-            <p>求（1）\( a \) 的值；（2）\( a^2 - b^2 \) 的平方根</p>  
+            <p class="mb-4">\( \sqrt{a - 17} + 2\sqrt{34 - 2a} = b + 8 \)</p>  
+            <p class="mb-4">求（1）\( a \) 的值；（2）\( a^2 - b^2 \) 的平方根。</p>  
+            
+            <div class="text-center">  
+                <img src="path_to_your_image.jpg" alt="几何示例" class="w-full h-auto" />  
+            </div>  
+
             <p>当前掌握率：<span class="text-green-600 font-medium">10.81%</span></p>  
             <p>历史正确率：<span class="text-yellow-600 font-medium">15%</span></p>  
         </div>  
 
-        <!-- 历史正确率趋势图 -->  
+        <!-- 历史正确率折线图 -->  
         <div class="flex-1 bg-white p-4 rounded shadow relative">  
             <h2 class="text-lg font-bold mb-2">历史正确率趋势</h2>  
             <svg id="line-chart" class="w-full h-full"></svg>  
@@ -61,16 +171,56 @@
 </div>  
 
 <script>  
-// 知识点数据（新增知识点 + 模拟正确率）  
+// 知识点与示例题数据  
 const knowledgeQuestions = {  
-    "平方根的性质": { accuracy: 0.35, basic: "平方根定义", medium: "简单方程求解", advanced: "结合多条件求解" },  
-    "一元一次方程的解法": { accuracy: 0.48, basic: "基础方程定义与求值", medium: "参数代入求解", advanced: "结合条件分析变形" },  
-    "代数表达式的变换": { accuracy: 0.62, basic: "代数表达式的基本化简", medium: "更复杂的表达式变形", advanced: "结合代数思维的综合运算" },  
-    "平方根的高级性质": { accuracy: 0.75, basic: "扩展平方根高阶定义", medium: "结合几何问题求解", advanced: "从推导公式出发分析" },  
-    "方程的灵活变形": { accuracy: 0.82, basic: "公式的灵活应用", medium: "结合参数复杂变形", advanced: "广义条件下公式变形" },  
-    "平方差公式的性质": { accuracy: 0.91, basic: "平方差公式基础特性", medium: "结合复杂代数问题应用", advanced: "运用代数式与平方差综合证明" },  
-    "复杂代数问题的处理": { accuracy: 0.53, basic: "复杂代数分解", medium: "结合方程与几何交汇解题", advanced: "系统性思路解决复杂代数关系" },  
-    "平方根与方程结合问题": { accuracy: 0.25, basic: "结合平方根简单代数", medium: "多元约束模型求解", advanced: "结合广义几何中的平方根分析" }  
+    "平方根的性质": {  
+        basic: "平方根的基本定义与应用",  
+        medium: "平方根在简单方程中的应用",  
+        advanced: "复杂方程中的平方根求解",  
+        accuracy: 0.35  
+    },  
+    "一元一次方程的解法": {  
+        basic: "基础方程的解法",  
+        medium: "参数代入法求解",  
+        advanced: "结合平方根的高级求解",  
+        accuracy: 0.48  
+    },  
+    "代数表达式的变换": {  
+        basic: "代数表达式的基本变换",  
+        medium: "复杂代数表达式的化简",  
+        advanced: "结合平方根与代数变换",  
+        accuracy: 0.62  
+    },  
+    "平方根的高级性质": {  
+        basic: "平方根的高级定义",  
+        medium: "平方根在几何问题中的应用",  
+        advanced: "平方根在高级方程中的应用",  
+        accuracy: 0.75  
+    },  
+    "方程的灵活变形": {  
+        basic: "基础方程变形",  
+        medium: "参数化方程变形",  
+        advanced: "广义条件下的方程变形",  
+        accuracy: 0.82  
+    },  
+    "平方差公式的性质": {  
+        basic: "平方差公式的基本性质",  
+        medium: "平方差公式在代数问题中的应用",  
+        advanced: "平方差公式在高级问题中的应用",  
+        accuracy: 0.91  
+    },  
+    "复杂代数问题的处理": {  
+        basic: "复杂代数问题的基本分解",  
+        medium: "结合方程与几何问题",  
+        advanced: "系统性处理复杂代数关系",  
+        accuracy: 0.53  
+    },  
+    "平方根与方程结合问题": {  
+        basic: "平方根与简单代数结合",  
+        medium: "平方根与多元方程结合",  
+        advanced: "平方根与广义代数结合",  
+        accuracy: 0.25  
+    }  
 };  
 
 // 力导向图数据  
@@ -98,76 +248,90 @@ const graphData = {
     ]  
 };  
 
-// 颜色映射函数  
-const getColorByAccuracy = accuracy => {  
-    if (accuracy < 0.4) return "#f87171"; // 红色  
-    if (accuracy < 0.6) return "#fb923c"; // 橙色  
-    if (accuracy < 0.8) return "#facc15"; // 黄色  
-    return "#4ade80"; // 绿色  
-};  
-
-// 动态设置SVG尺寸  
-const leftPanel = document.getElementById("left-panel");  
-const width = leftPanel.clientWidth;  
-const height = leftPanel.clientHeight;  
+// 力导向图实现  
+const width = document.getElementById("left-panel").clientWidth;  
+const height = document.getElementById("left-panel").clientHeight;  
 
 const svgGraph = d3.select("#graph-svg")  
     .attr("width", width)  
     .attr("height", height);  
 
-const tooltipGraph = d3.select("#graph-tooltip");  
-
-// 配置力导向布局  
 const simulation = d3.forceSimulation(graphData.nodes)  
-    .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(120))  
+    .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(80))  
     .force("charge", d3.forceManyBody().strength(-300))  
     .force("center", d3.forceCenter(width / 2, height / 2))  
     .on("tick", ticked);  
 
-// 绘制链接  
-const link = svgGraph.selectAll(".link")  
+const link = svgGraph.selectAll("line.link")  
     .data(graphData.links)  
     .enter()  
     .append("line")  
     .attr("class", "link");  
 
-// 绘制节点  
-const node = svgGraph.selectAll(".node")  
+const node = svgGraph.selectAll("g.node")  
     .data(graphData.nodes)  
     .enter()  
-    .append("g");  
+    .append("g")  
+    .attr("class", "node")  
+    .call(d3.drag()  
+        .on("start", dragstarted)  
+        .on("drag", dragged)  
+        .on("end", dragended));  
+
+const tooltipGraph = d3.select("#graph-tooltip");  
 
 node.append("circle")  
     .attr("r", d => (d.type === "question" ? 18 : 14))  
-    .attr("fill", d => d.type === "question" ? "#fca5a5" : getColorByAccuracy(knowledgeQuestions[d.name]?.accuracy || 0))  
+    .attr("fill", d => {  
+        if (d.type === "question") return "#fca5a5";  
+        const accuracy = knowledgeQuestions[d.name]?.accuracy || 0;  
+        if (accuracy < 0.4) return "#f87171";  
+        if (accuracy < 0.6) return "#f59e0b";  
+        if (accuracy < 0.8) return "#facc15";  
+        return "#4ade80";  
+    })  
     .on("mouseover", (event, d) => {  
-        let tooltipContent = `<strong>${d.name}</strong>`;  
+        let html = `<strong>${d.name}</strong>`;  
         if (knowledgeQuestions[d.name]) {  
-            const data = knowledgeQuestions[d.name];  
-            tooltipContent += `  
-                <br/>基础题: ${data.basic}  
-                <br/>中等题: ${data.medium}  
-                <br/>高级题: ${data.advanced}  
-                <br/><strong>正确率:</strong> ${(data.accuracy * 100).toFixed(1)}%`;  
+            const qSet = knowledgeQuestions[d.name];  
+            html += `  
+                <br/><strong>基础题：</strong>${qSet.basic}  
+                <br/><strong>中等题：</strong>${qSet.medium}  
+                <br/><strong>较难题：</strong>${qSet.advanced}  
+                <br/><strong>正确率：</strong>${(qSet.accuracy * 100).toFixed(1)}%`;  
         }  
         tooltipGraph  
-            .html(tooltipContent)  
+            .html(html)  
+            .style("opacity", 1)  
             .style("left", `${event.pageX + 10}px`)  
-            .style("top", `${event.pageY}px`)  
-            .classed("visible", true);  
+            .style("top", `${event.pageY - 10}px`);  
     })  
-    .on("mouseout", () => tooltipGraph.classed("visible", false));  
+    .on("mouseout", () => tooltipGraph.style("opacity", 0));  
 
-// 节点文字  
 node.append("text")  
+    .text(d => d.name)  
     .attr("x", 20)  
-    .attr("y", 4)  
-    .text(d => d.name);  
+    .attr("y", 5);  
 
-// 更新力导向图  
+function dragstarted(event, d) {  
+    if (!event.active) simulation.alphaTarget(0.3).restart();  
+    d.fx = d.x;  
+    d.fy = d.y;  
+}  
+
+function dragged(event, d) {  
+    d.fx = event.x;  
+    d.fy = event.y;  
+}  
+
+function dragended(event, d) {  
+    if (!event.active) simulation.alphaTarget(0);  
+    d.fx = null;  
+    d.fy = null;  
+}  
+
 function ticked() {  
-    link  
-        .attr("x1", d => d.source.x)  
+    link.attr("x1", d => d.source.x)  
         .attr("y1", d => d.source.y)  
         .attr("x2", d => d.target.x)  
         .attr("y2", d => d.target.y);  
@@ -175,7 +339,7 @@ function ticked() {
     node.attr("transform", d => `translate(${d.x}, ${d.y})`);  
 }  
 
-// 历史正确率数据  
+// 历史正确率趋势  
 const trendData = [  
     { time: "测验1", accuracy: 0.10 },  
     { time: "测验2", accuracy: 0.12 },  
@@ -197,7 +361,7 @@ const xScale = d3.scalePoint()
     .padding(0.5);  
 
 const yScale = d3.scaleLinear()  
-    .domain([0, 0.2]) // 定义y轴范围适配数据  
+    .domain([0, 0.15])  
     .range([innerHeight, 0]);  
 
 const svgLine = d3.select("#line-chart")  
@@ -206,31 +370,37 @@ const svgLine = d3.select("#line-chart")
     .append("g")  
     .attr("transform", `translate(${margin.left},${margin.top})`);  
 
-svgLine.append("g")  
-    .attr("transform", `translate(0, ${innerHeight})`)  
-    .call(d3.axisBottom(xScale));  
-
-svgLine.append("g")  
-    .call(d3.axisLeft(yScale).tickFormat(d3.format(".0%")));  
+const lineGenerator = d3.line()  
+    .x(d => xScale(d.time))  
+    .y(d => yScale(d.accuracy))  
+    .curve(d3.curveMonotoneX);  
 
 svgLine.append("path")  
     .datum(trendData)  
-    .attr("d", d3.line()  
-        .x(d => xScale(d.time))  
-        .y(d => yScale(d.accuracy))  
-    )  
+    .attr("class", "line")  
+    .attr("fill", "none")  
     .attr("stroke", "#f97316")  
-    .attr("fill", "none");  
+    .attr("stroke-width", 2)  
+    .attr("d", lineGenerator);  
 
 svgLine.selectAll(".dot")  
     .data(trendData)  
     .enter()  
     .append("circle")  
+    .attr("class", "dot")  
     .attr("r", 4)  
     .attr("cx", d => xScale(d.time))  
     .attr("cy", d => yScale(d.accuracy))  
-    .attr("fill", "#ff5722");  
-
+    .attr("fill", "#ff5722")  
+    .on("mouseover", (event, d) => {  
+        tooltipGraph  
+            .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(2)}%</strong>`)  
+            .style("opacity", 1)  
+            .style("left", `${event.pageX + 10}px`)  
+            .style("top", `${event.pageY - 10}px`);  
+    })  
+    .on("mouseout", () => tooltipGraph.style("opacity", 0));  
 </script>  
+<div id="line-tooltip" class="tooltip"></div>  
 </body>  
 </html>  
