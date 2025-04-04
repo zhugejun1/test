@@ -8,11 +8,17 @@
     <!-- D3.js v6 -->  
     <script src="https://d3js.org/d3.v6.min.js"></script>  
 
-    <!-- MathJax 引入 -->  
+    <!-- MathJax Configuration -->  
     <script>  
         MathJax = {  
-            tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] },  
-            svg: { fontCache: "global" }  
+            tex: {  
+                inlineMath: [ ["\\(", "\\)"] ],  
+                displayMath: [ ["$$", "$$"] ],  
+                processEscapes: true  
+            },  
+            svg: {  
+                    fontCache: "global"  
+                }  
         };  
     </script>  
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.min.js"></script>  
@@ -35,22 +41,22 @@
 </head>  
 <body class="h-screen w-screen overflow-hidden bg-gray-100">  
 
-<!-- 顶部：返回按钮 -->  
+<!-- Back Button -->  
 <div class="p-4 bg-white shadow">  
     <button class="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 transition-colors" onclick="location.href='index.html'">  
         返回题目列表  
     </button>  
 </div>  
 
-<!-- 主体：左侧力导向图 + 右侧题目信息 -->  
+<!-- Main Content: Left Panel (Force Directed Graph) + Right Panel (Question Info and Chart) -->  
 <div class="flex h-[calc(100vh-64px)]">  
 
-    <!-- 左侧：力导向图 -->  
+    <!-- Left Panel: Force Directed Graph -->  
     <div id="left-panel" class="w-1/2 h-full bg-white relative">  
         <svg id="graph-svg" class="w-full h-full"></svg>  
         <div id="graph-tooltip" class="tooltip"></div>  
         
-        <!-- 颜色对应正确率说明 -->  
+        <!-- Color Legend -->  
         <div class="color-legend">  
             <h3 class="text-sm font-bold mb-2">正确率说明:</h3>  
             <div class="legend-item">  
@@ -76,10 +82,10 @@
         </div>  
     </div>  
 
-    <!-- 右侧：题目信息和历史趋势图 -->  
+    <!-- Right Panel: Question Information and Historical Accuracy Trend -->  
     <div id="right-panel" class="w-1/2 h-full flex flex-col p-4 space-y-4">  
 
-        <!-- 题干描述区域 -->  
+        <!-- Question Description -->  
         <div class="bg-white p-4 rounded shadow">  
             <h1 class="text-xl font-bold mb-2">题号：第10题</h1>  
             <p class="mb-4">  
@@ -104,11 +110,11 @@
                 <input type="checkbox" id="option4" />  
                 <label for="option4">D. ①②④</label>  
             </div>  
-            <p>当前掌握率：<span class="text-red-600 font-medium">7.89%</span></p>  
-            <p>历史正确率：<span class="text-red-600 font-medium">7.8%</span></p>  
+            <p>当前掌握率：<span class="text-green-600 font-medium">7.89%</span></p>  
+            <p>历史正确率：<span class="text-yellow-600 font-medium">7.8%</span></p>  
         </div>  
 
-        <!-- 历史正确率折线图 -->  
+        <!-- Historical Accuracy Rate Line Chart -->  
         <div class="flex-1 bg-white p-4 rounded shadow relative">  
             <h2 class="text-lg font-bold mb-2">历史正确率趋势</h2>  
             <svg id="line-chart" class="w-full h-full"></svg>  
@@ -118,7 +124,7 @@
 </div>  
 
 <script>  
-// 知识点与示例题数据  
+// Knowledge Points and Example Questions Data  
 const knowledgeQuestions = {  
     "几何性质": {  
         basic: "基本几何图形性质",  
@@ -136,8 +142,7 @@ const knowledgeQuestions = {
         basic: "相似定义与公式",  
         medium: "相似三角形面积关系",  
         advanced: "相似三角形复杂几何推论",  
-        accuracy: 0.15,  
-        related: true  
+        accuracy: 0.15  
     },  
     "线角关系": {  
         basic: "线与角的定义",  
@@ -149,28 +154,26 @@ const knowledgeQuestions = {
         basic: "基本几何定理",  
         medium: "几何定理的应用",  
         advanced: "几何定理的推广",  
-        accuracy: 0.21,  
-        related: true  
+        accuracy: 0.21  
     },  
     "三角形全等": {  
         basic: "全等三角形判定方法",  
         medium: "全等三角形性质应用",  
         advanced: "复杂全等问题",  
-        accuracy: 0.35,  
-        related: true  
+        accuracy: 0.35  
     }  
 };  
 
-// 设置力导向图数据  
+// Force Directed Graph Data  
 const graphData = {  
     nodes: [  
         { id: "Q10", type: "question", name: "第10题", accuracy: 0.078 },  
         { id: "K1", type: "knowledge", name: "几何性质", accuracy: 0.12 },  
         { id: "K2", type: "knowledge", name: "角的关系", accuracy: 0.08 },  
-        { id: "K3", type: "knowledge", name: "相似三角形", accuracy: 0.15, related: true },  
+        { id: "K3", type: "knowledge", name: "相似三角形", accuracy: 0.15 },  
         { id: "K4", type: "knowledge", name: "线角关系", accuracy: 0.07 },  
-        { id: "K5", type: "knowledge", name: "几何图形定理", accuracy: 0.21, related: true },  
-        { id: "K6", type: "knowledge", name: "三角形全等", accuracy: 0.35, related: true }  
+        { id: "K5", type: "knowledge", name: "几何图形定理", accuracy: 0.21 },  
+        { id: "K6", type: "knowledge", name: "三角形全等", accuracy: 0.35 }  
     ],  
     links: [  
         { source: "Q10", target: "K1" },  
@@ -184,24 +187,20 @@ const graphData = {
     ]  
 };  
 
-// 获取节点颜色函数  
+// Node Color Function  
 function getNodeColor(d) {  
     if (d.type === "question") {  
-        return "#fca5a5"; // 题目节点颜色  
+        return "#fca5a5"; // Question node color  
     }  
     
-    if (d.related) {  
-        return "#9ca3af"; // 相关知识点为灰色  
-    }  
-    
-    const acc = d.accuracy;  
-    if (acc < 0.4) return "#ef4444"; // 红色，低于40%  
-    if (acc < 0.6) return "#f97316"; // 橙色，40%-60%  
-    if (acc < 0.8) return "#eab308"; // 黄色，60%-80%  
-    return "#22c55e"; // 绿色，大于80%  
+    const acc = knowledgeQuestions[d.name].accuracy;  
+    if (acc < 0.4) return "#ef4444"; // Below 40%  
+    if (acc < 0.6) return "#f97316"; // 40%-60%  
+    if (acc < 0.8) return "#eab308"; // 60%-80%  
+    return "#22c55e"; // Above 80%  
 }  
 
-// 绘制力导向图  
+// Draw Force Directed Graph  
 const width = document.getElementById("left-panel").clientWidth;  
 const height = document.getElementById("left-panel").clientHeight;  
 
@@ -209,12 +208,12 @@ const svgGraph = d3.select("#graph-svg")
     .attr("width", width)  
     .attr("height", height);  
 
-// 增强力导向图配置，防止重叠  
+// Enhanced Force Directed Graph Configuration  
 const simulation = d3.forceSimulation(graphData.nodes)  
     .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(150))  
     .force("charge", d3.forceManyBody().strength(-600))  
     .force("center", d3.forceCenter(width / 2, height / 2))  
-    .force("collision", d3.forceCollide().radius(60)) // 增加碰撞检测  
+    .force("collision", d3.forceCollide().radius(60)) // Prevent node overlap  
     .on("tick", ticked);  
 
 const link = svgGraph.selectAll("line.link")  
@@ -228,7 +227,7 @@ const node = svgGraph.selectAll("g.node")
     .enter()  
     .append("g")  
     .attr("class", "node")  
-    .call(d3.drag() // 添加拖拽功能  
+    .call(d3.drag() // Add drag functionality  
         .on("start", dragstarted)  
         .on("drag", dragged)  
         .on("end", dragended));  
@@ -272,7 +271,7 @@ node.append("text")
     .attr("fill", "#333")  
     .attr("font-weight", d => (d.type === "question" ? "bold" : "normal"));  
 
-// 拖拽功能实现  
+// Drag Functionality Implementation  
 function dragstarted(event, d) {  
     if (!event.active) simulation.alphaTarget(0.3).restart();  
     d.fx = d.x;  
@@ -291,7 +290,7 @@ function dragended(event, d) {
 }  
 
 function ticked() {  
-    // 确保节点不会超出可视区域  
+    // Keep nodes within visible area  
     graphData.nodes.forEach(function(d) {  
         d.x = Math.max(40, Math.min(width - 40, d.x));  
         d.y = Math.max(40, Math.min(height - 40, d.y));  
@@ -306,7 +305,7 @@ function ticked() {
     node.attr("transform", d => `translate(${d.x}, ${d.y})`);  
 }  
 
-// 历史正确率折线图  
+// Historical Accuracy Rate Line Chart  
 const trendData = [  
     { time: "测验1", accuracy: 0.05 },  
     { time: "测验2", accuracy: 0.07 },  
