@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>  
 <html lang="zh">  
 <head>  
@@ -21,10 +20,10 @@
     <style>  
         body { margin: 0; font-family: Arial, sans-serif; background-color: #f6f9fc; }  
         .node circle { cursor: pointer; }  
-        .node circle:hover { fill: #555; }  
+        .node circle:hover { fill: #333; }  
         .node text { pointer-events: none; font-size: 12px; fill: #333; }  
         line.link { stroke: #ccc; stroke-width: 1.5px; }  
-        .tooltip { position: absolute; min-width: 150px; padding: 8px; font-size: 12px; background: rgba(255, 255, 255, 0.9); border: 1px solid #ddd; border-radius: 4px; pointer-events: none; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15); opacity: 0; transition: opacity 0.2s; z-index: 999; }  
+        .tooltip { position: absolute; min-width: 150px; padding: 8px; font-size: 12px; background: rgba(255, 255, 255, 0.9); border: 1px solid #ccc; border-radius: 4px; pointer-events: none; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15); opacity: 0; transition: opacity 0.2s; z-index: 999; }  
         .line { fill: none; stroke-width: 2px; }  
         .line-chart-axis path, .line-chart-axis line { fill: none; stroke: #ccc; }  
         .dot { fill: #ff5722; stroke: #fff; stroke-width: 1px; cursor: pointer; }  
@@ -67,12 +66,8 @@
                 <span class="text-xs">60%-80%</span>  
             </div>  
             <div class="legend-item">  
-                <div class="legend-color" style="background-color: #22c55e;"></div>  
+                <div class="legend-color" style="background-color: #22c555;"></div>  
                 <span class="text-xs">大于80%</span>  
-            </div>  
-            <div class="legend-item">  
-                <div class="legend-color" style="background-color: #9ca3af;"></div>  
-                <span class="text-xs">相关知识点</span>  
             </div>  
         </div>  
     </div>  
@@ -125,7 +120,7 @@
 </div>  
 
 <script>  
-// ================ 知识点与示例题数据 ================  
+// ================ 知识点数据 ================  
 const knowledgeQuestions = {  
     "全等三角形的判定": {  
         basic: "全等三角形的基本判定方法",  
@@ -175,19 +170,23 @@ const knowledgeQuestions = {
         advanced: "平行线的高级综合应用",  
         accuracy: 0.82  
     },  
-    "例题 1": {  
-        basic: "全等三角形的简单应用",  
-        medium: "复杂图形的全等判定",  
-        advanced: "高级全等三角形问题解决",  
-        accuracy: 0.90,  
-        related: true  
+    "几何推理技巧": {  
+        basic: "基础几何推理技巧",  
+        medium: "中等复杂度几何推理技巧",  
+        advanced: "高级几何推理技巧",  
+        accuracy: 0.80  
     },  
-    "例题 2": {  
-        basic: "角平分线的基础应用",  
-        medium: "角平分线在三角形中的应用",  
-        advanced: "高级角平分线问题解决",  
-        accuracy: 0.88,  
-        related: true  
+    "图形变换的应用": {  
+        basic: "基础图形变换的应用",  
+        medium: "复杂图形变换的应用",  
+        advanced: "高级图形变换的综合应用",  
+        accuracy: 0.81  
+    },  
+    "空间想象力的训练": {  
+        basic: "基础空间想象力的训练",  
+        medium: "中等空间想象力的训练",  
+        advanced: "高级空间想象力的训练",  
+        accuracy: 0.79  
     }  
 };  
 
@@ -203,8 +202,9 @@ const graphData = {
         { id: "K6", type: "knowledge", name: "内错角与平行线", accuracy: 0.84 },  
         { id: "K7", type: "knowledge", name: "同位角与平行线", accuracy: 0.83 },  
         { id: "K8", type: "knowledge", name: "平行线的综合应用", accuracy: 0.82 },  
-        { id: "E1", type: "example", name: "例题 1", accuracy: 0.90, related: true },  
-        { id: "E2", type: "example", name: "例题 2", accuracy: 0.88, related: true }  
+        { id: "K9", type: "knowledge", name: "几何推理技巧", accuracy: 0.80 },  
+        { id: "K10", type: "knowledge", name: "图形变换的应用", accuracy: 0.81 },  
+        { id: "K11", type: "knowledge", name: "空间想象力的训练", accuracy: 0.79 }  
     ],  
     links: [  
         { source: "Q4", target: "K1" },  
@@ -215,14 +215,18 @@ const graphData = {
         { source: "Q4", target: "K6" },  
         { source: "Q4", target: "K7" },  
         { source: "Q4", target: "K8" },  
-        { source: "K1", target: "E1" },  
-        { source: "K2", target: "E2" },  
-        { source: "K3", target: "E1" },  
-        { source: "K4", target: "E1" },  
-        { source: "K5", target: "E1" },  
-        { source: "K6", target: "E1" },  
-        { source: "K7", target: "E2" },  
-        { source: "K8", target: "E2" }  
+        { source: "Q4", target: "K9" },  
+        { source: "Q4", target: "K10" },  
+        { source: "Q4", target: "K11" },  
+        { source: "K1", target: "K9" },  
+        { source: "K1", target: "K10" },  
+        { source: "K2", target: "K9" },  
+        { source: "K3", target: "K11" },  
+        { source: "K4", target: "K10" },  
+        { source: "K5", target: "K11" },  
+        { source: "K6", target: "K9" },  
+        { source: "K7", target: "K10" },  
+        { source: "K8", target: "K11" }  
     ]  
 };  
 
@@ -263,7 +267,7 @@ node.append("circle")
     .attr("r", d => d.type === "question" ? 18 : 14)  
     .attr("fill", d => {  
         if (d.type === "question") return "#fca5a5";  
-        return d.type === "example" ? "#9ca3af" : getNodeColor(d);  
+        return getNodeColor(d);  
     })  
     .on("mouseover", (event, d) => {  
         let htmlStr = "";  
@@ -280,7 +284,7 @@ node.append("circle")
                     <br/><strong>正确率：</strong>${(qSet.accuracy * 100).toFixed(1)}%  
                 `;  
             } else {  
-                htmlStr += "<br/>暂无示例题";  
+                htmlStr += "<br/>暂无详细信息";  
             }  
         }  
         tooltipGraph  
@@ -321,7 +325,7 @@ function ticked() {
         d.x = Math.max(40, Math.min(width - 40, d.x));  
         d.y = Math.max(40, Math.min(height - 40, d.y));  
     });  
-    
+
     link  
         .attr("x1", d => d.source.x)  
         .attr("y1", d => d.source.y)  
@@ -336,7 +340,7 @@ function getNodeColor(d) {
     if (acc < 0.4) return "#ef4444";  
     if (acc < 0.6) return "#f97316";  
     if (acc < 0.8) return "#eab308";  
-    return "#22c55e";  
+    return "#22c555";  
 }  
 
 // ================ 历史正确率折线图 ================  
@@ -418,4 +422,3 @@ svgLine.selectAll(".dot")
 </script>  
 </body>  
 </html>  
-
