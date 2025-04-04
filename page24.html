@@ -10,8 +10,8 @@
     <!-- MathJax 配置 -->  
     <script>  
         MathJax = {  
-            tex: {inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]]},  
-            svg: {fontCache: "global"}  
+            tex: { inlineMath: [["\\(", "\\)"], ["$", "$"]], displayMath: [["$$", "$$"]] },  
+            svg: { fontCache: "global" }  
         };  
     </script>  
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.min.js"></script>  
@@ -23,10 +23,9 @@
         }  
         .node circle {  
             cursor: pointer;  
-            transition: fill 0.3s;  
         }  
         .node circle:hover {  
-            fill: #333;  
+            fill: #555;  
         }  
         .node text {  
             pointer-events: none;  
@@ -39,17 +38,17 @@
         }  
         .tooltip {  
             position: absolute;  
-            min-width: 200px;  
-            max-width: 300px;  
+            min-width: 150px;  
             padding: 8px;  
             font-size: 12px;  
             background: rgba(255, 255, 255, 0.9);  
-            border: 1px solid #ccc;  
+            border: 1px solid #ddd;  
             border-radius: 4px;  
             pointer-events: none;  
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);  
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);  
             opacity: 0;  
-            transition: opacity 0.3s;  
+            transition: opacity 0.2s;  
+            z-index: 999;  
         }  
         .line {  
             fill: none;  
@@ -69,39 +68,103 @@
             fill: none;  
             stroke: #ccc;  
         }  
+        .color-legend {  
+            position: absolute;  
+            bottom: 20px;  
+            left: 20px;  
+            background: rgba(255, 255, 255, 0.95);  
+            padding: 10px;  
+            border-radius: 4px;  
+            border: 1px solid #ddd;  
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);  
+        }  
+        .legend-item {  
+            display: flex;  
+            align-items: center;  
+            margin-bottom: 5px;  
+        }  
+        .legend-color {  
+            width: 16px;  
+            height: 16px;  
+            margin-right: 8px;  
+            border-radius: 50%;  
+        }  
     </style>  
 </head>  
 <body class="h-screen w-screen overflow-hidden bg-gray-100">  
 
 <!-- 顶部：返回按钮 -->  
 <div class="p-4 bg-white shadow">  
-    <button class="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 transition-colors"  
-        onclick="location.href='index.html'">  
+    <button class="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 transition-colors" onclick="location.href='index.html'">  
         返回题目列表  
     </button>  
 </div>  
-<!-- 主体部分 -->  
+
+<!-- 主体：左侧力导向图 + 右侧题目信息 -->  
 <div class="flex h-[calc(100vh-64px)]">  
+
     <!-- 左侧：力导向图 -->  
     <div id="left-panel" class="w-1/2 h-full bg-white relative">  
         <svg id="graph-svg" class="w-full h-full"></svg>  
         <div id="graph-tooltip" class="tooltip"></div>  
+        
+        <!-- 颜色对应正确率说明 -->  
+        <div class="color-legend">  
+            <h3 class="text-sm font-bold mb-2">正确率说明：</h3>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #ef4444;"></div>  
+                <span class="text-xs">低于40%</span>  
+            </div>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #f97316;"></div>  
+                <span class="text-xs">40%-60%</span>  
+            </div>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #eab308;"></div>  
+                <span class="text-xs">60%-80%</span>  
+            </div>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #22c55e;"></div>  
+                <span class="text-xs">大于80%</span>  
+            </div>  
+            <div class="legend-item">  
+                <div class="legend-color" style="background-color: #9ca3af;"></div>  
+                <span class="text-xs">相关知识点</span>  
+            </div>  
+        </div>  
     </div>  
-    <!-- 右侧：题目信息 -->  
+
+    <!-- 右侧：题目信息和历史趋势图 -->  
     <div id="right-panel" class="w-1/2 h-full flex flex-col p-4 space-y-4">  
+
         <!-- 题目描述 -->  
         <div class="bg-white p-4 rounded shadow">  
-            <h1 class="text-xl font-bold mb-2">题号：第24题</h1>  
-            <p class="mb-4">如图，点 \( A \) 落在点 \( F \) 处。</p>  
-            <p class="mb-4">已知：$$ \angle DEF + \angle LCBF = \angle AL = \angle EF $$</p>  
-            <p class="mb-4">  
-                （1）请证明上述结论；（3分）  
-            </p>  
-            <p class="mb-4">（2）在四边形\( MHGN \)中进行变化，证明角的和的数量关系。（5分）</p>  
-            <p><img src="path_to_your_image.jpg" alt="几何示例" class="w-full h-auto" /></p>  
+            <h1 class="text-xl font-bold mb-2">第24题（本题12分）</h1>  
+            <p class="mb-4">数学活动课上，琳琳同学将一张长方形纸条 ABCD 沿 BE 折叠，点 A 落在点 F 处。</p>  
+
+            <div class="mb-4">  
+                <p class="font-medium">（1）如图1，她通过测量发现：∠DEF + ∠CBF = ∠A，请你证明她的结论。</p>  
+                <p class="text-sm text-gray-600">(3分)</p>  
+            </div>  
+
+            <div class="mb-4">  
+                <p class="font-medium">（2）如图2，点 M 在 AD 上，点 N 在 BC 上，连接 MN，MN//EF，将四边形 MDCN 沿 MN 所在直线折叠得到 MHGN，MH 交 BC 于 R，点 D 的对应点落在点 H 处，点 C 的对应点落在点 G 处。她通过测量发现：∠CNG = 4∠ABE，请你证明她的结论。</p>  
+                <p class="text-sm text-gray-600">(4分)</p>  
+            </div>  
+
+            <div class="mb-4">  
+                <p class="font-medium">（3）如图3，在（2）的条件下，将四边形 MHGN 沿 RN 向上折盖得到四边形 RPQN，点 H 的对应点恰好落到 AD 上的点 P 处，点 G 落到点 Q 处。猜想 ∠ABF、∠MNQ 与 ∠MRN 的数量关系，并证明你的结论。</p>  
+                <p class="text-sm text-gray-600">(5分)</p>  
+            </div>  
+
+            <div class="text-center">  
+                <img src="path_to_your_image.jpg" alt="几何示例" class="w-full h-auto" />  
+            </div>  
+
             <p>当前掌握率：<span class="text-green-600 font-medium">0%</span></p>  
             <p>历史正确率：<span class="text-yellow-600 font-medium">10%</span></p>  
         </div>  
+
         <!-- 历史正确率折线图 -->  
         <div class="flex-1 bg-white p-4 rounded shadow relative">  
             <h2 class="text-lg font-bold mb-2">历史正确率趋势</h2>  
@@ -110,8 +173,9 @@
         </div>  
     </div>  
 </div>  
+
 <script>  
-// 知识点与次级知识点配置  
+// 知识点与示例题数据  
 const knowledgeQuestions = {  
     "平行线与角度的性质": {  
         basic: "平行线及其与角度的基本关系",  
@@ -163,7 +227,7 @@ const knowledgeQuestions = {
     }  
 };  
 
-// 力导向图数据定义  
+// 力导向图数据  
 const graphData = {  
     nodes: [  
         { id: "Q24", type: "question", name: "第24题" },  
@@ -212,7 +276,11 @@ const node = svgGraph.selectAll("g.node")
     .data(graphData.nodes)  
     .enter()  
     .append("g")  
-    .attr("class", "node");  
+    .attr("class", "node")  
+    .call(d3.drag()  
+        .on("start", dragstarted)  
+        .on("drag", dragged)  
+        .on("end", dragended));  
 
 const tooltipGraph = d3.select("#graph-tooltip");  
 
@@ -249,6 +317,23 @@ node.append("text")
     .attr("x", 20)  
     .attr("y", 5);  
 
+function dragstarted(event, d) {  
+    if (!event.active) simulation.alphaTarget(0.3).restart();  
+    d.fx = d.x;  
+    d.fy = d.y;  
+}  
+
+function dragged(event, d) {  
+    d.fx = event.x;  
+    d.fy = event.y;  
+}  
+
+function dragended(event, d) {  
+    if (!event.active) simulation.alphaTarget(0);  
+    d.fx = null;  
+    d.fy = null;  
+}  
+
 function ticked() {  
     link.attr("x1", d => d.source.x)  
         .attr("y1", d => d.source.y)  
@@ -258,7 +343,7 @@ function ticked() {
     node.attr("transform", d => `translate(${d.x}, ${d.y})`);  
 }  
 
-// 绘制趋势图数据  
+// 历史正确率趋势  
 const trendData = [  
     { time: "测验1", accuracy: 0.0 },  
     { time: "测验2", accuracy: 0.03 },  
@@ -274,8 +359,14 @@ const margin = { top: 20, right: 20, bottom: 30, left: 40 };
 const innerWidth = lineChartWidth - margin.left - margin.right;  
 const innerHeight = lineChartHeight - margin.top - margin.bottom;  
 
-const xScale = d3.scalePoint().domain(trendData.map(d => d.time)).range([0, innerWidth]).padding(0.5);  
-const yScale = d3.scaleLinear().domain([0, 0.15]).range([innerHeight, 0]);  
+const xScale = d3.scalePoint()  
+    .domain(trendData.map(d => d.time))  
+    .range([0, innerWidth])  
+    .padding(0.5);  
+
+const yScale = d3.scaleLinear()  
+    .domain([0, 0.15])  
+    .range([innerHeight, 0]);  
 
 const svgLine = d3.select("#line-chart")  
     .attr("width", lineChartWidth)  
@@ -283,14 +374,30 @@ const svgLine = d3.select("#line-chart")
     .append("g")  
     .attr("transform", `translate(${margin.left},${margin.top})`);  
 
-svgLine.append("g").attr("class", "line-chart-axis").attr("transform", `translate(0, ${innerHeight})`).call(d3.axisBottom(xScale));  
-svgLine.append("g").attr("class", "line-chart-axis").call(d3.axisLeft(yScale).tickFormat(d3.format(".0%")));  
+const xAxis = d3.axisBottom(xScale);  
+const yAxis = d3.axisLeft(yScale).tickFormat(d3.format(".0%"));  
+
+svgLine.append("g")  
+    .attr("class", "line-chart-axis")  
+    .attr("transform", `translate(0, ${innerHeight})`)  
+    .call(xAxis);  
+
+svgLine.append("g")  
+    .attr("class", "line-chart-axis")  
+    .call(yAxis);  
+
+const lineGenerator = d3.line()  
+    .x(d => xScale(d.time))  
+    .y(d => yScale(d.accuracy))  
+    .curve(d3.curveMonotoneX);  
 
 svgLine.append("path")  
     .datum(trendData)  
     .attr("class", "line")  
-    .attr("d", d3.line().x(d => xScale(d.time)).y(d => yScale(d.accuracy)))  
-    .attr("stroke", "#f97316");  
+    .attr("fill", "none")  
+    .attr("stroke", "#f97316")  
+    .attr("stroke-width", 2)  
+    .attr("d", lineGenerator);  
 
 svgLine.selectAll(".dot")  
     .data(trendData)  
@@ -300,16 +407,16 @@ svgLine.selectAll(".dot")
     .attr("r", 4)  
     .attr("cx", d => xScale(d.time))  
     .attr("cy", d => yScale(d.accuracy))  
+    .attr("fill", "#ff5722")  
     .on("mouseover", (event, d) => {  
         tooltipGraph  
-            .html(`${d.time}<br/><strong>${(d.accuracy * 100).toFixed(2)}%</strong>`)  
+            .html(`${d.time}<br/>正确率：<strong>${(d.accuracy * 100).toFixed(2)}%</strong>`)  
             .style("opacity", 1)  
             .style("left", `${event.pageX + 10}px`)  
             .style("top", `${event.pageY - 10}px`);  
     })  
     .on("mouseout", () => tooltipGraph.style("opacity", 0));  
 </script>  
-<!-- 提示工具 -->  
 <div id="line-tooltip" class="tooltip"></div>  
 </body>  
 </html>  
