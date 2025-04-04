@@ -8,7 +8,7 @@
     <!-- D3.js v6 -->  
     <script src="https://d3js.org/d3.v6.min.js"></script>  
 
-    <!-- MathJax 配置 -->  
+    <!-- MathJax -->  
     <script>  
         MathJax = {  
             tex: { inlineMath: [["\\(", "\\)"], ["$", "$"]], displayMath: [["$$", "$$"]] },  
@@ -25,9 +25,10 @@
         }  
         .node circle {  
             cursor: pointer;  
+            transition: fill 0.3s;  
         }  
         .node circle:hover {  
-            fill: #333;  
+            fill: #555;  
         }  
         .node text {  
             pointer-events: none;  
@@ -44,7 +45,7 @@
             padding: 8px;  
             font-size: 12px;  
             background: rgba(255, 255, 255, 0.9);  
-            border: 1px solid #ddd;  
+            border: 1px solid #ccc;  
             border-radius: 4px;  
             pointer-events: none;  
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);  
@@ -93,12 +94,14 @@
         }  
         /* 调整布局比例 */  
         .flex-container {  
+            display: flex;  
             height: 100vh;  
         }  
         #left-panel {  
-            width: 40%;        }  
+            width: 50%;  
+        }  
         #right-panel {  
-            width: 60%;  
+            width: 50%;  
         }  
     </style>  
 </head>  
@@ -106,7 +109,8 @@
 
 <!-- 顶部：返回按钮 -->  
 <div class="p-4 bg-white shadow">  
-    <button class="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 transition-colors" onclick="location.href='index.html'">  
+    <button class="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 transition-colors"  
+        onclick="location.href='index.html'">  
         返回题目列表  
     </button>  
 </div>  
@@ -115,10 +119,10 @@
 <div class="flex-container flex h-[calc(100vh-64px)]">  
 
     <!-- 左侧：力导向图 -->  
-    <div id="left-panel" class="w-1/2 h-full bg-white relative">  
+    <div id="left-panel" class="bg-white relative">  
         <svg id="graph-svg" class="w-full h-full"></svg>  
         <div id="graph-tooltip" class="tooltip"></div>  
-
+        
         <!-- 颜色对应正确率说明 -->  
         <div class="color-legend">  
             <h3 class="text-sm font-bold mb-2">正确率说明：</h3>  
@@ -142,7 +146,7 @@
     </div>  
 
     <!-- 右侧：题目信息和历史正确率折线图 -->  
-    <div id="right-panel" class="w-1/2 h-full flex flex-col p-4 space-y-4">  
+    <div id="right-panel" class="flex flex-col p-4 space-y-4">  
 
         <!-- 题目描述 -->  
         <div class="bg-white p-4 rounded shadow">  
@@ -184,67 +188,67 @@ const knowledgeQuestions = {
         basic: "平行线及其与角度的基本关系",  
         medium: "平行线中角和的应用",  
         advanced: "复杂几何图形中平行与角的联系",  
-        accuracy: 0.76  
+        accuracy: 0.38  
     },  
     "几何证明方法": {  
         basic: "学习基础的几何证明方法",  
         medium: "多种条件组合下的证明",  
         advanced: "复杂几何组合关系的证明技巧",  
-        accuracy: 0.49  
+        accuracy: 0.39  
     },  
     "四边形的性质": {  
         basic: "理解四边形对角线与角关系",  
         medium: "运用四边形性质解决几何问题",  
         advanced: "复杂条件下的四边形关系推理",  
-        accuracy: 0.65  
+        accuracy: 0.37  
     },  
     "角度计算": {  
         basic: "基础的角度计算公式",  
         medium: "角度计算的多种方法",  
         advanced: "复杂角度关系的精确计算",  
-        accuracy: 0.58  
+        accuracy: 0.36  
     },  
     "三角形性质": {  
         basic: "三角形的基本性质",  
         medium: "三角形的面积计算",  
         advanced: "三角形的特殊性质",  
-        accuracy: 0.72  
+        accuracy: 0.35  
     },  
     "圆的性质": {  
         basic: "圆的基础性质",  
         medium: "圆与切线的关系",  
         advanced: "圆的复杂性质应用",  
-        accuracy: 0.81  
+        accuracy: 0.34  
     },  
     "空间几何": {  
         basic: "空间几何的基础概念，包括点、线、面的三维关系",  
         medium: "空间几何的简单应用，如三维坐标系的理解和立体几何的基本公式",  
         advanced: "空间几何的高级应用，包括复杂多面体的体积计算和表面积计算",  
-        accuracy: 0.54  
+        accuracy: 0.33  
     },  
     "平面几何": {  
         basic: "平面几何的基础知识，包括点、线、面的基本概念",  
         medium: "平面几何的中级应用，如三角形、四边形的性质和面积计算",  
         advanced: "平面几何的高级技巧，包括平面几何的定理应用和复杂图形的分割",  
-        accuracy: 0.43  
+        accuracy: 0.32  
     },  
     "几何构造与测量": {  
         basic: "基础测量工具的使用",  
         medium: "复杂测量工具的应用",  
         advanced: "高级测量工具技巧",  
-        accuracy: 0.64  
+        accuracy: 0.31  
     },  
     "几何变换": {  
         basic: "基础几何变换的应用",  
         medium: "几何变换在多边形和空间中的应用",  
         advanced: "高级几何变换的综合运用",  
-        accuracy: 0.66  
+        accuracy: 0.30  
     },  
     "几何误差控制": {  
         basic: "基础测量误差处理",  
         medium: "测量精度控制方法",  
         advanced: "高级测量误差分析",  
-        accuracy: 0.69  
+        accuracy: 0.29  
     }  
 };  
 
@@ -303,7 +307,6 @@ const simulation = d3.forceSimulation(graphData.nodes)
     .force("collision", d3.forceCollide().radius(60))  
     .on("tick", ticked);  
 
-// 先绘制边，再绘制节点，确保文字在边上方  
 const link = svgGraph.selectAll("line.link")  
     .data(graphData.links)  
     .enter()  
@@ -322,7 +325,6 @@ const node = svgGraph.selectAll("g.node")
 
 const tooltipGraph = d3.select("#graph-tooltip");  
 
-// 为节点添加圆和文字  
 node.append("circle")  
     .attr("r", d => d.type === "question" ? 18 : 14)  
     .attr("fill", d => {  
@@ -481,4 +483,4 @@ svgLine.selectAll(".dot")
     });  
 </script>  
 </body>  
-</html>
+</html>  
