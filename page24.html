@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>  
     <!-- D3.js v6 -->  
     <script src="https://d3js.org/d3.v6.min.js"></script>  
+
     <!-- MathJax 配置 -->  
     <script>  
         MathJax = {  
@@ -95,8 +96,7 @@
             height: 100vh;  
         }  
         #left-panel {  
-            width: 40%;  
-        }  
+            width: 40%;        }  
         #right-panel {  
             width: 60%;  
         }  
@@ -252,17 +252,17 @@ const knowledgeQuestions = {
 const graphData = {  
     nodes: [  
         { id: "Q24", type: "question", name: "第24题", accuracy: 0.10 },  
-        { id: "K1", type: "knowledge", name: "平行线与角度的性质" },  
-        { id: "K2", type: "knowledge", name: "几何证明方法" },  
-        { id: "K3", type: "knowledge", name: "四边形的性质" },  
-        { id: "K4", type: "knowledge", name: "角度计算" },  
-        { id: "K5", type: "knowledge", name: "三角形性质" },  
-        { id: "K6", type: "knowledge", name: "圆的性质" },  
-        { id: "K7", type: "knowledge", name: "空间几何" },  
-        { id: "K8", type: "knowledge", name: "平面几何" },  
-        { id: "K9", type: "knowledge", name: "几何构造与测量" },  
-        { id: "K10", type: "knowledge", name: "几何变换" },  
-        { id: "K11", type: "knowledge", name: "几何误差控制" }  
+        { id: "K1", type: "knowledge", name: "平行线与角度的性质", accuracy: 0.38 },  
+        { id: "K2", type: "knowledge", name: "几何证明方法", accuracy: 0.39 },  
+        { id: "K3", type: "knowledge", name: "四边形的性质", accuracy: 0.37 },  
+        { id: "K4", type: "knowledge", name: "角度计算", accuracy: 0.36 },  
+        { id: "K5", type: "knowledge", name: "三角形性质", accuracy: 0.35 },  
+        { id: "K6", type: "knowledge", name: "圆的性质", accuracy: 0.34 },  
+        { id: "K7", type: "knowledge", name: "空间几何", accuracy: 0.33 },  
+        { id: "K8", type: "knowledge", name: "平面几何", accuracy: 0.32 },  
+        { id: "K9", type: "knowledge", name: "几何构造与测量", accuracy: 0.31 },  
+        { id: "K10", type: "knowledge", name: "几何变换", accuracy: 0.30 },  
+        { id: "K11", type: "knowledge", name: "几何误差控制", accuracy: 0.29 }  
     ],  
     links: [  
         { source: "Q24", target: "K1" },  
@@ -481,4 +481,4 @@ svgLine.selectAll(".dot")
     });  
 </script>  
 </body>  
-</html>  
+</html>
